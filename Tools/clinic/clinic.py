@@ -537,7 +537,15 @@ def normalize_snippet(s, *, indent=0):
     return s
 
 
-def declare_parser(*, hasformat: bool=False):
+def generate_argparser(*, hasformat: bool = False):
+    """
+    Generates a _PyArg_Parser for arguments parsing.
+
+    If Py_BUILD_CORE is defined, it uses statically allocated
+    kw tuple and strings to avoid the need for dynamic memory
+    allocation else fallbacks to the usual creating a tuple
+    and strings on the fly.
+    """
     if hasformat:
         fname = ''
         format_ = '.format = "{format_units}:{name}",'
@@ -999,7 +1007,7 @@ class CLanguage(Language):
                 flags = "METH_FASTCALL|METH_KEYWORDS"
                 parser_prototype = parser_prototype_fastcall_keywords
                 argname_fmt = 'args[%d]'
-                declarations = declare_parser()
+                declarations = generate_argparser()
                 declarations += "\nPyObject *argsbuf[%s];" % len(converters)
                 if has_optional_kw:
                     pre_buffer = "0" if vararg != NO_VARARG else "nargs"
@@ -1015,7 +1023,7 @@ class CLanguage(Language):
                 flags = "METH_VARARGS|METH_KEYWORDS"
                 parser_prototype = parser_prototype_keyword
                 argname_fmt = 'fastargs[%d]'
-                declarations = declare_parser()
+                declarations = generate_argparser()
                 declarations += "\nPyObject *argsbuf[%s];" % len(converters)
                 declarations += "\nPyObject * const *fastargs;"
                 declarations += "\nPy_ssize_t nargs = PyTuple_GET_SIZE(args);"
@@ -1092,7 +1100,7 @@ class CLanguage(Language):
                 if add_label:
                     parser_code.append("%s:" % add_label)
             else:
-                declarations = declare_parser(hasformat=True)
+                declarations = generate_argparser(hasformat=True)
                 if not new_or_init:
                     parser_code = [normalize_snippet("""
                         if (!_PyArg_ParseStackAndKeywords(args, nargs, kwnames, &_parser{parse_arguments_comma}
