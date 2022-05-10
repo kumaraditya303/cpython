@@ -1381,6 +1381,7 @@ PyArg_ParseTupleAndKeywords(PyObject *args,
     int retval;
     va_list va;
 
+#ifdef Py_DEBUG
     if ((args == NULL || !PyTuple_Check(args)) ||
         (keywords != NULL && !PyDict_Check(keywords)) ||
         format == NULL ||
@@ -1389,7 +1390,7 @@ PyArg_ParseTupleAndKeywords(PyObject *args,
         PyErr_BadInternalCall();
         return 0;
     }
-
+#endif
     va_start(va, kwlist);
     retval = vgetargskeywords(args, keywords, format, kwlist, &va, 0);
     va_end(va);
@@ -1404,7 +1405,7 @@ _PyArg_ParseTupleAndKeywords_SizeT(PyObject *args,
 {
     int retval;
     va_list va;
-
+#ifdef Py_DEBUG
     if ((args == NULL || !PyTuple_Check(args)) ||
         (keywords != NULL && !PyDict_Check(keywords)) ||
         format == NULL ||
@@ -1413,7 +1414,7 @@ _PyArg_ParseTupleAndKeywords_SizeT(PyObject *args,
         PyErr_BadInternalCall();
         return 0;
     }
-
+#endif
     va_start(va, kwlist);
     retval = vgetargskeywords(args, keywords, format,
                               kwlist, &va, FLAG_SIZE_T);
@@ -1430,7 +1431,7 @@ PyArg_VaParseTupleAndKeywords(PyObject *args,
 {
     int retval;
     va_list lva;
-
+#ifdef Py_DEBUG
     if ((args == NULL || !PyTuple_Check(args)) ||
         (keywords != NULL && !PyDict_Check(keywords)) ||
         format == NULL ||
@@ -1439,7 +1440,7 @@ PyArg_VaParseTupleAndKeywords(PyObject *args,
         PyErr_BadInternalCall();
         return 0;
     }
-
+#endif
     va_copy(lva, va);
 
     retval = vgetargskeywords(args, keywords, format, kwlist, &lva, 0);
@@ -1455,7 +1456,7 @@ _PyArg_VaParseTupleAndKeywords_SizeT(PyObject *args,
 {
     int retval;
     va_list lva;
-
+#ifdef Py_DEBUG
     if ((args == NULL || !PyTuple_Check(args)) ||
         (keywords != NULL && !PyDict_Check(keywords)) ||
         format == NULL ||
@@ -1464,7 +1465,7 @@ _PyArg_VaParseTupleAndKeywords_SizeT(PyObject *args,
         PyErr_BadInternalCall();
         return 0;
     }
-
+#endif
     va_copy(lva, va);
 
     retval = vgetargskeywords(args, keywords, format,
@@ -2089,15 +2090,8 @@ vgetargskeywordsfast_impl(PyObject *const *args, Py_ssize_t nargs,
     assert(kwargs == NULL || kwnames == NULL);
     assert(p_va != NULL);
 
-    if (parser == NULL) {
-        PyErr_BadInternalCall();
-        return 0;
-    }
-
-    if (kwnames != NULL && !PyTuple_Check(kwnames)) {
-        PyErr_BadInternalCall();
-        return 0;
-    }
+    assert(parser != NULL);
+    assert(kwnames == NULL || PyTuple_Check(kwnames));
 
     if (!parser_init(parser)) {
         return 0;
@@ -2308,6 +2302,7 @@ vgetargskeywordsfast(PyObject *args, PyObject *keywords,
     PyObject **stack;
     Py_ssize_t nargs;
 
+#ifdef Py_DEBUG
     if (args == NULL
         || !PyTuple_Check(args)
         || (keywords != NULL && !PyDict_Check(keywords)))
@@ -2315,7 +2310,7 @@ vgetargskeywordsfast(PyObject *args, PyObject *keywords,
         PyErr_BadInternalCall();
         return 0;
     }
-
+#endif
     stack = _PyTuple_ITEMS(args);
     nargs = PyTuple_GET_SIZE(args);
     return vgetargskeywordsfast_impl(stack, nargs, keywords, NULL,
@@ -2343,15 +2338,9 @@ _PyArg_UnpackKeywords(PyObject *const *args, Py_ssize_t nargs,
     assert(kwargs == NULL || PyDict_Check(kwargs));
     assert(kwargs == NULL || kwnames == NULL);
 
-    if (parser == NULL) {
-        PyErr_BadInternalCall();
-        return NULL;
-    }
+    assert(parser != NULL);
 
-    if (kwnames != NULL && !PyTuple_Check(kwnames)) {
-        PyErr_BadInternalCall();
-        return NULL;
-    }
+    assert(kwnames == NULL || PyTuple_Check(kwnames));
 
     if (args == NULL && nargs == 0) {
         args = buf;
@@ -2545,15 +2534,8 @@ _PyArg_UnpackKeywordsWithVararg(PyObject *const *args, Py_ssize_t nargs,
     assert(kwargs == NULL || PyDict_Check(kwargs));
     assert(kwargs == NULL || kwnames == NULL);
 
-    if (parser == NULL) {
-        PyErr_BadInternalCall();
-        return NULL;
-    }
-
-    if (kwnames != NULL && !PyTuple_Check(kwnames)) {
-        PyErr_BadInternalCall();
-        return NULL;
-    }
+    assert(parser != NULL);
+    assert(kwnames == NULL || PyTuple_Check(kwnames));
 
     if (args == NULL && nargs == 0) {
         args = buf;
@@ -2949,10 +2931,8 @@ _PyArg_NoKeywords(const char *funcname, PyObject *kwargs)
     if (kwargs == NULL) {
         return 1;
     }
-    if (!PyDict_CheckExact(kwargs)) {
-        PyErr_BadInternalCall();
-        return 0;
-    }
+    assert(PyDict_CheckExact(kwargs));
+
     if (PyDict_GET_SIZE(kwargs) == 0) {
         return 1;
     }
@@ -2967,10 +2947,8 @@ _PyArg_NoPositional(const char *funcname, PyObject *args)
 {
     if (args == NULL)
         return 1;
-    if (!PyTuple_CheckExact(args)) {
-        PyErr_BadInternalCall();
-        return 0;
-    }
+    assert(PyTuple_CheckExact(args));
+
     if (PyTuple_GET_SIZE(args) == 0)
         return 1;
 
