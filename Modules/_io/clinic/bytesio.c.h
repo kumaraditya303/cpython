@@ -186,6 +186,7 @@ _io_BytesIO_read(bytesio *self, PyObject *const *args, Py_ssize_t nargs)
     }
 skip_optional:
     return_value = _io_BytesIO_read_impl(self, size);
+
 exit:
     return return_value;
 }
@@ -222,6 +223,7 @@ _io_BytesIO_read1(bytesio *self, PyObject *const *args, Py_ssize_t nargs)
     }
 skip_optional:
     return_value = _io_BytesIO_read1_impl(self, size);
+
 exit:
     return return_value;
 }
@@ -259,6 +261,7 @@ _io_BytesIO_readline(bytesio *self, PyObject *const *args, Py_ssize_t nargs)
     }
 skip_optional:
     return_value = _io_BytesIO_readline_impl(self, size);
+
 exit:
     return return_value;
 }
@@ -294,6 +297,7 @@ _io_BytesIO_readlines(bytesio *self, PyObject *const *args, Py_ssize_t nargs)
     arg = args[0];
 skip_optional:
     return_value = _io_BytesIO_readlines_impl(self, arg);
+
 exit:
     return return_value;
 }
@@ -329,6 +333,7 @@ _io_BytesIO_readinto(bytesio *self, PyObject *arg)
         goto exit;
     }
     return_value = _io_BytesIO_readinto_impl(self, &buffer);
+
 exit:
     /* Cleanup for buffer */
     if (buffer.obj) {
@@ -370,6 +375,7 @@ _io_BytesIO_truncate(bytesio *self, PyObject *const *args, Py_ssize_t nargs)
     }
 skip_optional:
     return_value = _io_BytesIO_truncate_impl(self, size);
+
 exit:
     return return_value;
 }
@@ -423,6 +429,7 @@ _io_BytesIO_seek(bytesio *self, PyObject *const *args, Py_ssize_t nargs)
     }
 skip_optional:
     return_value = _io_BytesIO_seek_impl(self, pos, whence);
+
 exit:
     return return_value;
 }
@@ -532,7 +539,8 @@ _io_BytesIO___init__(PyObject *self, PyObject *args, PyObject *kwargs)
     initvalue = fastargs[0];
 skip_optional_pos:
     return_value = _io_BytesIO___init___impl((bytesio *)self, initvalue);
+
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=07866b06bb470960 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=989bbbbf41401bc7 input=a9049054013a1b77]*/

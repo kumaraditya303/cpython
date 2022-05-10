@@ -30,6 +30,7 @@ _sre_getcodesize(PyObject *module, PyObject *Py_UNUSED(ignored))
         goto exit;
     }
     return_value = PyLong_FromLong((long)_return_value);
+
 exit:
     return return_value;
 }
@@ -61,6 +62,7 @@ _sre_ascii_iscased(PyObject *module, PyObject *arg)
         goto exit;
     }
     return_value = PyBool_FromLong((long)_return_value);
+
 exit:
     return return_value;
 }
@@ -92,6 +94,7 @@ _sre_unicode_iscased(PyObject *module, PyObject *arg)
         goto exit;
     }
     return_value = PyBool_FromLong((long)_return_value);
+
 exit:
     return return_value;
 }
@@ -123,6 +126,7 @@ _sre_ascii_tolower(PyObject *module, PyObject *arg)
         goto exit;
     }
     return_value = PyLong_FromLong((long)_return_value);
+
 exit:
     return return_value;
 }
@@ -154,6 +158,7 @@ _sre_unicode_tolower(PyObject *module, PyObject *arg)
         goto exit;
     }
     return_value = PyLong_FromLong((long)_return_value);
+
 exit:
     return return_value;
 }
@@ -255,6 +260,7 @@ _sre_SRE_Pattern_match(PatternObject *self, PyTypeObject *cls, PyObject *const *
     }
 skip_optional_pos:
     return_value = _sre_SRE_Pattern_match_impl(self, cls, string, pos, endpos);
+
 exit:
     return return_value;
 }
@@ -356,6 +362,7 @@ _sre_SRE_Pattern_fullmatch(PatternObject *self, PyTypeObject *cls, PyObject *con
     }
 skip_optional_pos:
     return_value = _sre_SRE_Pattern_fullmatch_impl(self, cls, string, pos, endpos);
+
 exit:
     return return_value;
 }
@@ -459,6 +466,7 @@ _sre_SRE_Pattern_search(PatternObject *self, PyTypeObject *cls, PyObject *const 
     }
 skip_optional_pos:
     return_value = _sre_SRE_Pattern_search_impl(self, cls, string, pos, endpos);
+
 exit:
     return return_value;
 }
@@ -559,6 +567,7 @@ _sre_SRE_Pattern_findall(PatternObject *self, PyObject *const *args, Py_ssize_t 
     }
 skip_optional_pos:
     return_value = _sre_SRE_Pattern_findall_impl(self, string, pos, endpos);
+
 exit:
     return return_value;
 }
@@ -662,6 +671,7 @@ _sre_SRE_Pattern_finditer(PatternObject *self, PyTypeObject *cls, PyObject *cons
     }
 skip_optional_pos:
     return_value = _sre_SRE_Pattern_finditer_impl(self, cls, string, pos, endpos);
+
 exit:
     return return_value;
 }
@@ -762,6 +772,7 @@ _sre_SRE_Pattern_scanner(PatternObject *self, PyTypeObject *cls, PyObject *const
     }
 skip_optional_pos:
     return_value = _sre_SRE_Pattern_scanner_impl(self, cls, string, pos, endpos);
+
 exit:
     return return_value;
 }
@@ -844,6 +855,7 @@ _sre_SRE_Pattern_split(PatternObject *self, PyObject *const *args, Py_ssize_t na
     }
 skip_optional_pos:
     return_value = _sre_SRE_Pattern_split_impl(self, string, maxsplit);
+
 exit:
     return return_value;
 }
@@ -928,6 +940,7 @@ _sre_SRE_Pattern_sub(PatternObject *self, PyTypeObject *cls, PyObject *const *ar
     }
 skip_optional_pos:
     return_value = _sre_SRE_Pattern_sub_impl(self, cls, repl, string, count);
+
 exit:
     return return_value;
 }
@@ -1013,6 +1026,7 @@ _sre_SRE_Pattern_subn(PatternObject *self, PyTypeObject *cls, PyObject *const *a
     }
 skip_optional_pos:
     return_value = _sre_SRE_Pattern_subn_impl(self, cls, repl, string, count);
+
 exit:
     return return_value;
 }
@@ -1152,6 +1166,7 @@ _sre_compile(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyObject
         repeat_count = ival;
     }
     return_value = _sre_compile_impl(module, pattern, flags, code, groups, groupindex, indexgroup, repeat_count);
+
 exit:
     return return_value;
 }
@@ -1215,6 +1230,7 @@ _sre_SRE_Match_expand(MatchObject *self, PyObject *const *args, Py_ssize_t nargs
     }
     template = args[0];
     return_value = _sre_SRE_Match_expand_impl(self, template);
+
 exit:
     return return_value;
 }
@@ -1286,6 +1302,7 @@ _sre_SRE_Match_groups(MatchObject *self, PyObject *const *args, Py_ssize_t nargs
     default_value = args[0];
 skip_optional_pos:
     return_value = _sre_SRE_Match_groups_impl(self, default_value);
+
 exit:
     return return_value;
 }
@@ -1357,6 +1374,7 @@ _sre_SRE_Match_groupdict(MatchObject *self, PyObject *const *args, Py_ssize_t na
     default_value = args[0];
 skip_optional_pos:
     return_value = _sre_SRE_Match_groupdict_impl(self, default_value);
+
 exit:
     return return_value;
 }
@@ -1393,6 +1411,7 @@ skip_optional:
         goto exit;
     }
     return_value = PyLong_FromSsize_t(_return_value);
+
 exit:
     return return_value;
 }
@@ -1429,6 +1448,7 @@ skip_optional:
         goto exit;
     }
     return_value = PyLong_FromSsize_t(_return_value);
+
 exit:
     return return_value;
 }
@@ -1460,6 +1480,7 @@ _sre_SRE_Match_span(MatchObject *self, PyObject *const *args, Py_ssize_t nargs)
     group = args[0];
 skip_optional:
     return_value = _sre_SRE_Match_span_impl(self, group);
+
 exit:
     return return_value;
 }
@@ -1530,4 +1551,4 @@ _sre_SRE_Scanner_search(ScannerObject *self, PyTypeObject *cls, PyObject *const 
     }
     return _sre_SRE_Scanner_search_impl(self, cls);
 }
-/*[clinic end generated code: output=f22f05e270ffa031 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=52ad6bc2d504c973 input=a9049054013a1b77]*/

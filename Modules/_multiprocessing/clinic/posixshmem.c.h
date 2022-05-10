@@ -97,6 +97,7 @@ skip_optional_pos:
         goto exit;
     }
     return_value = PyLong_FromLong((long)_return_value);
+
 exit:
     return return_value;
 }
@@ -175,6 +176,7 @@ _posixshmem_shm_unlink(PyObject *module, PyObject *const *args, Py_ssize_t nargs
     }
     path = args[0];
     return_value = _posixshmem_shm_unlink_impl(module, path);
+
 exit:
     return return_value;
 }
@@ -188,4 +190,4 @@ exit:
 #ifndef _POSIXSHMEM_SHM_UNLINK_METHODDEF
     #define _POSIXSHMEM_SHM_UNLINK_METHODDEF
 #endif /* !defined(_POSIXSHMEM_SHM_UNLINK_METHODDEF) */
-/*[clinic end generated code: output=d2ff5beddc006493 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=ef18da8a6131c59c input=a9049054013a1b77]*/

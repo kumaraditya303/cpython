@@ -35,6 +35,7 @@ _io__BufferedIOBase_readinto(PyObject *self, PyObject *arg)
         goto exit;
     }
     return_value = _io__BufferedIOBase_readinto_impl(self, &buffer);
+
 exit:
     /* Cleanup for buffer */
     if (buffer.obj) {
@@ -71,6 +72,7 @@ _io__BufferedIOBase_readinto1(PyObject *self, PyObject *arg)
         goto exit;
     }
     return_value = _io__BufferedIOBase_readinto1_impl(self, &buffer);
+
 exit:
     /* Cleanup for buffer */
     if (buffer.obj) {
@@ -138,6 +140,7 @@ _io__Buffered_peek(buffered *self, PyObject *const *args, Py_ssize_t nargs)
     }
 skip_optional:
     return_value = _io__Buffered_peek_impl(self, size);
+
 exit:
     return return_value;
 }
@@ -170,6 +173,7 @@ _io__Buffered_read(buffered *self, PyObject *const *args, Py_ssize_t nargs)
     }
 skip_optional:
     return_value = _io__Buffered_read_impl(self, n);
+
 exit:
     return return_value;
 }
@@ -211,6 +215,7 @@ _io__Buffered_read1(buffered *self, PyObject *const *args, Py_ssize_t nargs)
     }
 skip_optional:
     return_value = _io__Buffered_read1_impl(self, n);
+
 exit:
     return return_value;
 }
@@ -242,6 +247,7 @@ _io__Buffered_readinto(buffered *self, PyObject *arg)
         goto exit;
     }
     return_value = _io__Buffered_readinto_impl(self, &buffer);
+
 exit:
     /* Cleanup for buffer */
     if (buffer.obj) {
@@ -278,6 +284,7 @@ _io__Buffered_readinto1(buffered *self, PyObject *arg)
         goto exit;
     }
     return_value = _io__Buffered_readinto1_impl(self, &buffer);
+
 exit:
     /* Cleanup for buffer */
     if (buffer.obj) {
@@ -315,6 +322,7 @@ _io__Buffered_readline(buffered *self, PyObject *const *args, Py_ssize_t nargs)
     }
 skip_optional:
     return_value = _io__Buffered_readline_impl(self, size);
+
 exit:
     return return_value;
 }
@@ -350,6 +358,7 @@ _io__Buffered_seek(buffered *self, PyObject *const *args, Py_ssize_t nargs)
     }
 skip_optional:
     return_value = _io__Buffered_seek_impl(self, targetobj, whence);
+
 exit:
     return return_value;
 }
@@ -380,6 +389,7 @@ _io__Buffered_truncate(buffered *self, PyObject *const *args, Py_ssize_t nargs)
     pos = args[0];
 skip_optional:
     return_value = _io__Buffered_truncate_impl(self, pos);
+
 exit:
     return return_value;
 }
@@ -461,6 +471,7 @@ _io_BufferedReader___init__(PyObject *self, PyObject *args, PyObject *kwargs)
     }
 skip_optional_pos:
     return_value = _io_BufferedReader___init___impl((buffered *)self, raw, buffer_size);
+
 exit:
     return return_value;
 }
@@ -546,6 +557,7 @@ _io_BufferedWriter___init__(PyObject *self, PyObject *args, PyObject *kwargs)
     }
 skip_optional_pos:
     return_value = _io_BufferedWriter___init___impl((buffered *)self, raw, buffer_size);
+
 exit:
     return return_value;
 }
@@ -575,6 +587,7 @@ _io_BufferedWriter_write(buffered *self, PyObject *arg)
         goto exit;
     }
     return_value = _io_BufferedWriter_write_impl(self, &buffer);
+
 exit:
     /* Cleanup for buffer */
     if (buffer.obj) {
@@ -637,6 +650,7 @@ _io_BufferedRWPair___init__(PyObject *self, PyObject *args, PyObject *kwargs)
     }
 skip_optional:
     return_value = _io_BufferedRWPair___init___impl((rwpair *)self, reader, writer, buffer_size);
+
 exit:
     return return_value;
 }
@@ -722,7 +736,8 @@ _io_BufferedRandom___init__(PyObject *self, PyObject *args, PyObject *kwargs)
     }
 skip_optional_pos:
     return_value = _io_BufferedRandom___init___impl((buffered *)self, raw, buffer_size);
+
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=3ad0f87cf0dc929f input=a9049054013a1b77]*/
+/*[clinic end generated code: output=51fe2f7f9a97c270 input=a9049054013a1b77]*/

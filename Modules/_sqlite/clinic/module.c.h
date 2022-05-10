@@ -147,6 +147,7 @@ pysqlite_connect(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyOb
     }
 skip_optional_pos:
     return_value = pysqlite_connect_impl(module, database, timeout, detect_types, isolation_level, check_same_thread, factory, cached_statements, uri);
+
 exit:
     return return_value;
 }
@@ -222,6 +223,7 @@ pysqlite_complete_statement(PyObject *module, PyObject *const *args, Py_ssize_t 
         goto exit;
     }
     return_value = pysqlite_complete_statement_impl(module, statement);
+
 exit:
     return return_value;
 }
@@ -293,6 +295,7 @@ pysqlite_enable_shared_cache(PyObject *module, PyObject *const *args, Py_ssize_t
         goto exit;
     }
     return_value = pysqlite_enable_shared_cache_impl(module, do_enable);
+
 exit:
     return return_value;
 }
@@ -323,6 +326,7 @@ pysqlite_register_adapter(PyObject *module, PyObject *const *args, Py_ssize_t na
     type = (PyTypeObject *)args[0];
     caster = args[1];
     return_value = pysqlite_register_adapter_impl(module, type, caster);
+
 exit:
     return return_value;
 }
@@ -360,6 +364,7 @@ pysqlite_register_converter(PyObject *module, PyObject *const *args, Py_ssize_t 
     orig_name = args[0];
     callable = args[1];
     return_value = pysqlite_register_converter_impl(module, orig_name, callable);
+
 exit:
     return return_value;
 }
@@ -387,6 +392,7 @@ pysqlite_enable_callback_trace(PyObject *module, PyObject *arg)
         goto exit;
     }
     return_value = pysqlite_enable_callback_trace_impl(module, enable);
+
 exit:
     return return_value;
 }
@@ -426,7 +432,8 @@ pysqlite_adapt(PyObject *module, PyObject *const *args, Py_ssize_t nargs)
     alt = args[2];
 skip_optional:
     return_value = pysqlite_adapt_impl(module, obj, proto, alt);
+
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=13977eb6ead580ed input=a9049054013a1b77]*/
+/*[clinic end generated code: output=0fda70d4d7ae350f input=a9049054013a1b77]*/

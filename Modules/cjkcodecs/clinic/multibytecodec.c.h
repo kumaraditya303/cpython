@@ -98,6 +98,7 @@ _multibytecodec_MultibyteCodec_encode(MultibyteCodecObject *self, PyObject *cons
     }
 skip_optional_pos:
     return_value = _multibytecodec_MultibyteCodec_encode_impl(self, input, errors);
+
 exit:
     return return_value;
 }
@@ -198,6 +199,7 @@ _multibytecodec_MultibyteCodec_decode(MultibyteCodecObject *self, PyObject *cons
     }
 skip_optional_pos:
     return_value = _multibytecodec_MultibyteCodec_decode_impl(self, &input, errors);
+
 exit:
     /* Cleanup for input */
     if (input.obj) {
@@ -277,6 +279,7 @@ _multibytecodec_MultibyteIncrementalEncoder_encode(MultibyteIncrementalEncoderOb
     }
 skip_optional_pos:
     return_value = _multibytecodec_MultibyteIncrementalEncoder_encode_impl(self, input, final);
+
 exit:
     return return_value;
 }
@@ -322,6 +325,7 @@ _multibytecodec_MultibyteIncrementalEncoder_setstate(MultibyteIncrementalEncoder
     }
     statelong = (PyLongObject *)arg;
     return_value = _multibytecodec_MultibyteIncrementalEncoder_setstate_impl(self, statelong);
+
 exit:
     return return_value;
 }
@@ -419,6 +423,7 @@ _multibytecodec_MultibyteIncrementalDecoder_decode(MultibyteIncrementalDecoderOb
     }
 skip_optional_pos:
     return_value = _multibytecodec_MultibyteIncrementalDecoder_decode_impl(self, &input, final);
+
 exit:
     /* Cleanup for input */
     if (input.obj) {
@@ -469,6 +474,7 @@ _multibytecodec_MultibyteIncrementalDecoder_setstate(MultibyteIncrementalDecoder
     }
     state = arg;
     return_value = _multibytecodec_MultibyteIncrementalDecoder_setstate_impl(self, state);
+
 exit:
     return return_value;
 }
@@ -517,6 +523,7 @@ _multibytecodec_MultibyteStreamReader_read(MultibyteStreamReaderObject *self, Py
     sizeobj = args[0];
 skip_optional:
     return_value = _multibytecodec_MultibyteStreamReader_read_impl(self, sizeobj);
+
 exit:
     return return_value;
 }
@@ -548,6 +555,7 @@ _multibytecodec_MultibyteStreamReader_readline(MultibyteStreamReaderObject *self
     sizeobj = args[0];
 skip_optional:
     return_value = _multibytecodec_MultibyteStreamReader_readline_impl(self, sizeobj);
+
 exit:
     return return_value;
 }
@@ -579,6 +587,7 @@ _multibytecodec_MultibyteStreamReader_readlines(MultibyteStreamReaderObject *sel
     sizehintobj = args[0];
 skip_optional:
     return_value = _multibytecodec_MultibyteStreamReader_readlines_impl(self, sizehintobj);
+
 exit:
     return return_value;
 }
@@ -660,6 +669,7 @@ _multibytecodec_MultibyteStreamWriter_write(MultibyteStreamWriterObject *self, P
     }
     strobj = args[0];
     return_value = _multibytecodec_MultibyteStreamWriter_write_impl(self, cls, strobj);
+
 exit:
     return return_value;
 }
@@ -724,6 +734,7 @@ _multibytecodec_MultibyteStreamWriter_writelines(MultibyteStreamWriterObject *se
     }
     lines = args[0];
     return_value = _multibytecodec_MultibyteStreamWriter_writelines_impl(self, cls, lines);
+
 exit:
     return return_value;
 }
@@ -757,4 +768,4 @@ PyDoc_STRVAR(_multibytecodec___create_codec__doc__,
 
 #define _MULTIBYTECODEC___CREATE_CODEC_METHODDEF    \
     {"__create_codec", (PyCFunction)_multibytecodec___create_codec, METH_O, _multibytecodec___create_codec__doc__},
-/*[clinic end generated code: output=521877a5d28d301b input=a9049054013a1b77]*/
+/*[clinic end generated code: output=5f888a630e268875 input=a9049054013a1b77]*/

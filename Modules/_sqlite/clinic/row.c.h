@@ -38,6 +38,7 @@ pysqlite_row_new(PyTypeObject *type, PyObject *args, PyObject *kwargs)
     }
     data = PyTuple_GET_ITEM(args, 1);
     return_value = pysqlite_row_new_impl(type, cursor, data);
+
 exit:
     return return_value;
 }
@@ -59,4 +60,4 @@ pysqlite_row_keys(pysqlite_Row *self, PyObject *Py_UNUSED(ignored))
 {
     return pysqlite_row_keys_impl(self);
 }
-/*[clinic end generated code: output=dcf02df531a46903 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=9d54919dbb4ba5f1 input=a9049054013a1b77]*/

@@ -81,6 +81,7 @@ skip_optional_posonly:
     }
 skip_optional_kwonly:
     return_value = py_sha3_new_impl(type, data, usedforsecurity);
+
 exit:
     return return_value;
 }
@@ -170,6 +171,7 @@ _sha3_shake_128_digest(SHA3object *self, PyObject *arg)
         goto exit;
     }
     return_value = _sha3_shake_128_digest_impl(self, length);
+
 exit:
     return return_value;
 }
@@ -196,7 +198,8 @@ _sha3_shake_128_hexdigest(SHA3object *self, PyObject *arg)
         goto exit;
     }
     return_value = _sha3_shake_128_hexdigest_impl(self, length);
+
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=64525f448c0c1e66 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=21ace4f579b00c83 input=a9049054013a1b77]*/

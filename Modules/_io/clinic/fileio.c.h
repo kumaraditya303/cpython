@@ -136,6 +136,7 @@ _io_FileIO___init__(PyObject *self, PyObject *args, PyObject *kwargs)
     opener = fastargs[3];
 skip_optional_pos:
     return_value = _io_FileIO___init___impl((fileio *)self, nameobj, mode, closefd, opener);
+
 exit:
     return return_value;
 }
@@ -240,6 +241,7 @@ _io_FileIO_readinto(fileio *self, PyObject *arg)
         goto exit;
     }
     return_value = _io_FileIO_readinto_impl(self, &buffer);
+
 exit:
     /* Cleanup for buffer */
     if (buffer.obj) {
@@ -303,6 +305,7 @@ _io_FileIO_read(fileio *self, PyObject *const *args, Py_ssize_t nargs)
     }
 skip_optional:
     return_value = _io_FileIO_read_impl(self, size);
+
 exit:
     return return_value;
 }
@@ -337,6 +340,7 @@ _io_FileIO_write(fileio *self, PyObject *arg)
         goto exit;
     }
     return_value = _io_FileIO_write_impl(self, &b);
+
 exit:
     /* Cleanup for b */
     if (b.obj) {
@@ -386,6 +390,7 @@ _io_FileIO_seek(fileio *self, PyObject *const *args, Py_ssize_t nargs)
     }
 skip_optional:
     return_value = _io_FileIO_seek_impl(self, pos, whence);
+
 exit:
     return return_value;
 }
@@ -442,6 +447,7 @@ _io_FileIO_truncate(fileio *self, PyObject *const *args, Py_ssize_t nargs)
     posobj = args[0];
 skip_optional:
     return_value = _io_FileIO_truncate_impl(self, posobj);
+
 exit:
     return return_value;
 }
@@ -469,4 +475,4 @@ _io_FileIO_isatty(fileio *self, PyObject *Py_UNUSED(ignored))
 #ifndef _IO_FILEIO_TRUNCATE_METHODDEF
     #define _IO_FILEIO_TRUNCATE_METHODDEF
 #endif /* !defined(_IO_FILEIO_TRUNCATE_METHODDEF) */
-/*[clinic end generated code: output=556d623d366ff2b3 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=da98c05e717161f3 input=a9049054013a1b77]*/

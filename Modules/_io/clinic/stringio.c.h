@@ -76,6 +76,7 @@ _io_StringIO_read(stringio *self, PyObject *const *args, Py_ssize_t nargs)
     }
 skip_optional:
     return_value = _io_StringIO_read_impl(self, size);
+
 exit:
     return return_value;
 }
@@ -111,6 +112,7 @@ _io_StringIO_readline(stringio *self, PyObject *const *args, Py_ssize_t nargs)
     }
 skip_optional:
     return_value = _io_StringIO_readline_impl(self, size);
+
 exit:
     return return_value;
 }
@@ -148,6 +150,7 @@ _io_StringIO_truncate(stringio *self, PyObject *const *args, Py_ssize_t nargs)
     }
 skip_optional:
     return_value = _io_StringIO_truncate_impl(self, size);
+
 exit:
     return return_value;
 }
@@ -201,6 +204,7 @@ _io_StringIO_seek(stringio *self, PyObject *const *args, Py_ssize_t nargs)
     }
 skip_optional:
     return_value = _io_StringIO_seek_impl(self, pos, whence);
+
 exit:
     return return_value;
 }
@@ -314,6 +318,7 @@ _io_StringIO___init__(PyObject *self, PyObject *args, PyObject *kwargs)
     newline_obj = fastargs[1];
 skip_optional_pos:
     return_value = _io_StringIO___init___impl((stringio *)self, value, newline_obj);
+
 exit:
     return return_value;
 }
@@ -371,4 +376,4 @@ _io_StringIO_seekable(stringio *self, PyObject *Py_UNUSED(ignored))
 {
     return _io_StringIO_seekable_impl(self);
 }
-/*[clinic end generated code: output=dc8cf59e40786fa5 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=80764615338dbfe7 input=a9049054013a1b77]*/

@@ -300,6 +300,7 @@ _io_open(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyObject *kw
     opener = args[7];
 skip_optional_pos:
     return_value = _io_open_impl(module, file, mode, buffering, encoding, errors, newline, closefd, opener);
+
 exit:
     return return_value;
 }
@@ -346,6 +347,7 @@ _io_text_encoding(PyObject *module, PyObject *const *args, Py_ssize_t nargs)
     }
 skip_optional:
     return_value = _io_text_encoding_impl(module, encoding, stacklevel);
+
 exit:
     return return_value;
 }
@@ -419,7 +421,8 @@ _io_open_code(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyObjec
     }
     path = args[0];
     return_value = _io_open_code_impl(module, path);
+
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=8ccb186189a9b9fb input=a9049054013a1b77]*/
+/*[clinic end generated code: output=8ed4a05fdae0320d input=a9049054013a1b77]*/

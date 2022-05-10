@@ -74,6 +74,7 @@ _ssl_Certificate_public_bytes(PySSLCertificate *self, PyObject *const *args, Py_
     }
 skip_optional_pos:
     return_value = _ssl_Certificate_public_bytes_impl(self, format);
+
 exit:
     return return_value;
 }
@@ -94,4 +95,4 @@ _ssl_Certificate_get_info(PySSLCertificate *self, PyObject *Py_UNUSED(ignored))
 {
     return _ssl_Certificate_get_info_impl(self);
 }
-/*[clinic end generated code: output=5a1c77ae6814333a input=a9049054013a1b77]*/
+/*[clinic end generated code: output=f31fbb25f0c2be2a input=a9049054013a1b77]*/

@@ -205,6 +205,7 @@ skip_optional_posonly:
     }
 skip_optional_kwonly:
     return_value = py_blake2s_new_impl(type, data, digest_size, &key, &salt, &person, fanout, depth, leaf_size, node_offset, node_depth, inner_size, last_node, usedforsecurity);
+
 exit:
     /* Cleanup for key */
     if (key.obj) {
@@ -284,4 +285,4 @@ _blake2_blake2s_hexdigest(BLAKE2sObject *self, PyObject *Py_UNUSED(ignored))
 {
     return _blake2_blake2s_hexdigest_impl(self);
 }
-/*[clinic end generated code: output=658bca8a6a18dad1 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=db63f2dd15cb6859 input=a9049054013a1b77]*/

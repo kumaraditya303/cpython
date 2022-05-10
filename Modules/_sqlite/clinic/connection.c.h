@@ -138,6 +138,7 @@ pysqlite_connection_init(PyObject *self, PyObject *args, PyObject *kwargs)
     }
 skip_optional_pos:
     return_value = pysqlite_connection_init_impl((pysqlite_Connection *)self, database, timeout, detect_types, isolation_level, check_same_thread, factory, cache_size, uri);
+
 exit:
     /* Cleanup for database */
     PyMem_Free((void *)database);
@@ -209,6 +210,7 @@ pysqlite_connection_cursor(pysqlite_Connection *self, PyObject *const *args, Py_
     factory = args[0];
 skip_optional_pos:
     return_value = pysqlite_connection_cursor_impl(self, factory);
+
 exit:
     return return_value;
 }
@@ -344,6 +346,7 @@ blobopen(pysqlite_Connection *self, PyObject *const *args, Py_ssize_t nargs, PyO
     }
 skip_optional_kwonly:
     return_value = blobopen_impl(self, table, col, row, readonly, name);
+
 exit:
     return return_value;
 }
@@ -493,6 +496,7 @@ pysqlite_connection_create_function(pysqlite_Connection *self, PyTypeObject *cls
     }
 skip_optional_kwonly:
     return_value = pysqlite_connection_create_function_impl(self, cls, name, narg, func, deterministic);
+
 exit:
     return return_value;
 }
@@ -588,6 +592,7 @@ create_window_function(pysqlite_Connection *self, PyTypeObject *cls, PyObject *c
     }
     aggregate_class = args[2];
     return_value = create_window_function_impl(self, cls, name, num_params, aggregate_class);
+
 exit:
     return return_value;
 }
@@ -675,6 +680,7 @@ pysqlite_connection_create_aggregate(pysqlite_Connection *self, PyTypeObject *cl
     }
     aggregate_class = args[2];
     return_value = pysqlite_connection_create_aggregate_impl(self, cls, name, n_arg, aggregate_class);
+
 exit:
     return return_value;
 }
@@ -740,6 +746,7 @@ pysqlite_connection_set_authorizer(pysqlite_Connection *self, PyTypeObject *cls,
     }
     callable = args[0];
     return_value = pysqlite_connection_set_authorizer_impl(self, cls, callable);
+
 exit:
     return return_value;
 }
@@ -810,6 +817,7 @@ pysqlite_connection_set_progress_handler(pysqlite_Connection *self, PyTypeObject
         goto exit;
     }
     return_value = pysqlite_connection_set_progress_handler_impl(self, cls, callable, n);
+
 exit:
     return return_value;
 }
@@ -875,6 +883,7 @@ pysqlite_connection_set_trace_callback(pysqlite_Connection *self, PyTypeObject *
     }
     callable = args[0];
     return_value = pysqlite_connection_set_trace_callback_impl(self, cls, callable);
+
 exit:
     return return_value;
 }
@@ -905,6 +914,7 @@ pysqlite_connection_enable_load_extension(pysqlite_Connection *self, PyObject *a
         goto exit;
     }
     return_value = pysqlite_connection_enable_load_extension_impl(self, onoff);
+
 exit:
     return return_value;
 }
@@ -946,6 +956,7 @@ pysqlite_connection_load_extension(pysqlite_Connection *self, PyObject *arg)
         goto exit;
     }
     return_value = pysqlite_connection_load_extension_impl(self, extension_name);
+
 exit:
     return return_value;
 }
@@ -989,6 +1000,7 @@ pysqlite_connection_execute(pysqlite_Connection *self, PyObject *const *args, Py
     parameters = args[1];
 skip_optional:
     return_value = pysqlite_connection_execute_impl(self, sql, parameters);
+
 exit:
     return return_value;
 }
@@ -1026,6 +1038,7 @@ pysqlite_connection_executemany(pysqlite_Connection *self, PyObject *const *args
     sql = args[0];
     parameters = args[1];
     return_value = pysqlite_connection_executemany_impl(self, sql, parameters);
+
 exit:
     return return_value;
 }
@@ -1194,6 +1207,7 @@ pysqlite_connection_backup(pysqlite_Connection *self, PyObject *const *args, Py_
     }
 skip_optional_kwonly:
     return_value = pysqlite_connection_backup_impl(self, target, pages, progress, name, sleep);
+
 exit:
     return return_value;
 }
@@ -1274,6 +1288,7 @@ pysqlite_connection_create_collation(pysqlite_Connection *self, PyTypeObject *cl
     }
     callable = args[1];
     return_value = pysqlite_connection_create_collation_impl(self, cls, name, callable);
+
 exit:
     return return_value;
 }
@@ -1364,6 +1379,7 @@ serialize(pysqlite_Connection *self, PyObject *const *args, Py_ssize_t nargs, Py
     }
 skip_optional_kwonly:
     return_value = serialize_impl(self, name);
+
 exit:
     return return_value;
 }
@@ -1479,6 +1495,7 @@ deserialize(pysqlite_Connection *self, PyObject *const *args, Py_ssize_t nargs, 
     }
 skip_optional_kwonly:
     return_value = deserialize_impl(self, &data, name);
+
 exit:
     /* Cleanup for data */
     if (data.obj) {
@@ -1540,6 +1557,7 @@ pysqlite_connection_exit(pysqlite_Connection *self, PyObject *const *args, Py_ss
     exc_value = args[1];
     exc_tb = args[2];
     return_value = pysqlite_connection_exit_impl(self, exc_type, exc_value, exc_tb);
+
 exit:
     return return_value;
 }
@@ -1585,6 +1603,7 @@ setlimit(pysqlite_Connection *self, PyObject *const *args, Py_ssize_t nargs)
         goto exit;
     }
     return_value = setlimit_impl(self, category, limit);
+
 exit:
     return return_value;
 }
@@ -1615,6 +1634,7 @@ getlimit(pysqlite_Connection *self, PyObject *arg)
         goto exit;
     }
     return_value = getlimit_impl(self, category);
+
 exit:
     return return_value;
 }
@@ -1638,4 +1658,4 @@ exit:
 #ifndef DESERIALIZE_METHODDEF
     #define DESERIALIZE_METHODDEF
 #endif /* !defined(DESERIALIZE_METHODDEF) */
-/*[clinic end generated code: output=8d126387d7f29f2d input=a9049054013a1b77]*/
+/*[clinic end generated code: output=ff877582f37091ef input=a9049054013a1b77]*/

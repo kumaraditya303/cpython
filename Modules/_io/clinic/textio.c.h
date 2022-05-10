@@ -87,6 +87,7 @@ _io_IncrementalNewlineDecoder___init__(PyObject *self, PyObject *args, PyObject 
     errors = fastargs[2];
 skip_optional_pos:
     return_value = _io_IncrementalNewlineDecoder___init___impl((nldecoder_object *)self, decoder, translate, errors);
+
 exit:
     return return_value;
 }
@@ -160,6 +161,7 @@ _io_IncrementalNewlineDecoder_decode(nldecoder_object *self, PyObject *const *ar
     }
 skip_optional_pos:
     return_value = _io_IncrementalNewlineDecoder_decode_impl(self, input, final);
+
 exit:
     return return_value;
 }
@@ -370,6 +372,7 @@ _io_TextIOWrapper___init__(PyObject *self, PyObject *args, PyObject *kwargs)
     }
 skip_optional_pos:
     return_value = _io_TextIOWrapper___init___impl((textio *)self, buffer, encoding, errors, newline, line_buffering, write_through);
+
 exit:
     return return_value;
 }
@@ -472,6 +475,7 @@ _io_TextIOWrapper_reconfigure(textio *self, PyObject *const *args, Py_ssize_t na
     write_through_obj = args[4];
 skip_optional_kwonly:
     return_value = _io_TextIOWrapper_reconfigure_impl(self, encoding, errors, newline_obj, line_buffering_obj, write_through_obj);
+
 exit:
     return return_value;
 }
@@ -519,6 +523,7 @@ _io_TextIOWrapper_write(textio *self, PyObject *arg)
     }
     text = arg;
     return_value = _io_TextIOWrapper_write_impl(self, text);
+
 exit:
     return return_value;
 }
@@ -551,6 +556,7 @@ _io_TextIOWrapper_read(textio *self, PyObject *const *args, Py_ssize_t nargs)
     }
 skip_optional:
     return_value = _io_TextIOWrapper_read_impl(self, n);
+
 exit:
     return return_value;
 }
@@ -592,6 +598,7 @@ _io_TextIOWrapper_readline(textio *self, PyObject *const *args, Py_ssize_t nargs
     }
 skip_optional:
     return_value = _io_TextIOWrapper_readline_impl(self, size);
+
 exit:
     return return_value;
 }
@@ -627,6 +634,7 @@ _io_TextIOWrapper_seek(textio *self, PyObject *const *args, Py_ssize_t nargs)
     }
 skip_optional:
     return_value = _io_TextIOWrapper_seek_impl(self, cookieObj, whence);
+
 exit:
     return return_value;
 }
@@ -674,6 +682,7 @@ _io_TextIOWrapper_truncate(textio *self, PyObject *const *args, Py_ssize_t nargs
     pos = args[0];
 skip_optional:
     return_value = _io_TextIOWrapper_truncate_impl(self, pos);
+
 exit:
     return return_value;
 }
@@ -796,4 +805,4 @@ _io_TextIOWrapper_close(textio *self, PyObject *Py_UNUSED(ignored))
 {
     return _io_TextIOWrapper_close_impl(self);
 }
-/*[clinic end generated code: output=cae1eb5285705134 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=99e0e36c1e2dbb15 input=a9049054013a1b77]*/

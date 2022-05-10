@@ -32,6 +32,7 @@ pysqlite_cursor_init(PyObject *self, PyObject *args, PyObject *kwargs)
     }
     connection = (pysqlite_Connection *)PyTuple_GET_ITEM(args, 0);
     return_value = pysqlite_cursor_init_impl((pysqlite_Cursor *)self, connection);
+
 exit:
     return return_value;
 }
@@ -73,6 +74,7 @@ pysqlite_cursor_execute(pysqlite_Cursor *self, PyObject *const *args, Py_ssize_t
     parameters = args[1];
 skip_optional:
     return_value = pysqlite_cursor_execute_impl(self, sql, parameters);
+
 exit:
     return return_value;
 }
@@ -110,6 +112,7 @@ pysqlite_cursor_executemany(pysqlite_Cursor *self, PyObject *const *args, Py_ssi
     sql = args[0];
     seq_of_parameters = args[1];
     return_value = pysqlite_cursor_executemany_impl(self, sql, seq_of_parameters);
+
 exit:
     return return_value;
 }
@@ -147,6 +150,7 @@ pysqlite_cursor_executescript(pysqlite_Cursor *self, PyObject *arg)
         goto exit;
     }
     return_value = pysqlite_cursor_executescript_impl(self, sql_script);
+
 exit:
     return return_value;
 }
@@ -239,6 +243,7 @@ pysqlite_cursor_fetchmany(pysqlite_Cursor *self, PyObject *const *args, Py_ssize
     }
 skip_optional_pos:
     return_value = pysqlite_cursor_fetchmany_impl(self, maxrows);
+
 exit:
     return return_value;
 }
@@ -300,6 +305,7 @@ pysqlite_cursor_setoutputsize(pysqlite_Cursor *self, PyObject *const *args, Py_s
     column = args[1];
 skip_optional:
     return_value = pysqlite_cursor_setoutputsize_impl(self, size, column);
+
 exit:
     return return_value;
 }
@@ -321,4 +327,4 @@ pysqlite_cursor_close(pysqlite_Cursor *self, PyObject *Py_UNUSED(ignored))
 {
     return pysqlite_cursor_close_impl(self);
 }
-/*[clinic end generated code: output=8d9ecc6f72482153 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=a0e5dfa624f25ec4 input=a9049054013a1b77]*/

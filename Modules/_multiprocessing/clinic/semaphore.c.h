@@ -85,6 +85,7 @@ _multiprocessing_SemLock_acquire(SemLockObject *self, PyObject *const *args, Py_
     timeout_obj = args[1];
 skip_optional_pos:
     return_value = _multiprocessing_SemLock_acquire_impl(self, blocking, timeout_obj);
+
 exit:
     return return_value;
 }
@@ -190,6 +191,7 @@ _multiprocessing_SemLock_acquire(SemLockObject *self, PyObject *const *args, Py_
     timeout_obj = args[1];
 skip_optional_pos:
     return_value = _multiprocessing_SemLock_acquire_impl(self, blocking, timeout_obj);
+
 exit:
     return return_value;
 }
@@ -305,6 +307,7 @@ _multiprocessing_SemLock(PyTypeObject *type, PyObject *args, PyObject *kwargs)
         goto exit;
     }
     return_value = _multiprocessing_SemLock_impl(type, kind, value, maxvalue, name, unlink);
+
 exit:
     return return_value;
 }
@@ -340,6 +343,7 @@ _multiprocessing_SemLock__rebuild(PyTypeObject *type, PyObject *const *args, Py_
         goto exit;
     }
     return_value = _multiprocessing_SemLock__rebuild_impl(type, handle, kind, maxvalue, name);
+
 exit:
     return return_value;
 }
@@ -519,6 +523,7 @@ _multiprocessing_SemLock___exit__(SemLockObject *self, PyObject *const *args, Py
     exc_tb = args[2];
 skip_optional:
     return_value = _multiprocessing_SemLock___exit___impl(self, exc_type, exc_value, exc_tb);
+
 exit:
     return return_value;
 }
@@ -564,4 +569,4 @@ exit:
 #ifndef _MULTIPROCESSING_SEMLOCK___EXIT___METHODDEF
     #define _MULTIPROCESSING_SEMLOCK___EXIT___METHODDEF
 #endif /* !defined(_MULTIPROCESSING_SEMLOCK___EXIT___METHODDEF) */
-/*[clinic end generated code: output=b42ed31b515b8ee0 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=f76d06b62ddd5aa8 input=a9049054013a1b77]*/

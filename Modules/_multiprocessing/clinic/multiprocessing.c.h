@@ -31,6 +31,7 @@ _multiprocessing_closesocket(PyObject *module, PyObject *arg)
         goto exit;
     }
     return_value = _multiprocessing_closesocket_impl(module, handle);
+
 exit:
     return return_value;
 }
@@ -62,6 +63,7 @@ _multiprocessing_recv(PyObject *module, PyObject *const *args, Py_ssize_t nargs)
         goto exit;
     }
     return_value = _multiprocessing_recv_impl(module, handle, size);
+
 exit:
     return return_value;
 }
@@ -93,6 +95,7 @@ _multiprocessing_send(PyObject *module, PyObject *const *args, Py_ssize_t nargs)
         goto exit;
     }
     return_value = _multiprocessing_send_impl(module, handle, &buf);
+
 exit:
     /* Cleanup for buf */
     if (buf.obj) {
@@ -135,6 +138,7 @@ _multiprocessing_sem_unlink(PyObject *module, PyObject *arg)
         goto exit;
     }
     return_value = _multiprocessing_sem_unlink_impl(module, name);
+
 exit:
     return return_value;
 }
@@ -150,4 +154,4 @@ exit:
 #ifndef _MULTIPROCESSING_SEND_METHODDEF
     #define _MULTIPROCESSING_SEND_METHODDEF
 #endif /* !defined(_MULTIPROCESSING_SEND_METHODDEF) */
-/*[clinic end generated code: output=ce5918ead9d64564 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=d3bbf69de578db7b input=a9049054013a1b77]*/
