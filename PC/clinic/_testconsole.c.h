@@ -2,6 +2,12 @@
 preserve
 [clinic start generated code]*/
 
+#ifdef Py_BUILD_CORE
+#include "pycore_gc.h"            // PyGC_Head
+#include "pycore_runtime.h"       // _Py_ID()
+#endif
+
+
 #if defined(MS_WINDOWS)
 
 PyDoc_STRVAR(_testconsole_write_input__doc__,
@@ -11,7 +17,7 @@ PyDoc_STRVAR(_testconsole_write_input__doc__,
 "Writes UTF-16-LE encoded bytes to the console as if typed by a user.");
 
 #define _TESTCONSOLE_WRITE_INPUT_METHODDEF    \
-    {"write_input", _PyCFunction_CAST(_testconsole_write_input), METH_FASTCALL|METH_KEYWORDS, _testconsole_write_input__doc__},
+    {"write_input", (PyCFunction)(void(*)(void))_testconsole_write_input, METH_FASTCALL|METH_KEYWORDS, _testconsole_write_input__doc__},
 
 static PyObject *
 _testconsole_write_input_impl(PyObject *module, PyObject *file,
@@ -21,8 +27,40 @@ static PyObject *
 _testconsole_write_input(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
+    #define NUM_KEYWORDS 2
+    #if NUM_KEYWORDS == 0
+
+    #  ifdef Py_BUILD_CORE
+    #    define KWTUPLE (PyObject *)&_Py_SINGLETON(tuple_empty)
+    #  else
+    #    define KWTUPLE NULL
+    #  endif
+
+    #else  // NUM_KEYWORDS != 0
+    #  ifdef Py_BUILD_CORE
+
+    static struct {
+        PyObject_VAR_HEAD
+        PyObject *ob_item[NUM_KEYWORDS];
+    } _kwtuple = {
+        .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
+        .ob_item = { &_Py_ID(file), &_Py_ID(s), },
+    };
+    #  define KWTUPLE ((PyObject *)(&_kwtuple))
+
+    #  else  // !Py_BUILD_CORE
+    #    define KWTUPLE NULL
+    #  endif  // !Py_BUILD_CORE
+    #endif  // NUM_KEYWORDS != 0
+    #undef NUM_KEYWORDS
+
     static const char * const _keywords[] = {"file", "s", NULL};
-    static _PyArg_Parser _parser = {NULL, _keywords, "write_input", 0};
+    static _PyArg_Parser _parser = {
+        .keywords = _keywords,
+        .fname = "write_input",
+        .kwtuple = KWTUPLE,
+    };
+    #undef KWTUPLE
     PyObject *argsbuf[2];
     PyObject *file;
     PyBytesObject *s;
@@ -54,7 +92,7 @@ PyDoc_STRVAR(_testconsole_read_output__doc__,
 "Reads a str from the console as written to stdout.");
 
 #define _TESTCONSOLE_READ_OUTPUT_METHODDEF    \
-    {"read_output", _PyCFunction_CAST(_testconsole_read_output), METH_FASTCALL|METH_KEYWORDS, _testconsole_read_output__doc__},
+    {"read_output", (PyCFunction)(void(*)(void))_testconsole_read_output, METH_FASTCALL|METH_KEYWORDS, _testconsole_read_output__doc__},
 
 static PyObject *
 _testconsole_read_output_impl(PyObject *module, PyObject *file);
@@ -63,8 +101,40 @@ static PyObject *
 _testconsole_read_output(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
+    #define NUM_KEYWORDS 1
+    #if NUM_KEYWORDS == 0
+
+    #  ifdef Py_BUILD_CORE
+    #    define KWTUPLE (PyObject *)&_Py_SINGLETON(tuple_empty)
+    #  else
+    #    define KWTUPLE NULL
+    #  endif
+
+    #else  // NUM_KEYWORDS != 0
+    #  ifdef Py_BUILD_CORE
+
+    static struct {
+        PyObject_VAR_HEAD
+        PyObject *ob_item[NUM_KEYWORDS];
+    } _kwtuple = {
+        .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
+        .ob_item = { &_Py_ID(file), },
+    };
+    #  define KWTUPLE ((PyObject *)(&_kwtuple))
+
+    #  else  // !Py_BUILD_CORE
+    #    define KWTUPLE NULL
+    #  endif  // !Py_BUILD_CORE
+    #endif  // NUM_KEYWORDS != 0
+    #undef NUM_KEYWORDS
+
     static const char * const _keywords[] = {"file", NULL};
-    static _PyArg_Parser _parser = {NULL, _keywords, "read_output", 0};
+    static _PyArg_Parser _parser = {
+        .keywords = _keywords,
+        .fname = "read_output",
+        .kwtuple = KWTUPLE,
+    };
+    #undef KWTUPLE
     PyObject *argsbuf[1];
     PyObject *file;
 
@@ -88,4 +158,4 @@ exit:
 #ifndef _TESTCONSOLE_READ_OUTPUT_METHODDEF
     #define _TESTCONSOLE_READ_OUTPUT_METHODDEF
 #endif /* !defined(_TESTCONSOLE_READ_OUTPUT_METHODDEF) */
-/*[clinic end generated code: output=6e9f8b0766eb5a0e input=a9049054013a1b77]*/
+/*[clinic end generated code: output=b6aecde736c49136 input=a9049054013a1b77]*/

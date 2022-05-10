@@ -2,6 +2,12 @@
 preserve
 [clinic start generated code]*/
 
+#ifdef Py_BUILD_CORE
+#include "pycore_gc.h"            // PyGC_Head
+#include "pycore_runtime.h"       // _Py_ID()
+#endif
+
+
 PyDoc_STRVAR(binascii_a2b_uu__doc__,
 "a2b_uu($module, data, /)\n"
 "--\n"
@@ -40,7 +46,7 @@ PyDoc_STRVAR(binascii_b2a_uu__doc__,
 "Uuencode line of data.");
 
 #define BINASCII_B2A_UU_METHODDEF    \
-    {"b2a_uu", _PyCFunction_CAST(binascii_b2a_uu), METH_FASTCALL|METH_KEYWORDS, binascii_b2a_uu__doc__},
+    {"b2a_uu", (PyCFunction)(void(*)(void))binascii_b2a_uu, METH_FASTCALL|METH_KEYWORDS, binascii_b2a_uu__doc__},
 
 static PyObject *
 binascii_b2a_uu_impl(PyObject *module, Py_buffer *data, int backtick);
@@ -49,8 +55,40 @@ static PyObject *
 binascii_b2a_uu(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
+    #define NUM_KEYWORDS 2
+    #if NUM_KEYWORDS == 0
+
+    #  ifdef Py_BUILD_CORE
+    #    define KWTUPLE (PyObject *)&_Py_SINGLETON(tuple_empty)
+    #  else
+    #    define KWTUPLE NULL
+    #  endif
+
+    #else  // NUM_KEYWORDS != 0
+    #  ifdef Py_BUILD_CORE
+
+    static struct {
+        PyObject_VAR_HEAD
+        PyObject *ob_item[NUM_KEYWORDS];
+    } _kwtuple = {
+        .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
+        .ob_item = { &_Py_STR(empty), &_Py_ID(backtick), },
+    };
+    #  define KWTUPLE ((PyObject *)(&_kwtuple))
+
+    #  else  // !Py_BUILD_CORE
+    #    define KWTUPLE NULL
+    #  endif  // !Py_BUILD_CORE
+    #endif  // NUM_KEYWORDS != 0
+    #undef NUM_KEYWORDS
+
     static const char * const _keywords[] = {"", "backtick", NULL};
-    static _PyArg_Parser _parser = {NULL, _keywords, "b2a_uu", 0};
+    static _PyArg_Parser _parser = {
+        .keywords = _keywords,
+        .fname = "b2a_uu",
+        .kwtuple = KWTUPLE,
+    };
+    #undef KWTUPLE
     PyObject *argsbuf[2];
     Py_ssize_t noptargs = nargs + (kwnames ? PyTuple_GET_SIZE(kwnames) : 0) - 1;
     Py_buffer data = {NULL, NULL};
@@ -97,7 +135,7 @@ PyDoc_STRVAR(binascii_a2b_base64__doc__,
 "    The same applies to excess data after padding (= / ==).");
 
 #define BINASCII_A2B_BASE64_METHODDEF    \
-    {"a2b_base64", _PyCFunction_CAST(binascii_a2b_base64), METH_FASTCALL|METH_KEYWORDS, binascii_a2b_base64__doc__},
+    {"a2b_base64", (PyCFunction)(void(*)(void))binascii_a2b_base64, METH_FASTCALL|METH_KEYWORDS, binascii_a2b_base64__doc__},
 
 static PyObject *
 binascii_a2b_base64_impl(PyObject *module, Py_buffer *data, int strict_mode);
@@ -106,8 +144,40 @@ static PyObject *
 binascii_a2b_base64(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
+    #define NUM_KEYWORDS 2
+    #if NUM_KEYWORDS == 0
+
+    #  ifdef Py_BUILD_CORE
+    #    define KWTUPLE (PyObject *)&_Py_SINGLETON(tuple_empty)
+    #  else
+    #    define KWTUPLE NULL
+    #  endif
+
+    #else  // NUM_KEYWORDS != 0
+    #  ifdef Py_BUILD_CORE
+
+    static struct {
+        PyObject_VAR_HEAD
+        PyObject *ob_item[NUM_KEYWORDS];
+    } _kwtuple = {
+        .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
+        .ob_item = { &_Py_STR(empty), &_Py_ID(strict_mode), },
+    };
+    #  define KWTUPLE ((PyObject *)(&_kwtuple))
+
+    #  else  // !Py_BUILD_CORE
+    #    define KWTUPLE NULL
+    #  endif  // !Py_BUILD_CORE
+    #endif  // NUM_KEYWORDS != 0
+    #undef NUM_KEYWORDS
+
     static const char * const _keywords[] = {"", "strict_mode", NULL};
-    static _PyArg_Parser _parser = {NULL, _keywords, "a2b_base64", 0};
+    static _PyArg_Parser _parser = {
+        .keywords = _keywords,
+        .fname = "a2b_base64",
+        .kwtuple = KWTUPLE,
+    };
+    #undef KWTUPLE
     PyObject *argsbuf[2];
     Py_ssize_t noptargs = nargs + (kwnames ? PyTuple_GET_SIZE(kwnames) : 0) - 1;
     Py_buffer data = {NULL, NULL};
@@ -145,7 +215,7 @@ PyDoc_STRVAR(binascii_b2a_base64__doc__,
 "Base64-code line of data.");
 
 #define BINASCII_B2A_BASE64_METHODDEF    \
-    {"b2a_base64", _PyCFunction_CAST(binascii_b2a_base64), METH_FASTCALL|METH_KEYWORDS, binascii_b2a_base64__doc__},
+    {"b2a_base64", (PyCFunction)(void(*)(void))binascii_b2a_base64, METH_FASTCALL|METH_KEYWORDS, binascii_b2a_base64__doc__},
 
 static PyObject *
 binascii_b2a_base64_impl(PyObject *module, Py_buffer *data, int newline);
@@ -154,8 +224,40 @@ static PyObject *
 binascii_b2a_base64(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
+    #define NUM_KEYWORDS 2
+    #if NUM_KEYWORDS == 0
+
+    #  ifdef Py_BUILD_CORE
+    #    define KWTUPLE (PyObject *)&_Py_SINGLETON(tuple_empty)
+    #  else
+    #    define KWTUPLE NULL
+    #  endif
+
+    #else  // NUM_KEYWORDS != 0
+    #  ifdef Py_BUILD_CORE
+
+    static struct {
+        PyObject_VAR_HEAD
+        PyObject *ob_item[NUM_KEYWORDS];
+    } _kwtuple = {
+        .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
+        .ob_item = { &_Py_STR(empty), &_Py_ID(newline), },
+    };
+    #  define KWTUPLE ((PyObject *)(&_kwtuple))
+
+    #  else  // !Py_BUILD_CORE
+    #    define KWTUPLE NULL
+    #  endif  // !Py_BUILD_CORE
+    #endif  // NUM_KEYWORDS != 0
+    #undef NUM_KEYWORDS
+
     static const char * const _keywords[] = {"", "newline", NULL};
-    static _PyArg_Parser _parser = {NULL, _keywords, "b2a_base64", 0};
+    static _PyArg_Parser _parser = {
+        .keywords = _keywords,
+        .fname = "b2a_base64",
+        .kwtuple = KWTUPLE,
+    };
+    #undef KWTUPLE
     PyObject *argsbuf[2];
     Py_ssize_t noptargs = nargs + (kwnames ? PyTuple_GET_SIZE(kwnames) : 0) - 1;
     Py_buffer data = {NULL, NULL};
@@ -198,7 +300,7 @@ PyDoc_STRVAR(binascii_crc_hqx__doc__,
 "Compute CRC-CCITT incrementally.");
 
 #define BINASCII_CRC_HQX_METHODDEF    \
-    {"crc_hqx", _PyCFunction_CAST(binascii_crc_hqx), METH_FASTCALL, binascii_crc_hqx__doc__},
+    {"crc_hqx", (PyCFunction)(void(*)(void))binascii_crc_hqx, METH_FASTCALL, binascii_crc_hqx__doc__},
 
 static PyObject *
 binascii_crc_hqx_impl(PyObject *module, Py_buffer *data, unsigned int crc);
@@ -242,7 +344,7 @@ PyDoc_STRVAR(binascii_crc32__doc__,
 "Compute CRC-32 incrementally.");
 
 #define BINASCII_CRC32_METHODDEF    \
-    {"crc32", _PyCFunction_CAST(binascii_crc32), METH_FASTCALL, binascii_crc32__doc__},
+    {"crc32", (PyCFunction)(void(*)(void))binascii_crc32, METH_FASTCALL, binascii_crc32__doc__},
 
 static unsigned int
 binascii_crc32_impl(PyObject *module, Py_buffer *data, unsigned int crc);
@@ -312,7 +414,7 @@ PyDoc_STRVAR(binascii_b2a_hex__doc__,
 "b\'b9_01ef\'");
 
 #define BINASCII_B2A_HEX_METHODDEF    \
-    {"b2a_hex", _PyCFunction_CAST(binascii_b2a_hex), METH_FASTCALL|METH_KEYWORDS, binascii_b2a_hex__doc__},
+    {"b2a_hex", (PyCFunction)(void(*)(void))binascii_b2a_hex, METH_FASTCALL|METH_KEYWORDS, binascii_b2a_hex__doc__},
 
 static PyObject *
 binascii_b2a_hex_impl(PyObject *module, Py_buffer *data, PyObject *sep,
@@ -322,8 +424,40 @@ static PyObject *
 binascii_b2a_hex(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
+    #define NUM_KEYWORDS 3
+    #if NUM_KEYWORDS == 0
+
+    #  ifdef Py_BUILD_CORE
+    #    define KWTUPLE (PyObject *)&_Py_SINGLETON(tuple_empty)
+    #  else
+    #    define KWTUPLE NULL
+    #  endif
+
+    #else  // NUM_KEYWORDS != 0
+    #  ifdef Py_BUILD_CORE
+
+    static struct {
+        PyObject_VAR_HEAD
+        PyObject *ob_item[NUM_KEYWORDS];
+    } _kwtuple = {
+        .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
+        .ob_item = { &_Py_ID(data), &_Py_ID(sep), &_Py_ID(bytes_per_sep), },
+    };
+    #  define KWTUPLE ((PyObject *)(&_kwtuple))
+
+    #  else  // !Py_BUILD_CORE
+    #    define KWTUPLE NULL
+    #  endif  // !Py_BUILD_CORE
+    #endif  // NUM_KEYWORDS != 0
+    #undef NUM_KEYWORDS
+
     static const char * const _keywords[] = {"data", "sep", "bytes_per_sep", NULL};
-    static _PyArg_Parser _parser = {NULL, _keywords, "b2a_hex", 0};
+    static _PyArg_Parser _parser = {
+        .keywords = _keywords,
+        .fname = "b2a_hex",
+        .kwtuple = KWTUPLE,
+    };
+    #undef KWTUPLE
     PyObject *argsbuf[3];
     Py_ssize_t noptargs = nargs + (kwnames ? PyTuple_GET_SIZE(kwnames) : 0) - 1;
     Py_buffer data = {NULL, NULL};
@@ -382,7 +516,7 @@ PyDoc_STRVAR(binascii_hexlify__doc__,
 "available as \"b2a_hex()\".");
 
 #define BINASCII_HEXLIFY_METHODDEF    \
-    {"hexlify", _PyCFunction_CAST(binascii_hexlify), METH_FASTCALL|METH_KEYWORDS, binascii_hexlify__doc__},
+    {"hexlify", (PyCFunction)(void(*)(void))binascii_hexlify, METH_FASTCALL|METH_KEYWORDS, binascii_hexlify__doc__},
 
 static PyObject *
 binascii_hexlify_impl(PyObject *module, Py_buffer *data, PyObject *sep,
@@ -392,8 +526,40 @@ static PyObject *
 binascii_hexlify(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
+    #define NUM_KEYWORDS 3
+    #if NUM_KEYWORDS == 0
+
+    #  ifdef Py_BUILD_CORE
+    #    define KWTUPLE (PyObject *)&_Py_SINGLETON(tuple_empty)
+    #  else
+    #    define KWTUPLE NULL
+    #  endif
+
+    #else  // NUM_KEYWORDS != 0
+    #  ifdef Py_BUILD_CORE
+
+    static struct {
+        PyObject_VAR_HEAD
+        PyObject *ob_item[NUM_KEYWORDS];
+    } _kwtuple = {
+        .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
+        .ob_item = { &_Py_ID(data), &_Py_ID(sep), &_Py_ID(bytes_per_sep), },
+    };
+    #  define KWTUPLE ((PyObject *)(&_kwtuple))
+
+    #  else  // !Py_BUILD_CORE
+    #    define KWTUPLE NULL
+    #  endif  // !Py_BUILD_CORE
+    #endif  // NUM_KEYWORDS != 0
+    #undef NUM_KEYWORDS
+
     static const char * const _keywords[] = {"data", "sep", "bytes_per_sep", NULL};
-    static _PyArg_Parser _parser = {NULL, _keywords, "hexlify", 0};
+    static _PyArg_Parser _parser = {
+        .keywords = _keywords,
+        .fname = "hexlify",
+        .kwtuple = KWTUPLE,
+    };
+    #undef KWTUPLE
     PyObject *argsbuf[3];
     Py_ssize_t noptargs = nargs + (kwnames ? PyTuple_GET_SIZE(kwnames) : 0) - 1;
     Py_buffer data = {NULL, NULL};
@@ -510,7 +676,7 @@ PyDoc_STRVAR(binascii_a2b_qp__doc__,
 "Decode a string of qp-encoded data.");
 
 #define BINASCII_A2B_QP_METHODDEF    \
-    {"a2b_qp", _PyCFunction_CAST(binascii_a2b_qp), METH_FASTCALL|METH_KEYWORDS, binascii_a2b_qp__doc__},
+    {"a2b_qp", (PyCFunction)(void(*)(void))binascii_a2b_qp, METH_FASTCALL|METH_KEYWORDS, binascii_a2b_qp__doc__},
 
 static PyObject *
 binascii_a2b_qp_impl(PyObject *module, Py_buffer *data, int header);
@@ -519,8 +685,40 @@ static PyObject *
 binascii_a2b_qp(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
+    #define NUM_KEYWORDS 2
+    #if NUM_KEYWORDS == 0
+
+    #  ifdef Py_BUILD_CORE
+    #    define KWTUPLE (PyObject *)&_Py_SINGLETON(tuple_empty)
+    #  else
+    #    define KWTUPLE NULL
+    #  endif
+
+    #else  // NUM_KEYWORDS != 0
+    #  ifdef Py_BUILD_CORE
+
+    static struct {
+        PyObject_VAR_HEAD
+        PyObject *ob_item[NUM_KEYWORDS];
+    } _kwtuple = {
+        .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
+        .ob_item = { &_Py_ID(data), &_Py_ID(header), },
+    };
+    #  define KWTUPLE ((PyObject *)(&_kwtuple))
+
+    #  else  // !Py_BUILD_CORE
+    #    define KWTUPLE NULL
+    #  endif  // !Py_BUILD_CORE
+    #endif  // NUM_KEYWORDS != 0
+    #undef NUM_KEYWORDS
+
     static const char * const _keywords[] = {"data", "header", NULL};
-    static _PyArg_Parser _parser = {NULL, _keywords, "a2b_qp", 0};
+    static _PyArg_Parser _parser = {
+        .keywords = _keywords,
+        .fname = "a2b_qp",
+        .kwtuple = KWTUPLE,
+    };
+    #undef KWTUPLE
     PyObject *argsbuf[2];
     Py_ssize_t noptargs = nargs + (kwnames ? PyTuple_GET_SIZE(kwnames) : 0) - 1;
     Py_buffer data = {NULL, NULL};
@@ -562,7 +760,7 @@ PyDoc_STRVAR(binascii_b2a_qp__doc__,
 "are both encoded.  When quotetabs is set, space and tabs are encoded.");
 
 #define BINASCII_B2A_QP_METHODDEF    \
-    {"b2a_qp", _PyCFunction_CAST(binascii_b2a_qp), METH_FASTCALL|METH_KEYWORDS, binascii_b2a_qp__doc__},
+    {"b2a_qp", (PyCFunction)(void(*)(void))binascii_b2a_qp, METH_FASTCALL|METH_KEYWORDS, binascii_b2a_qp__doc__},
 
 static PyObject *
 binascii_b2a_qp_impl(PyObject *module, Py_buffer *data, int quotetabs,
@@ -572,8 +770,40 @@ static PyObject *
 binascii_b2a_qp(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
+    #define NUM_KEYWORDS 4
+    #if NUM_KEYWORDS == 0
+
+    #  ifdef Py_BUILD_CORE
+    #    define KWTUPLE (PyObject *)&_Py_SINGLETON(tuple_empty)
+    #  else
+    #    define KWTUPLE NULL
+    #  endif
+
+    #else  // NUM_KEYWORDS != 0
+    #  ifdef Py_BUILD_CORE
+
+    static struct {
+        PyObject_VAR_HEAD
+        PyObject *ob_item[NUM_KEYWORDS];
+    } _kwtuple = {
+        .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
+        .ob_item = { &_Py_ID(data), &_Py_ID(quotetabs), &_Py_ID(istext), &_Py_ID(header), },
+    };
+    #  define KWTUPLE ((PyObject *)(&_kwtuple))
+
+    #  else  // !Py_BUILD_CORE
+    #    define KWTUPLE NULL
+    #  endif  // !Py_BUILD_CORE
+    #endif  // NUM_KEYWORDS != 0
+    #undef NUM_KEYWORDS
+
     static const char * const _keywords[] = {"data", "quotetabs", "istext", "header", NULL};
-    static _PyArg_Parser _parser = {NULL, _keywords, "b2a_qp", 0};
+    static _PyArg_Parser _parser = {
+        .keywords = _keywords,
+        .fname = "b2a_qp",
+        .kwtuple = KWTUPLE,
+    };
+    #undef KWTUPLE
     PyObject *argsbuf[4];
     Py_ssize_t noptargs = nargs + (kwnames ? PyTuple_GET_SIZE(kwnames) : 0) - 1;
     Py_buffer data = {NULL, NULL};
@@ -628,4 +858,4 @@ exit:
 
     return return_value;
 }
-/*[clinic end generated code: output=ba9ed7b810b8762d input=a9049054013a1b77]*/
+/*[clinic end generated code: output=cafe60e05a4ebb04 input=a9049054013a1b77]*/

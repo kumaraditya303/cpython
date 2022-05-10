@@ -2,6 +2,12 @@
 preserve
 [clinic start generated code]*/
 
+#ifdef Py_BUILD_CORE
+#include "pycore_gc.h"            // PyGC_Head
+#include "pycore_runtime.h"       // _Py_ID()
+#endif
+
+
 PyDoc_STRVAR(MD5Type_copy__doc__,
 "copy($self, /)\n"
 "--\n"
@@ -9,7 +15,7 @@ PyDoc_STRVAR(MD5Type_copy__doc__,
 "Return a copy of the hash object.");
 
 #define MD5TYPE_COPY_METHODDEF    \
-    {"copy", _PyCFunction_CAST(MD5Type_copy), METH_METHOD|METH_FASTCALL|METH_KEYWORDS, MD5Type_copy__doc__},
+    {"copy", (PyCFunction)(void(*)(void))MD5Type_copy, METH_METHOD|METH_FASTCALL|METH_KEYWORDS, MD5Type_copy__doc__},
 
 static PyObject *
 MD5Type_copy_impl(MD5object *self, PyTypeObject *cls);
@@ -17,11 +23,50 @@ MD5Type_copy_impl(MD5object *self, PyTypeObject *cls);
 static PyObject *
 MD5Type_copy(MD5object *self, PyTypeObject *cls, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
-    if (nargs) {
-        PyErr_SetString(PyExc_TypeError, "copy() takes no arguments");
-        return NULL;
+    PyObject *return_value = NULL;
+    #define NUM_KEYWORDS 0
+    #if NUM_KEYWORDS == 0
+
+    #  ifdef Py_BUILD_CORE
+    #    define KWTUPLE (PyObject *)&_Py_SINGLETON(tuple_empty)
+    #  else
+    #    define KWTUPLE NULL
+    #  endif
+
+    #else  // NUM_KEYWORDS != 0
+    #  ifdef Py_BUILD_CORE
+
+    static struct {
+        PyObject_VAR_HEAD
+        PyObject *ob_item[NUM_KEYWORDS];
+    } _kwtuple = {
+        .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
+        .ob_item = {  },
+    };
+    #  define KWTUPLE ((PyObject *)(&_kwtuple))
+
+    #  else  // !Py_BUILD_CORE
+    #    define KWTUPLE NULL
+    #  endif  // !Py_BUILD_CORE
+    #endif  // NUM_KEYWORDS != 0
+    #undef NUM_KEYWORDS
+
+    static const char * const _keywords[] = { NULL};
+    static _PyArg_Parser _parser = {
+        .keywords = _keywords,
+        .format = ":copy",
+        .kwtuple = KWTUPLE,
+    };
+    #undef KWTUPLE
+
+    if (!_PyArg_ParseStackAndKeywords(args, nargs, kwnames, &_parser
+        )) {
+        goto exit;
     }
-    return MD5Type_copy_impl(self, cls);
+    return_value = MD5Type_copy_impl(self, cls);
+
+exit:
+    return return_value;
 }
 
 PyDoc_STRVAR(MD5Type_digest__doc__,
@@ -76,7 +121,7 @@ PyDoc_STRVAR(_md5_md5__doc__,
 "Return a new MD5 hash object; optionally initialized with a string.");
 
 #define _MD5_MD5_METHODDEF    \
-    {"md5", _PyCFunction_CAST(_md5_md5), METH_FASTCALL|METH_KEYWORDS, _md5_md5__doc__},
+    {"md5", (PyCFunction)(void(*)(void))_md5_md5, METH_FASTCALL|METH_KEYWORDS, _md5_md5__doc__},
 
 static PyObject *
 _md5_md5_impl(PyObject *module, PyObject *string, int usedforsecurity);
@@ -85,8 +130,40 @@ static PyObject *
 _md5_md5(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
+    #define NUM_KEYWORDS 2
+    #if NUM_KEYWORDS == 0
+
+    #  ifdef Py_BUILD_CORE
+    #    define KWTUPLE (PyObject *)&_Py_SINGLETON(tuple_empty)
+    #  else
+    #    define KWTUPLE NULL
+    #  endif
+
+    #else  // NUM_KEYWORDS != 0
+    #  ifdef Py_BUILD_CORE
+
+    static struct {
+        PyObject_VAR_HEAD
+        PyObject *ob_item[NUM_KEYWORDS];
+    } _kwtuple = {
+        .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
+        .ob_item = { &_Py_ID(string), &_Py_ID(usedforsecurity), },
+    };
+    #  define KWTUPLE ((PyObject *)(&_kwtuple))
+
+    #  else  // !Py_BUILD_CORE
+    #    define KWTUPLE NULL
+    #  endif  // !Py_BUILD_CORE
+    #endif  // NUM_KEYWORDS != 0
+    #undef NUM_KEYWORDS
+
     static const char * const _keywords[] = {"string", "usedforsecurity", NULL};
-    static _PyArg_Parser _parser = {NULL, _keywords, "md5", 0};
+    static _PyArg_Parser _parser = {
+        .keywords = _keywords,
+        .fname = "md5",
+        .kwtuple = KWTUPLE,
+    };
+    #undef KWTUPLE
     PyObject *argsbuf[2];
     Py_ssize_t noptargs = nargs + (kwnames ? PyTuple_GET_SIZE(kwnames) : 0) - 0;
     PyObject *string = NULL;
@@ -119,4 +196,4 @@ skip_optional_kwonly:
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=e5dac1237beb2788 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=9d834bdd7297e019 input=a9049054013a1b77]*/

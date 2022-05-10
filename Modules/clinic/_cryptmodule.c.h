@@ -2,6 +2,12 @@
 preserve
 [clinic start generated code]*/
 
+#ifdef Py_BUILD_CORE
+#include "pycore_gc.h"            // PyGC_Head
+#include "pycore_runtime.h"       // _Py_ID()
+#endif
+
+
 PyDoc_STRVAR(crypt_crypt__doc__,
 "crypt($module, word, salt, /)\n"
 "--\n"
@@ -14,7 +20,7 @@ PyDoc_STRVAR(crypt_crypt__doc__,
 "results for a given *word*.");
 
 #define CRYPT_CRYPT_METHODDEF    \
-    {"crypt", _PyCFunction_CAST(crypt_crypt), METH_FASTCALL, crypt_crypt__doc__},
+    {"crypt", (PyCFunction)(void(*)(void))crypt_crypt, METH_FASTCALL, crypt_crypt__doc__},
 
 static PyObject *
 crypt_crypt_impl(PyObject *module, const char *word, const char *salt);
@@ -60,4 +66,4 @@ crypt_crypt(PyObject *module, PyObject *const *args, Py_ssize_t nargs)
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=6f61ab29e361f9d0 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=549de0d43b030126 input=a9049054013a1b77]*/
