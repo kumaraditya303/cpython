@@ -2,6 +2,12 @@
 preserve
 [clinic start generated code]*/
 
+#ifdef Py_BUILD_CORE
+#include "pycore_gc.h"            // PyGC_Head
+#include "pycore_runtime.h"       // _Py_ID()
+#endif
+
+
 PyDoc_STRVAR(pysqlite_connect__doc__,
 "connect($module, /, database, timeout=5.0, detect_types=0,\n"
 "        isolation_level=<unrepresentable>, check_same_thread=True,\n"
@@ -26,8 +32,40 @@ static PyObject *
 pysqlite_connect(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
+    #define NUM_KEYWORDS 8
+    #if NUM_KEYWORDS == 0
+
+    #  ifdef Py_BUILD_CORE
+    #    define KWTUPLE (PyObject *)&_Py_SINGLETON(tuple_empty)
+    #  else
+    #    define KWTUPLE NULL
+    #  endif
+
+    #else  // NUM_KEYWORDS != 0
+    #  ifdef Py_BUILD_CORE
+
+    static struct {
+        PyObject_VAR_HEAD
+        PyObject *ob_item[NUM_KEYWORDS];
+    } _kwtuple = {
+        .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
+        .ob_item = { &_Py_ID(database), &_Py_ID(timeout), &_Py_ID(detect_types), &_Py_ID(isolation_level), &_Py_ID(check_same_thread), &_Py_ID(factory), &_Py_ID(cached_statements), &_Py_ID(uri), },
+    };
+    #  define KWTUPLE ((PyObject *)(&_kwtuple))
+
+    #  else  // !Py_BUILD_CORE
+    #    define KWTUPLE NULL
+    #  endif  // !Py_BUILD_CORE
+    #endif  // NUM_KEYWORDS != 0
+    #undef NUM_KEYWORDS
+
     static const char * const _keywords[] = {"database", "timeout", "detect_types", "isolation_level", "check_same_thread", "factory", "cached_statements", "uri", NULL};
-    static _PyArg_Parser _parser = {NULL, _keywords, "connect", 0};
+    static _PyArg_Parser _parser = {
+        .keywords = _keywords,
+        .fname = "connect",
+        .kwtuple = KWTUPLE,
+    };
+    #undef KWTUPLE
     PyObject *argsbuf[8];
     Py_ssize_t noptargs = nargs + (kwnames ? PyTuple_GET_SIZE(kwnames) : 0) - 1;
     PyObject *database;
@@ -109,7 +147,6 @@ pysqlite_connect(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyOb
     }
 skip_optional_pos:
     return_value = pysqlite_connect_impl(module, database, timeout, detect_types, isolation_level, check_same_thread, factory, cached_statements, uri);
-
 exit:
     return return_value;
 }
@@ -130,8 +167,40 @@ static PyObject *
 pysqlite_complete_statement(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
+    #define NUM_KEYWORDS 1
+    #if NUM_KEYWORDS == 0
+
+    #  ifdef Py_BUILD_CORE
+    #    define KWTUPLE (PyObject *)&_Py_SINGLETON(tuple_empty)
+    #  else
+    #    define KWTUPLE NULL
+    #  endif
+
+    #else  // NUM_KEYWORDS != 0
+    #  ifdef Py_BUILD_CORE
+
+    static struct {
+        PyObject_VAR_HEAD
+        PyObject *ob_item[NUM_KEYWORDS];
+    } _kwtuple = {
+        .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
+        .ob_item = { &_Py_ID(statement), },
+    };
+    #  define KWTUPLE ((PyObject *)(&_kwtuple))
+
+    #  else  // !Py_BUILD_CORE
+    #    define KWTUPLE NULL
+    #  endif  // !Py_BUILD_CORE
+    #endif  // NUM_KEYWORDS != 0
+    #undef NUM_KEYWORDS
+
     static const char * const _keywords[] = {"statement", NULL};
-    static _PyArg_Parser _parser = {NULL, _keywords, "complete_statement", 0};
+    static _PyArg_Parser _parser = {
+        .keywords = _keywords,
+        .fname = "complete_statement",
+        .kwtuple = KWTUPLE,
+    };
+    #undef KWTUPLE
     PyObject *argsbuf[1];
     const char *statement;
 
@@ -153,7 +222,6 @@ pysqlite_complete_statement(PyObject *module, PyObject *const *args, Py_ssize_t 
         goto exit;
     }
     return_value = pysqlite_complete_statement_impl(module, statement);
-
 exit:
     return return_value;
 }
@@ -179,8 +247,40 @@ static PyObject *
 pysqlite_enable_shared_cache(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
+    #define NUM_KEYWORDS 1
+    #if NUM_KEYWORDS == 0
+
+    #  ifdef Py_BUILD_CORE
+    #    define KWTUPLE (PyObject *)&_Py_SINGLETON(tuple_empty)
+    #  else
+    #    define KWTUPLE NULL
+    #  endif
+
+    #else  // NUM_KEYWORDS != 0
+    #  ifdef Py_BUILD_CORE
+
+    static struct {
+        PyObject_VAR_HEAD
+        PyObject *ob_item[NUM_KEYWORDS];
+    } _kwtuple = {
+        .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
+        .ob_item = { &_Py_ID(do_enable), },
+    };
+    #  define KWTUPLE ((PyObject *)(&_kwtuple))
+
+    #  else  // !Py_BUILD_CORE
+    #    define KWTUPLE NULL
+    #  endif  // !Py_BUILD_CORE
+    #endif  // NUM_KEYWORDS != 0
+    #undef NUM_KEYWORDS
+
     static const char * const _keywords[] = {"do_enable", NULL};
-    static _PyArg_Parser _parser = {NULL, _keywords, "enable_shared_cache", 0};
+    static _PyArg_Parser _parser = {
+        .keywords = _keywords,
+        .fname = "enable_shared_cache",
+        .kwtuple = KWTUPLE,
+    };
+    #undef KWTUPLE
     PyObject *argsbuf[1];
     int do_enable;
 
@@ -193,7 +293,6 @@ pysqlite_enable_shared_cache(PyObject *module, PyObject *const *args, Py_ssize_t
         goto exit;
     }
     return_value = pysqlite_enable_shared_cache_impl(module, do_enable);
-
 exit:
     return return_value;
 }
@@ -224,7 +323,6 @@ pysqlite_register_adapter(PyObject *module, PyObject *const *args, Py_ssize_t na
     type = (PyTypeObject *)args[0];
     caster = args[1];
     return_value = pysqlite_register_adapter_impl(module, type, caster);
-
 exit:
     return return_value;
 }
@@ -262,7 +360,6 @@ pysqlite_register_converter(PyObject *module, PyObject *const *args, Py_ssize_t 
     orig_name = args[0];
     callable = args[1];
     return_value = pysqlite_register_converter_impl(module, orig_name, callable);
-
 exit:
     return return_value;
 }
@@ -290,7 +387,6 @@ pysqlite_enable_callback_trace(PyObject *module, PyObject *arg)
         goto exit;
     }
     return_value = pysqlite_enable_callback_trace_impl(module, enable);
-
 exit:
     return return_value;
 }
@@ -330,8 +426,7 @@ pysqlite_adapt(PyObject *module, PyObject *const *args, Py_ssize_t nargs)
     alt = args[2];
 skip_optional:
     return_value = pysqlite_adapt_impl(module, obj, proto, alt);
-
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=d846459943008a9c input=a9049054013a1b77]*/
+/*[clinic end generated code: output=13977eb6ead580ed input=a9049054013a1b77]*/

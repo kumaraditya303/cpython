@@ -224,7 +224,7 @@ PyDoc_STRVAR(itertools_tee__doc__,
 "Returns a tuple of n independent iterators.");
 
 #define ITERTOOLS_TEE_METHODDEF    \
-    {"tee", (PyCFunction)(void(*)(void))itertools_tee, METH_FASTCALL, itertools_tee__doc__},
+    {"tee", _PyCFunction_CAST(itertools_tee), METH_FASTCALL, itertools_tee__doc__},
 
 static PyObject *
 itertools_tee_impl(PyObject *module, PyObject *iterable, Py_ssize_t n);
@@ -897,4 +897,4 @@ skip_optional_pos:
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=0a9a1acd44667cd4 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=5ff0c25fce1ee65b input=a9049054013a1b77]*/

@@ -20,7 +20,7 @@ PyDoc_STRVAR(winsound_PlaySound__doc__,
 "    Flag values, ored together.  See module documentation.");
 
 #define WINSOUND_PLAYSOUND_METHODDEF    \
-    {"PlaySound", (PyCFunction)(void(*)(void))winsound_PlaySound, METH_FASTCALL|METH_KEYWORDS, winsound_PlaySound__doc__},
+    {"PlaySound", _PyCFunction_CAST(winsound_PlaySound), METH_FASTCALL|METH_KEYWORDS, winsound_PlaySound__doc__},
 
 static PyObject *
 winsound_PlaySound_impl(PyObject *module, PyObject *sound, int flags);
@@ -95,7 +95,7 @@ PyDoc_STRVAR(winsound_Beep__doc__,
 "    How long the sound should play, in milliseconds.");
 
 #define WINSOUND_BEEP_METHODDEF    \
-    {"Beep", (PyCFunction)(void(*)(void))winsound_Beep, METH_FASTCALL|METH_KEYWORDS, winsound_Beep__doc__},
+    {"Beep", _PyCFunction_CAST(winsound_Beep), METH_FASTCALL|METH_KEYWORDS, winsound_Beep__doc__},
 
 static PyObject *
 winsound_Beep_impl(PyObject *module, int frequency, int duration);
@@ -169,7 +169,7 @@ PyDoc_STRVAR(winsound_MessageBeep__doc__,
 "x defaults to MB_OK.");
 
 #define WINSOUND_MESSAGEBEEP_METHODDEF    \
-    {"MessageBeep", (PyCFunction)(void(*)(void))winsound_MessageBeep, METH_FASTCALL|METH_KEYWORDS, winsound_MessageBeep__doc__},
+    {"MessageBeep", _PyCFunction_CAST(winsound_MessageBeep), METH_FASTCALL|METH_KEYWORDS, winsound_MessageBeep__doc__},
 
 static PyObject *
 winsound_MessageBeep_impl(PyObject *module, int type);
@@ -233,4 +233,4 @@ skip_optional_pos:
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=e765d5f32751c4c5 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=a6e7a58c939c430c input=a9049054013a1b77]*/

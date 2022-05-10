@@ -96,7 +96,7 @@ PyDoc_STRVAR(memoryview_cast__doc__,
 "Cast a memoryview to a new format or shape.");
 
 #define MEMORYVIEW_CAST_METHODDEF    \
-    {"cast", (PyCFunction)(void(*)(void))memoryview_cast, METH_FASTCALL|METH_KEYWORDS, memoryview_cast__doc__},
+    {"cast", _PyCFunction_CAST(memoryview_cast), METH_FASTCALL|METH_KEYWORDS, memoryview_cast__doc__},
 
 static PyObject *
 memoryview_cast_impl(PyMemoryViewObject *self, PyObject *format,
@@ -217,7 +217,7 @@ PyDoc_STRVAR(memoryview_tobytes__doc__,
 "to C first. order=None is the same as order=\'C\'.");
 
 #define MEMORYVIEW_TOBYTES_METHODDEF    \
-    {"tobytes", (PyCFunction)(void(*)(void))memoryview_tobytes, METH_FASTCALL|METH_KEYWORDS, memoryview_tobytes__doc__},
+    {"tobytes", _PyCFunction_CAST(memoryview_tobytes), METH_FASTCALL|METH_KEYWORDS, memoryview_tobytes__doc__},
 
 static PyObject *
 memoryview_tobytes_impl(PyMemoryViewObject *self, const char *order);
@@ -320,7 +320,7 @@ PyDoc_STRVAR(memoryview_hex__doc__,
 "\'b901:ef\'");
 
 #define MEMORYVIEW_HEX_METHODDEF    \
-    {"hex", (PyCFunction)(void(*)(void))memoryview_hex, METH_FASTCALL|METH_KEYWORDS, memoryview_hex__doc__},
+    {"hex", _PyCFunction_CAST(memoryview_hex), METH_FASTCALL|METH_KEYWORDS, memoryview_hex__doc__},
 
 static PyObject *
 memoryview_hex_impl(PyMemoryViewObject *self, PyObject *sep,
@@ -392,4 +392,4 @@ skip_optional_pos:
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=804b25e74b812e45 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=9f062635116a6b14 input=a9049054013a1b77]*/

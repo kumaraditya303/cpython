@@ -2,6 +2,12 @@
 preserve
 [clinic start generated code]*/
 
+#ifdef Py_BUILD_CORE
+#include "pycore_gc.h"            // PyGC_Head
+#include "pycore_runtime.h"       // _Py_ID()
+#endif
+
+
 PyDoc_STRVAR(blob_close__doc__,
 "close($self, /)\n"
 "--\n"
@@ -57,7 +63,6 @@ blob_read(pysqlite_Blob *self, PyObject *const *args, Py_ssize_t nargs)
     }
 skip_optional:
     return_value = blob_read_impl(self, length);
-
 exit:
     return return_value;
 }
@@ -91,7 +96,6 @@ blob_write(pysqlite_Blob *self, PyObject *arg)
         goto exit;
     }
     return_value = blob_write_impl(self, &data);
-
 exit:
     /* Cleanup for data */
     if (data.obj) {
@@ -140,7 +144,6 @@ blob_seek(pysqlite_Blob *self, PyObject *const *args, Py_ssize_t nargs)
     }
 skip_optional:
     return_value = blob_seek_impl(self, offset, origin);
-
 exit:
     return return_value;
 }
@@ -209,8 +212,7 @@ blob_exit(pysqlite_Blob *self, PyObject *const *args, Py_ssize_t nargs)
     val = args[1];
     tb = args[2];
     return_value = blob_exit_impl(self, type, val, tb);
-
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=382cbf0977bb158a input=a9049054013a1b77]*/
+/*[clinic end generated code: output=3fd8a19fc90430ec input=a9049054013a1b77]*/

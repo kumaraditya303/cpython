@@ -37,7 +37,7 @@ PyDoc_STRVAR(_csv_unregister_dialect__doc__,
 "    csv.unregister_dialect(name)");
 
 #define _CSV_UNREGISTER_DIALECT_METHODDEF    \
-    {"unregister_dialect", (PyCFunction)(void(*)(void))_csv_unregister_dialect, METH_FASTCALL|METH_KEYWORDS, _csv_unregister_dialect__doc__},
+    {"unregister_dialect", _PyCFunction_CAST(_csv_unregister_dialect), METH_FASTCALL|METH_KEYWORDS, _csv_unregister_dialect__doc__},
 
 static PyObject *
 _csv_unregister_dialect_impl(PyObject *module, PyObject *name);
@@ -103,7 +103,7 @@ PyDoc_STRVAR(_csv_get_dialect__doc__,
 "    dialect = csv.get_dialect(name)");
 
 #define _CSV_GET_DIALECT_METHODDEF    \
-    {"get_dialect", (PyCFunction)(void(*)(void))_csv_get_dialect, METH_FASTCALL|METH_KEYWORDS, _csv_get_dialect__doc__},
+    {"get_dialect", _PyCFunction_CAST(_csv_get_dialect), METH_FASTCALL|METH_KEYWORDS, _csv_get_dialect__doc__},
 
 static PyObject *
 _csv_get_dialect_impl(PyObject *module, PyObject *name);
@@ -172,7 +172,7 @@ PyDoc_STRVAR(_csv_field_size_limit__doc__,
 "the old limit is returned");
 
 #define _CSV_FIELD_SIZE_LIMIT_METHODDEF    \
-    {"field_size_limit", (PyCFunction)(void(*)(void))_csv_field_size_limit, METH_FASTCALL|METH_KEYWORDS, _csv_field_size_limit__doc__},
+    {"field_size_limit", _PyCFunction_CAST(_csv_field_size_limit), METH_FASTCALL|METH_KEYWORDS, _csv_field_size_limit__doc__},
 
 static PyObject *
 _csv_field_size_limit_impl(PyObject *module, PyObject *new_limit);
@@ -233,4 +233,4 @@ skip_optional_pos:
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=dacb94b024246643 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=2fe8cdcf50407f58 input=a9049054013a1b77]*/

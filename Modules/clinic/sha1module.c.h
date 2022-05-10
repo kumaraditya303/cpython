@@ -15,7 +15,7 @@ PyDoc_STRVAR(SHA1Type_copy__doc__,
 "Return a copy of the hash object.");
 
 #define SHA1TYPE_COPY_METHODDEF    \
-    {"copy", (PyCFunction)(void(*)(void))SHA1Type_copy, METH_METHOD|METH_FASTCALL|METH_KEYWORDS, SHA1Type_copy__doc__},
+    {"copy", _PyCFunction_CAST(SHA1Type_copy), METH_METHOD|METH_FASTCALL|METH_KEYWORDS, SHA1Type_copy__doc__},
 
 static PyObject *
 SHA1Type_copy_impl(SHA1object *self, PyTypeObject *cls);
@@ -23,50 +23,11 @@ SHA1Type_copy_impl(SHA1object *self, PyTypeObject *cls);
 static PyObject *
 SHA1Type_copy(SHA1object *self, PyTypeObject *cls, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
-    PyObject *return_value = NULL;
-    #define NUM_KEYWORDS 0
-    #if NUM_KEYWORDS == 0
-
-    #  ifdef Py_BUILD_CORE
-    #    define KWTUPLE (PyObject *)&_Py_SINGLETON(tuple_empty)
-    #  else
-    #    define KWTUPLE NULL
-    #  endif
-
-    #else  // NUM_KEYWORDS != 0
-    #  ifdef Py_BUILD_CORE
-
-    static struct {
-        PyObject_VAR_HEAD
-        PyObject *ob_item[NUM_KEYWORDS];
-    } _kwtuple = {
-        .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
-        .ob_item = {  },
-    };
-    #  define KWTUPLE ((PyObject *)(&_kwtuple))
-
-    #  else  // !Py_BUILD_CORE
-    #    define KWTUPLE NULL
-    #  endif  // !Py_BUILD_CORE
-    #endif  // NUM_KEYWORDS != 0
-    #undef NUM_KEYWORDS
-
-    static const char * const _keywords[] = { NULL};
-    static _PyArg_Parser _parser = {
-        .keywords = _keywords,
-        .format = ":copy",
-        .kwtuple = KWTUPLE,
-    };
-    #undef KWTUPLE
-
-    if (!_PyArg_ParseStackAndKeywords(args, nargs, kwnames, &_parser
-        )) {
-        goto exit;
+    if (nargs) {
+        PyErr_SetString(PyExc_TypeError, "copy() takes no arguments");
+        return NULL;
     }
-    return_value = SHA1Type_copy_impl(self, cls);
-
-exit:
-    return return_value;
+    return SHA1Type_copy_impl(self, cls);
 }
 
 PyDoc_STRVAR(SHA1Type_digest__doc__,
@@ -121,7 +82,7 @@ PyDoc_STRVAR(_sha1_sha1__doc__,
 "Return a new SHA1 hash object; optionally initialized with a string.");
 
 #define _SHA1_SHA1_METHODDEF    \
-    {"sha1", (PyCFunction)(void(*)(void))_sha1_sha1, METH_FASTCALL|METH_KEYWORDS, _sha1_sha1__doc__},
+    {"sha1", _PyCFunction_CAST(_sha1_sha1), METH_FASTCALL|METH_KEYWORDS, _sha1_sha1__doc__},
 
 static PyObject *
 _sha1_sha1_impl(PyObject *module, PyObject *string, int usedforsecurity);
@@ -196,4 +157,4 @@ skip_optional_kwonly:
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=c808cd2c6de21736 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=52fb5e0fb4ce857f input=a9049054013a1b77]*/

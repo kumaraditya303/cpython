@@ -2,6 +2,12 @@
 preserve
 [clinic start generated code]*/
 
+#ifdef Py_BUILD_CORE
+#include "pycore_gc.h"            // PyGC_Head
+#include "pycore_runtime.h"       // _Py_ID()
+#endif
+
+
 PyDoc_STRVAR(_io_IncrementalNewlineDecoder___init____doc__,
 "IncrementalNewlineDecoder(decoder, translate, errors=\'strict\')\n"
 "--\n"
@@ -24,8 +30,40 @@ static int
 _io_IncrementalNewlineDecoder___init__(PyObject *self, PyObject *args, PyObject *kwargs)
 {
     int return_value = -1;
+    #define NUM_KEYWORDS 3
+    #if NUM_KEYWORDS == 0
+
+    #  ifdef Py_BUILD_CORE
+    #    define KWTUPLE (PyObject *)&_Py_SINGLETON(tuple_empty)
+    #  else
+    #    define KWTUPLE NULL
+    #  endif
+
+    #else  // NUM_KEYWORDS != 0
+    #  ifdef Py_BUILD_CORE
+
+    static struct {
+        PyObject_VAR_HEAD
+        PyObject *ob_item[NUM_KEYWORDS];
+    } _kwtuple = {
+        .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
+        .ob_item = { &_Py_ID(decoder), &_Py_ID(translate), &_Py_ID(errors), },
+    };
+    #  define KWTUPLE ((PyObject *)(&_kwtuple))
+
+    #  else  // !Py_BUILD_CORE
+    #    define KWTUPLE NULL
+    #  endif  // !Py_BUILD_CORE
+    #endif  // NUM_KEYWORDS != 0
+    #undef NUM_KEYWORDS
+
     static const char * const _keywords[] = {"decoder", "translate", "errors", NULL};
-    static _PyArg_Parser _parser = {NULL, _keywords, "IncrementalNewlineDecoder", 0};
+    static _PyArg_Parser _parser = {
+        .keywords = _keywords,
+        .fname = "IncrementalNewlineDecoder",
+        .kwtuple = KWTUPLE,
+    };
+    #undef KWTUPLE
     PyObject *argsbuf[3];
     PyObject * const *fastargs;
     Py_ssize_t nargs = PyTuple_GET_SIZE(args);
@@ -49,7 +87,6 @@ _io_IncrementalNewlineDecoder___init__(PyObject *self, PyObject *args, PyObject 
     errors = fastargs[2];
 skip_optional_pos:
     return_value = _io_IncrementalNewlineDecoder___init___impl((nldecoder_object *)self, decoder, translate, errors);
-
 exit:
     return return_value;
 }
@@ -70,8 +107,40 @@ static PyObject *
 _io_IncrementalNewlineDecoder_decode(nldecoder_object *self, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
+    #define NUM_KEYWORDS 2
+    #if NUM_KEYWORDS == 0
+
+    #  ifdef Py_BUILD_CORE
+    #    define KWTUPLE (PyObject *)&_Py_SINGLETON(tuple_empty)
+    #  else
+    #    define KWTUPLE NULL
+    #  endif
+
+    #else  // NUM_KEYWORDS != 0
+    #  ifdef Py_BUILD_CORE
+
+    static struct {
+        PyObject_VAR_HEAD
+        PyObject *ob_item[NUM_KEYWORDS];
+    } _kwtuple = {
+        .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
+        .ob_item = { &_Py_ID(input), &_Py_ID(final), },
+    };
+    #  define KWTUPLE ((PyObject *)(&_kwtuple))
+
+    #  else  // !Py_BUILD_CORE
+    #    define KWTUPLE NULL
+    #  endif  // !Py_BUILD_CORE
+    #endif  // NUM_KEYWORDS != 0
+    #undef NUM_KEYWORDS
+
     static const char * const _keywords[] = {"input", "final", NULL};
-    static _PyArg_Parser _parser = {NULL, _keywords, "decode", 0};
+    static _PyArg_Parser _parser = {
+        .keywords = _keywords,
+        .fname = "decode",
+        .kwtuple = KWTUPLE,
+    };
+    #undef KWTUPLE
     PyObject *argsbuf[2];
     Py_ssize_t noptargs = nargs + (kwnames ? PyTuple_GET_SIZE(kwnames) : 0) - 1;
     PyObject *input;
@@ -91,7 +160,6 @@ _io_IncrementalNewlineDecoder_decode(nldecoder_object *self, PyObject *const *ar
     }
 skip_optional_pos:
     return_value = _io_IncrementalNewlineDecoder_decode_impl(self, input, final);
-
 exit:
     return return_value;
 }
@@ -182,8 +250,40 @@ static int
 _io_TextIOWrapper___init__(PyObject *self, PyObject *args, PyObject *kwargs)
 {
     int return_value = -1;
+    #define NUM_KEYWORDS 6
+    #if NUM_KEYWORDS == 0
+
+    #  ifdef Py_BUILD_CORE
+    #    define KWTUPLE (PyObject *)&_Py_SINGLETON(tuple_empty)
+    #  else
+    #    define KWTUPLE NULL
+    #  endif
+
+    #else  // NUM_KEYWORDS != 0
+    #  ifdef Py_BUILD_CORE
+
+    static struct {
+        PyObject_VAR_HEAD
+        PyObject *ob_item[NUM_KEYWORDS];
+    } _kwtuple = {
+        .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
+        .ob_item = { &_Py_ID(buffer), &_Py_ID(encoding), &_Py_ID(errors), &_Py_ID(newline), &_Py_ID(line_buffering), &_Py_ID(write_through), },
+    };
+    #  define KWTUPLE ((PyObject *)(&_kwtuple))
+
+    #  else  // !Py_BUILD_CORE
+    #    define KWTUPLE NULL
+    #  endif  // !Py_BUILD_CORE
+    #endif  // NUM_KEYWORDS != 0
+    #undef NUM_KEYWORDS
+
     static const char * const _keywords[] = {"buffer", "encoding", "errors", "newline", "line_buffering", "write_through", NULL};
-    static _PyArg_Parser _parser = {NULL, _keywords, "TextIOWrapper", 0};
+    static _PyArg_Parser _parser = {
+        .keywords = _keywords,
+        .fname = "TextIOWrapper",
+        .kwtuple = KWTUPLE,
+    };
+    #undef KWTUPLE
     PyObject *argsbuf[6];
     PyObject * const *fastargs;
     Py_ssize_t nargs = PyTuple_GET_SIZE(args);
@@ -270,7 +370,6 @@ _io_TextIOWrapper___init__(PyObject *self, PyObject *args, PyObject *kwargs)
     }
 skip_optional_pos:
     return_value = _io_TextIOWrapper___init___impl((textio *)self, buffer, encoding, errors, newline, line_buffering, write_through);
-
 exit:
     return return_value;
 }
@@ -297,8 +396,40 @@ static PyObject *
 _io_TextIOWrapper_reconfigure(textio *self, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
+    #define NUM_KEYWORDS 5
+    #if NUM_KEYWORDS == 0
+
+    #  ifdef Py_BUILD_CORE
+    #    define KWTUPLE (PyObject *)&_Py_SINGLETON(tuple_empty)
+    #  else
+    #    define KWTUPLE NULL
+    #  endif
+
+    #else  // NUM_KEYWORDS != 0
+    #  ifdef Py_BUILD_CORE
+
+    static struct {
+        PyObject_VAR_HEAD
+        PyObject *ob_item[NUM_KEYWORDS];
+    } _kwtuple = {
+        .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
+        .ob_item = { &_Py_ID(encoding), &_Py_ID(errors), &_Py_ID(newline), &_Py_ID(line_buffering), &_Py_ID(write_through), },
+    };
+    #  define KWTUPLE ((PyObject *)(&_kwtuple))
+
+    #  else  // !Py_BUILD_CORE
+    #    define KWTUPLE NULL
+    #  endif  // !Py_BUILD_CORE
+    #endif  // NUM_KEYWORDS != 0
+    #undef NUM_KEYWORDS
+
     static const char * const _keywords[] = {"encoding", "errors", "newline", "line_buffering", "write_through", NULL};
-    static _PyArg_Parser _parser = {NULL, _keywords, "reconfigure", 0};
+    static _PyArg_Parser _parser = {
+        .keywords = _keywords,
+        .fname = "reconfigure",
+        .kwtuple = KWTUPLE,
+    };
+    #undef KWTUPLE
     PyObject *argsbuf[5];
     Py_ssize_t noptargs = nargs + (kwnames ? PyTuple_GET_SIZE(kwnames) : 0) - 0;
     PyObject *encoding = Py_None;
@@ -341,7 +472,6 @@ _io_TextIOWrapper_reconfigure(textio *self, PyObject *const *args, Py_ssize_t na
     write_through_obj = args[4];
 skip_optional_kwonly:
     return_value = _io_TextIOWrapper_reconfigure_impl(self, encoding, errors, newline_obj, line_buffering_obj, write_through_obj);
-
 exit:
     return return_value;
 }
@@ -389,7 +519,6 @@ _io_TextIOWrapper_write(textio *self, PyObject *arg)
     }
     text = arg;
     return_value = _io_TextIOWrapper_write_impl(self, text);
-
 exit:
     return return_value;
 }
@@ -422,7 +551,6 @@ _io_TextIOWrapper_read(textio *self, PyObject *const *args, Py_ssize_t nargs)
     }
 skip_optional:
     return_value = _io_TextIOWrapper_read_impl(self, n);
-
 exit:
     return return_value;
 }
@@ -464,7 +592,6 @@ _io_TextIOWrapper_readline(textio *self, PyObject *const *args, Py_ssize_t nargs
     }
 skip_optional:
     return_value = _io_TextIOWrapper_readline_impl(self, size);
-
 exit:
     return return_value;
 }
@@ -500,7 +627,6 @@ _io_TextIOWrapper_seek(textio *self, PyObject *const *args, Py_ssize_t nargs)
     }
 skip_optional:
     return_value = _io_TextIOWrapper_seek_impl(self, cookieObj, whence);
-
 exit:
     return return_value;
 }
@@ -548,7 +674,6 @@ _io_TextIOWrapper_truncate(textio *self, PyObject *const *args, Py_ssize_t nargs
     pos = args[0];
 skip_optional:
     return_value = _io_TextIOWrapper_truncate_impl(self, pos);
-
 exit:
     return return_value;
 }
@@ -671,4 +796,4 @@ _io_TextIOWrapper_close(textio *self, PyObject *Py_UNUSED(ignored))
 {
     return _io_TextIOWrapper_close_impl(self);
 }
-/*[clinic end generated code: output=bb78b568b24759d6 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=cae1eb5285705134 input=a9049054013a1b77]*/

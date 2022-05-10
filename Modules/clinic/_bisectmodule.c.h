@@ -22,7 +22,7 @@ PyDoc_STRVAR(_bisect_bisect_right__doc__,
 "slice of a to be searched.");
 
 #define _BISECT_BISECT_RIGHT_METHODDEF    \
-    {"bisect_right", (PyCFunction)(void(*)(void))_bisect_bisect_right, METH_FASTCALL|METH_KEYWORDS, _bisect_bisect_right__doc__},
+    {"bisect_right", _PyCFunction_CAST(_bisect_bisect_right), METH_FASTCALL|METH_KEYWORDS, _bisect_bisect_right__doc__},
 
 static Py_ssize_t
 _bisect_bisect_right_impl(PyObject *module, PyObject *a, PyObject *x,
@@ -137,7 +137,7 @@ PyDoc_STRVAR(_bisect_insort_right__doc__,
 "slice of a to be searched.");
 
 #define _BISECT_INSORT_RIGHT_METHODDEF    \
-    {"insort_right", (PyCFunction)(void(*)(void))_bisect_insort_right, METH_FASTCALL|METH_KEYWORDS, _bisect_insort_right__doc__},
+    {"insort_right", _PyCFunction_CAST(_bisect_insort_right), METH_FASTCALL|METH_KEYWORDS, _bisect_insort_right__doc__},
 
 static PyObject *
 _bisect_insort_right_impl(PyObject *module, PyObject *a, PyObject *x,
@@ -249,7 +249,7 @@ PyDoc_STRVAR(_bisect_bisect_left__doc__,
 "slice of a to be searched.");
 
 #define _BISECT_BISECT_LEFT_METHODDEF    \
-    {"bisect_left", (PyCFunction)(void(*)(void))_bisect_bisect_left, METH_FASTCALL|METH_KEYWORDS, _bisect_bisect_left__doc__},
+    {"bisect_left", _PyCFunction_CAST(_bisect_bisect_left), METH_FASTCALL|METH_KEYWORDS, _bisect_bisect_left__doc__},
 
 static Py_ssize_t
 _bisect_bisect_left_impl(PyObject *module, PyObject *a, PyObject *x,
@@ -364,7 +364,7 @@ PyDoc_STRVAR(_bisect_insort_left__doc__,
 "slice of a to be searched.");
 
 #define _BISECT_INSORT_LEFT_METHODDEF    \
-    {"insort_left", (PyCFunction)(void(*)(void))_bisect_insort_left, METH_FASTCALL|METH_KEYWORDS, _bisect_insort_left__doc__},
+    {"insort_left", _PyCFunction_CAST(_bisect_insort_left), METH_FASTCALL|METH_KEYWORDS, _bisect_insort_left__doc__},
 
 static PyObject *
 _bisect_insort_left_impl(PyObject *module, PyObject *a, PyObject *x,
@@ -461,4 +461,4 @@ skip_optional_kwonly:
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=d7b4e3eba60262d5 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=e3a0d641750551f5 input=a9049054013a1b77]*/

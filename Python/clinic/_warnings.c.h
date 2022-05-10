@@ -15,7 +15,7 @@ PyDoc_STRVAR(warnings_warn__doc__,
 "Issue a warning, or maybe ignore it or raise an exception.");
 
 #define WARNINGS_WARN_METHODDEF    \
-    {"warn", (PyCFunction)(void(*)(void))warnings_warn, METH_FASTCALL|METH_KEYWORDS, warnings_warn__doc__},
+    {"warn", _PyCFunction_CAST(warnings_warn), METH_FASTCALL|METH_KEYWORDS, warnings_warn__doc__},
 
 static PyObject *
 warnings_warn_impl(PyObject *module, PyObject *message, PyObject *category,
@@ -104,4 +104,4 @@ skip_optional_pos:
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=bffbc41410ff7c3d input=a9049054013a1b77]*/
+/*[clinic end generated code: output=f85145a576136156 input=a9049054013a1b77]*/

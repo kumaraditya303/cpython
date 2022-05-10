@@ -2,6 +2,12 @@
 preserve
 [clinic start generated code]*/
 
+#ifdef Py_BUILD_CORE
+#include "pycore_gc.h"            // PyGC_Head
+#include "pycore_runtime.h"       // _Py_ID()
+#endif
+
+
 PyDoc_STRVAR(_io__BufferedIOBase_readinto__doc__,
 "readinto($self, buffer, /)\n"
 "--\n"
@@ -29,7 +35,6 @@ _io__BufferedIOBase_readinto(PyObject *self, PyObject *arg)
         goto exit;
     }
     return_value = _io__BufferedIOBase_readinto_impl(self, &buffer);
-
 exit:
     /* Cleanup for buffer */
     if (buffer.obj) {
@@ -66,7 +71,6 @@ _io__BufferedIOBase_readinto1(PyObject *self, PyObject *arg)
         goto exit;
     }
     return_value = _io__BufferedIOBase_readinto1_impl(self, &buffer);
-
 exit:
     /* Cleanup for buffer */
     if (buffer.obj) {
@@ -134,7 +138,6 @@ _io__Buffered_peek(buffered *self, PyObject *const *args, Py_ssize_t nargs)
     }
 skip_optional:
     return_value = _io__Buffered_peek_impl(self, size);
-
 exit:
     return return_value;
 }
@@ -167,7 +170,6 @@ _io__Buffered_read(buffered *self, PyObject *const *args, Py_ssize_t nargs)
     }
 skip_optional:
     return_value = _io__Buffered_read_impl(self, n);
-
 exit:
     return return_value;
 }
@@ -209,7 +211,6 @@ _io__Buffered_read1(buffered *self, PyObject *const *args, Py_ssize_t nargs)
     }
 skip_optional:
     return_value = _io__Buffered_read1_impl(self, n);
-
 exit:
     return return_value;
 }
@@ -241,7 +242,6 @@ _io__Buffered_readinto(buffered *self, PyObject *arg)
         goto exit;
     }
     return_value = _io__Buffered_readinto_impl(self, &buffer);
-
 exit:
     /* Cleanup for buffer */
     if (buffer.obj) {
@@ -278,7 +278,6 @@ _io__Buffered_readinto1(buffered *self, PyObject *arg)
         goto exit;
     }
     return_value = _io__Buffered_readinto1_impl(self, &buffer);
-
 exit:
     /* Cleanup for buffer */
     if (buffer.obj) {
@@ -316,7 +315,6 @@ _io__Buffered_readline(buffered *self, PyObject *const *args, Py_ssize_t nargs)
     }
 skip_optional:
     return_value = _io__Buffered_readline_impl(self, size);
-
 exit:
     return return_value;
 }
@@ -352,7 +350,6 @@ _io__Buffered_seek(buffered *self, PyObject *const *args, Py_ssize_t nargs)
     }
 skip_optional:
     return_value = _io__Buffered_seek_impl(self, targetobj, whence);
-
 exit:
     return return_value;
 }
@@ -383,7 +380,6 @@ _io__Buffered_truncate(buffered *self, PyObject *const *args, Py_ssize_t nargs)
     pos = args[0];
 skip_optional:
     return_value = _io__Buffered_truncate_impl(self, pos);
-
 exit:
     return return_value;
 }
@@ -402,8 +398,40 @@ static int
 _io_BufferedReader___init__(PyObject *self, PyObject *args, PyObject *kwargs)
 {
     int return_value = -1;
+    #define NUM_KEYWORDS 2
+    #if NUM_KEYWORDS == 0
+
+    #  ifdef Py_BUILD_CORE
+    #    define KWTUPLE (PyObject *)&_Py_SINGLETON(tuple_empty)
+    #  else
+    #    define KWTUPLE NULL
+    #  endif
+
+    #else  // NUM_KEYWORDS != 0
+    #  ifdef Py_BUILD_CORE
+
+    static struct {
+        PyObject_VAR_HEAD
+        PyObject *ob_item[NUM_KEYWORDS];
+    } _kwtuple = {
+        .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
+        .ob_item = { &_Py_ID(raw), &_Py_ID(buffer_size), },
+    };
+    #  define KWTUPLE ((PyObject *)(&_kwtuple))
+
+    #  else  // !Py_BUILD_CORE
+    #    define KWTUPLE NULL
+    #  endif  // !Py_BUILD_CORE
+    #endif  // NUM_KEYWORDS != 0
+    #undef NUM_KEYWORDS
+
     static const char * const _keywords[] = {"raw", "buffer_size", NULL};
-    static _PyArg_Parser _parser = {NULL, _keywords, "BufferedReader", 0};
+    static _PyArg_Parser _parser = {
+        .keywords = _keywords,
+        .fname = "BufferedReader",
+        .kwtuple = KWTUPLE,
+    };
+    #undef KWTUPLE
     PyObject *argsbuf[2];
     PyObject * const *fastargs;
     Py_ssize_t nargs = PyTuple_GET_SIZE(args);
@@ -433,7 +461,6 @@ _io_BufferedReader___init__(PyObject *self, PyObject *args, PyObject *kwargs)
     }
 skip_optional_pos:
     return_value = _io_BufferedReader___init___impl((buffered *)self, raw, buffer_size);
-
 exit:
     return return_value;
 }
@@ -456,8 +483,40 @@ static int
 _io_BufferedWriter___init__(PyObject *self, PyObject *args, PyObject *kwargs)
 {
     int return_value = -1;
+    #define NUM_KEYWORDS 2
+    #if NUM_KEYWORDS == 0
+
+    #  ifdef Py_BUILD_CORE
+    #    define KWTUPLE (PyObject *)&_Py_SINGLETON(tuple_empty)
+    #  else
+    #    define KWTUPLE NULL
+    #  endif
+
+    #else  // NUM_KEYWORDS != 0
+    #  ifdef Py_BUILD_CORE
+
+    static struct {
+        PyObject_VAR_HEAD
+        PyObject *ob_item[NUM_KEYWORDS];
+    } _kwtuple = {
+        .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
+        .ob_item = { &_Py_ID(raw), &_Py_ID(buffer_size), },
+    };
+    #  define KWTUPLE ((PyObject *)(&_kwtuple))
+
+    #  else  // !Py_BUILD_CORE
+    #    define KWTUPLE NULL
+    #  endif  // !Py_BUILD_CORE
+    #endif  // NUM_KEYWORDS != 0
+    #undef NUM_KEYWORDS
+
     static const char * const _keywords[] = {"raw", "buffer_size", NULL};
-    static _PyArg_Parser _parser = {NULL, _keywords, "BufferedWriter", 0};
+    static _PyArg_Parser _parser = {
+        .keywords = _keywords,
+        .fname = "BufferedWriter",
+        .kwtuple = KWTUPLE,
+    };
+    #undef KWTUPLE
     PyObject *argsbuf[2];
     PyObject * const *fastargs;
     Py_ssize_t nargs = PyTuple_GET_SIZE(args);
@@ -487,7 +546,6 @@ _io_BufferedWriter___init__(PyObject *self, PyObject *args, PyObject *kwargs)
     }
 skip_optional_pos:
     return_value = _io_BufferedWriter___init___impl((buffered *)self, raw, buffer_size);
-
 exit:
     return return_value;
 }
@@ -517,7 +575,6 @@ _io_BufferedWriter_write(buffered *self, PyObject *arg)
         goto exit;
     }
     return_value = _io_BufferedWriter_write_impl(self, &buffer);
-
 exit:
     /* Cleanup for buffer */
     if (buffer.obj) {
@@ -580,7 +637,6 @@ _io_BufferedRWPair___init__(PyObject *self, PyObject *args, PyObject *kwargs)
     }
 skip_optional:
     return_value = _io_BufferedRWPair___init___impl((rwpair *)self, reader, writer, buffer_size);
-
 exit:
     return return_value;
 }
@@ -603,8 +659,40 @@ static int
 _io_BufferedRandom___init__(PyObject *self, PyObject *args, PyObject *kwargs)
 {
     int return_value = -1;
+    #define NUM_KEYWORDS 2
+    #if NUM_KEYWORDS == 0
+
+    #  ifdef Py_BUILD_CORE
+    #    define KWTUPLE (PyObject *)&_Py_SINGLETON(tuple_empty)
+    #  else
+    #    define KWTUPLE NULL
+    #  endif
+
+    #else  // NUM_KEYWORDS != 0
+    #  ifdef Py_BUILD_CORE
+
+    static struct {
+        PyObject_VAR_HEAD
+        PyObject *ob_item[NUM_KEYWORDS];
+    } _kwtuple = {
+        .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
+        .ob_item = { &_Py_ID(raw), &_Py_ID(buffer_size), },
+    };
+    #  define KWTUPLE ((PyObject *)(&_kwtuple))
+
+    #  else  // !Py_BUILD_CORE
+    #    define KWTUPLE NULL
+    #  endif  // !Py_BUILD_CORE
+    #endif  // NUM_KEYWORDS != 0
+    #undef NUM_KEYWORDS
+
     static const char * const _keywords[] = {"raw", "buffer_size", NULL};
-    static _PyArg_Parser _parser = {NULL, _keywords, "BufferedRandom", 0};
+    static _PyArg_Parser _parser = {
+        .keywords = _keywords,
+        .fname = "BufferedRandom",
+        .kwtuple = KWTUPLE,
+    };
+    #undef KWTUPLE
     PyObject *argsbuf[2];
     PyObject * const *fastargs;
     Py_ssize_t nargs = PyTuple_GET_SIZE(args);
@@ -634,8 +722,7 @@ _io_BufferedRandom___init__(PyObject *self, PyObject *args, PyObject *kwargs)
     }
 skip_optional_pos:
     return_value = _io_BufferedRandom___init___impl((buffered *)self, raw, buffer_size);
-
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=820461c6b0e29e48 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=3ad0f87cf0dc929f input=a9049054013a1b77]*/

@@ -53,7 +53,7 @@ PyDoc_STRVAR(array_array_index__doc__,
 "Raise ValueError if the value is not present.");
 
 #define ARRAY_ARRAY_INDEX_METHODDEF    \
-    {"index", (PyCFunction)(void(*)(void))array_array_index, METH_FASTCALL, array_array_index__doc__},
+    {"index", _PyCFunction_CAST(array_array_index), METH_FASTCALL, array_array_index__doc__},
 
 static PyObject *
 array_array_index_impl(arrayobject *self, PyObject *v, Py_ssize_t start,
@@ -108,7 +108,7 @@ PyDoc_STRVAR(array_array_pop__doc__,
 "i defaults to -1.");
 
 #define ARRAY_ARRAY_POP_METHODDEF    \
-    {"pop", (PyCFunction)(void(*)(void))array_array_pop, METH_FASTCALL, array_array_pop__doc__},
+    {"pop", _PyCFunction_CAST(array_array_pop), METH_FASTCALL, array_array_pop__doc__},
 
 static PyObject *
 array_array_pop_impl(arrayobject *self, Py_ssize_t i);
@@ -151,7 +151,7 @@ PyDoc_STRVAR(array_array_extend__doc__,
 "Append items to the end of the array.");
 
 #define ARRAY_ARRAY_EXTEND_METHODDEF    \
-    {"extend", (PyCFunction)(void(*)(void))array_array_extend, METH_METHOD|METH_FASTCALL|METH_KEYWORDS, array_array_extend__doc__},
+    {"extend", _PyCFunction_CAST(array_array_extend), METH_METHOD|METH_FASTCALL|METH_KEYWORDS, array_array_extend__doc__},
 
 static PyObject *
 array_array_extend_impl(arrayobject *self, PyTypeObject *cls, PyObject *bb);
@@ -190,16 +190,18 @@ array_array_extend(arrayobject *self, PyTypeObject *cls, PyObject *const *args, 
     static const char * const _keywords[] = {"", NULL};
     static _PyArg_Parser _parser = {
         .keywords = _keywords,
-        .format = "O:extend",
+        .fname = "extend",
         .kwtuple = KWTUPLE,
     };
     #undef KWTUPLE
+    PyObject *argsbuf[1];
     PyObject *bb;
 
-    if (!_PyArg_ParseStackAndKeywords(args, nargs, kwnames, &_parser,
-        &bb)) {
+    args = _PyArg_UnpackKeywords(args, nargs, NULL, kwnames, &_parser, 1, 1, 0, argsbuf);
+    if (!args) {
         goto exit;
     }
+    bb = args[0];
     return_value = array_array_extend_impl(self, cls, bb);
 
 exit:
@@ -213,7 +215,7 @@ PyDoc_STRVAR(array_array_insert__doc__,
 "Insert a new item v into the array before position i.");
 
 #define ARRAY_ARRAY_INSERT_METHODDEF    \
-    {"insert", (PyCFunction)(void(*)(void))array_array_insert, METH_FASTCALL, array_array_insert__doc__},
+    {"insert", _PyCFunction_CAST(array_array_insert), METH_FASTCALL, array_array_insert__doc__},
 
 static PyObject *
 array_array_insert_impl(arrayobject *self, Py_ssize_t i, PyObject *v);
@@ -323,7 +325,7 @@ PyDoc_STRVAR(array_array_fromfile__doc__,
 "Read n objects from the file object f and append them to the end of the array.");
 
 #define ARRAY_ARRAY_FROMFILE_METHODDEF    \
-    {"fromfile", (PyCFunction)(void(*)(void))array_array_fromfile, METH_METHOD|METH_FASTCALL|METH_KEYWORDS, array_array_fromfile__doc__},
+    {"fromfile", _PyCFunction_CAST(array_array_fromfile), METH_METHOD|METH_FASTCALL|METH_KEYWORDS, array_array_fromfile__doc__},
 
 static PyObject *
 array_array_fromfile_impl(arrayobject *self, PyTypeObject *cls, PyObject *f,
@@ -363,16 +365,30 @@ array_array_fromfile(arrayobject *self, PyTypeObject *cls, PyObject *const *args
     static const char * const _keywords[] = {"", "", NULL};
     static _PyArg_Parser _parser = {
         .keywords = _keywords,
-        .format = "On:fromfile",
+        .fname = "fromfile",
         .kwtuple = KWTUPLE,
     };
     #undef KWTUPLE
+    PyObject *argsbuf[2];
     PyObject *f;
     Py_ssize_t n;
 
-    if (!_PyArg_ParseStackAndKeywords(args, nargs, kwnames, &_parser,
-        &f, &n)) {
+    args = _PyArg_UnpackKeywords(args, nargs, NULL, kwnames, &_parser, 2, 2, 0, argsbuf);
+    if (!args) {
         goto exit;
+    }
+    f = args[0];
+    {
+        Py_ssize_t ival = -1;
+        PyObject *iobj = _PyNumber_Index(args[1]);
+        if (iobj != NULL) {
+            ival = PyLong_AsSsize_t(iobj);
+            Py_DECREF(iobj);
+        }
+        if (ival == -1 && PyErr_Occurred()) {
+            goto exit;
+        }
+        n = ival;
     }
     return_value = array_array_fromfile_impl(self, cls, f, n);
 
@@ -387,7 +403,7 @@ PyDoc_STRVAR(array_array_tofile__doc__,
 "Write all items (as machine values) to the file object f.");
 
 #define ARRAY_ARRAY_TOFILE_METHODDEF    \
-    {"tofile", (PyCFunction)(void(*)(void))array_array_tofile, METH_METHOD|METH_FASTCALL|METH_KEYWORDS, array_array_tofile__doc__},
+    {"tofile", _PyCFunction_CAST(array_array_tofile), METH_METHOD|METH_FASTCALL|METH_KEYWORDS, array_array_tofile__doc__},
 
 static PyObject *
 array_array_tofile_impl(arrayobject *self, PyTypeObject *cls, PyObject *f);
@@ -426,16 +442,18 @@ array_array_tofile(arrayobject *self, PyTypeObject *cls, PyObject *const *args, 
     static const char * const _keywords[] = {"", NULL};
     static _PyArg_Parser _parser = {
         .keywords = _keywords,
-        .format = "O:tofile",
+        .fname = "tofile",
         .kwtuple = KWTUPLE,
     };
     #undef KWTUPLE
+    PyObject *argsbuf[1];
     PyObject *f;
 
-    if (!_PyArg_ParseStackAndKeywords(args, nargs, kwnames, &_parser,
-        &f)) {
+    args = _PyArg_UnpackKeywords(args, nargs, NULL, kwnames, &_parser, 1, 1, 0, argsbuf);
+    if (!args) {
         goto exit;
     }
+    f = args[0];
     return_value = array_array_tofile_impl(self, cls, f);
 
 exit:
@@ -607,7 +625,7 @@ PyDoc_STRVAR(array__array_reconstructor__doc__,
 "Internal. Used for pickling support.");
 
 #define ARRAY__ARRAY_RECONSTRUCTOR_METHODDEF    \
-    {"_array_reconstructor", (PyCFunction)(void(*)(void))array__array_reconstructor, METH_FASTCALL, array__array_reconstructor__doc__},
+    {"_array_reconstructor", _PyCFunction_CAST(array__array_reconstructor), METH_FASTCALL, array__array_reconstructor__doc__},
 
 static PyObject *
 array__array_reconstructor_impl(PyObject *module, PyTypeObject *arraytype,
@@ -658,7 +676,7 @@ PyDoc_STRVAR(array_array___reduce_ex____doc__,
 "Return state information for pickling.");
 
 #define ARRAY_ARRAY___REDUCE_EX___METHODDEF    \
-    {"__reduce_ex__", (PyCFunction)(void(*)(void))array_array___reduce_ex__, METH_METHOD|METH_FASTCALL|METH_KEYWORDS, array_array___reduce_ex____doc__},
+    {"__reduce_ex__", _PyCFunction_CAST(array_array___reduce_ex__), METH_METHOD|METH_FASTCALL|METH_KEYWORDS, array_array___reduce_ex____doc__},
 
 static PyObject *
 array_array___reduce_ex___impl(arrayobject *self, PyTypeObject *cls,
@@ -698,16 +716,18 @@ array_array___reduce_ex__(arrayobject *self, PyTypeObject *cls, PyObject *const 
     static const char * const _keywords[] = {"", NULL};
     static _PyArg_Parser _parser = {
         .keywords = _keywords,
-        .format = "O:__reduce_ex__",
+        .fname = "__reduce_ex__",
         .kwtuple = KWTUPLE,
     };
     #undef KWTUPLE
+    PyObject *argsbuf[1];
     PyObject *value;
 
-    if (!_PyArg_ParseStackAndKeywords(args, nargs, kwnames, &_parser,
-        &value)) {
+    args = _PyArg_UnpackKeywords(args, nargs, NULL, kwnames, &_parser, 1, 1, 0, argsbuf);
+    if (!args) {
         goto exit;
     }
+    value = args[0];
     return_value = array_array___reduce_ex___impl(self, cls, value);
 
 exit:
@@ -721,7 +741,7 @@ PyDoc_STRVAR(array_arrayiterator___reduce____doc__,
 "Return state information for pickling.");
 
 #define ARRAY_ARRAYITERATOR___REDUCE___METHODDEF    \
-    {"__reduce__", (PyCFunction)(void(*)(void))array_arrayiterator___reduce__, METH_METHOD|METH_FASTCALL|METH_KEYWORDS, array_arrayiterator___reduce____doc__},
+    {"__reduce__", _PyCFunction_CAST(array_arrayiterator___reduce__), METH_METHOD|METH_FASTCALL|METH_KEYWORDS, array_arrayiterator___reduce____doc__},
 
 static PyObject *
 array_arrayiterator___reduce___impl(arrayiterobject *self, PyTypeObject *cls);
@@ -729,50 +749,11 @@ array_arrayiterator___reduce___impl(arrayiterobject *self, PyTypeObject *cls);
 static PyObject *
 array_arrayiterator___reduce__(arrayiterobject *self, PyTypeObject *cls, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
-    PyObject *return_value = NULL;
-    #define NUM_KEYWORDS 0
-    #if NUM_KEYWORDS == 0
-
-    #  ifdef Py_BUILD_CORE
-    #    define KWTUPLE (PyObject *)&_Py_SINGLETON(tuple_empty)
-    #  else
-    #    define KWTUPLE NULL
-    #  endif
-
-    #else  // NUM_KEYWORDS != 0
-    #  ifdef Py_BUILD_CORE
-
-    static struct {
-        PyObject_VAR_HEAD
-        PyObject *ob_item[NUM_KEYWORDS];
-    } _kwtuple = {
-        .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
-        .ob_item = {  },
-    };
-    #  define KWTUPLE ((PyObject *)(&_kwtuple))
-
-    #  else  // !Py_BUILD_CORE
-    #    define KWTUPLE NULL
-    #  endif  // !Py_BUILD_CORE
-    #endif  // NUM_KEYWORDS != 0
-    #undef NUM_KEYWORDS
-
-    static const char * const _keywords[] = { NULL};
-    static _PyArg_Parser _parser = {
-        .keywords = _keywords,
-        .format = ":__reduce__",
-        .kwtuple = KWTUPLE,
-    };
-    #undef KWTUPLE
-
-    if (!_PyArg_ParseStackAndKeywords(args, nargs, kwnames, &_parser
-        )) {
-        goto exit;
+    if (nargs) {
+        PyErr_SetString(PyExc_TypeError, "__reduce__() takes no arguments");
+        return NULL;
     }
-    return_value = array_arrayiterator___reduce___impl(self, cls);
-
-exit:
-    return return_value;
+    return array_arrayiterator___reduce___impl(self, cls);
 }
 
 PyDoc_STRVAR(array_arrayiterator___setstate____doc__,
@@ -783,4 +764,4 @@ PyDoc_STRVAR(array_arrayiterator___setstate____doc__,
 
 #define ARRAY_ARRAYITERATOR___SETSTATE___METHODDEF    \
     {"__setstate__", (PyCFunction)array_arrayiterator___setstate__, METH_O, array_arrayiterator___setstate____doc__},
-/*[clinic end generated code: output=0e9fd25b1d1e1af1 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=cbcc30b8996be228 input=a9049054013a1b77]*/

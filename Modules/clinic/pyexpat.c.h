@@ -17,7 +17,7 @@ PyDoc_STRVAR(pyexpat_xmlparser_Parse__doc__,
 "`isfinal\' should be true at end of input.");
 
 #define PYEXPAT_XMLPARSER_PARSE_METHODDEF    \
-    {"Parse", (PyCFunction)(void(*)(void))pyexpat_xmlparser_Parse, METH_METHOD|METH_FASTCALL|METH_KEYWORDS, pyexpat_xmlparser_Parse__doc__},
+    {"Parse", _PyCFunction_CAST(pyexpat_xmlparser_Parse), METH_METHOD|METH_FASTCALL|METH_KEYWORDS, pyexpat_xmlparser_Parse__doc__},
 
 static PyObject *
 pyexpat_xmlparser_Parse_impl(xmlparseobject *self, PyTypeObject *cls,
@@ -57,17 +57,27 @@ pyexpat_xmlparser_Parse(xmlparseobject *self, PyTypeObject *cls, PyObject *const
     static const char * const _keywords[] = {"", "", NULL};
     static _PyArg_Parser _parser = {
         .keywords = _keywords,
-        .format = "O|i:Parse",
+        .fname = "Parse",
         .kwtuple = KWTUPLE,
     };
     #undef KWTUPLE
+    PyObject *argsbuf[2];
     PyObject *data;
     int isfinal = 0;
 
-    if (!_PyArg_ParseStackAndKeywords(args, nargs, kwnames, &_parser,
-        &data, &isfinal)) {
+    args = _PyArg_UnpackKeywords(args, nargs, NULL, kwnames, &_parser, 1, 2, 0, argsbuf);
+    if (!args) {
         goto exit;
     }
+    data = args[0];
+    if (nargs < 2) {
+        goto skip_optional_posonly;
+    }
+    isfinal = _PyLong_AsInt(args[1]);
+    if (isfinal == -1 && PyErr_Occurred()) {
+        goto exit;
+    }
+skip_optional_posonly:
     return_value = pyexpat_xmlparser_Parse_impl(self, cls, data, isfinal);
 
 exit:
@@ -81,7 +91,7 @@ PyDoc_STRVAR(pyexpat_xmlparser_ParseFile__doc__,
 "Parse XML data from file-like object.");
 
 #define PYEXPAT_XMLPARSER_PARSEFILE_METHODDEF    \
-    {"ParseFile", (PyCFunction)(void(*)(void))pyexpat_xmlparser_ParseFile, METH_METHOD|METH_FASTCALL|METH_KEYWORDS, pyexpat_xmlparser_ParseFile__doc__},
+    {"ParseFile", _PyCFunction_CAST(pyexpat_xmlparser_ParseFile), METH_METHOD|METH_FASTCALL|METH_KEYWORDS, pyexpat_xmlparser_ParseFile__doc__},
 
 static PyObject *
 pyexpat_xmlparser_ParseFile_impl(xmlparseobject *self, PyTypeObject *cls,
@@ -121,16 +131,18 @@ pyexpat_xmlparser_ParseFile(xmlparseobject *self, PyTypeObject *cls, PyObject *c
     static const char * const _keywords[] = {"", NULL};
     static _PyArg_Parser _parser = {
         .keywords = _keywords,
-        .format = "O:ParseFile",
+        .fname = "ParseFile",
         .kwtuple = KWTUPLE,
     };
     #undef KWTUPLE
+    PyObject *argsbuf[1];
     PyObject *file;
 
-    if (!_PyArg_ParseStackAndKeywords(args, nargs, kwnames, &_parser,
-        &file)) {
+    args = _PyArg_UnpackKeywords(args, nargs, NULL, kwnames, &_parser, 1, 1, 0, argsbuf);
+    if (!args) {
         goto exit;
     }
+    file = args[0];
     return_value = pyexpat_xmlparser_ParseFile_impl(self, cls, file);
 
 exit:
@@ -221,7 +233,7 @@ PyDoc_STRVAR(pyexpat_xmlparser_ExternalEntityParserCreate__doc__,
 "Create a parser for parsing an external entity based on the information passed to the ExternalEntityRefHandler.");
 
 #define PYEXPAT_XMLPARSER_EXTERNALENTITYPARSERCREATE_METHODDEF    \
-    {"ExternalEntityParserCreate", (PyCFunction)(void(*)(void))pyexpat_xmlparser_ExternalEntityParserCreate, METH_METHOD|METH_FASTCALL|METH_KEYWORDS, pyexpat_xmlparser_ExternalEntityParserCreate__doc__},
+    {"ExternalEntityParserCreate", _PyCFunction_CAST(pyexpat_xmlparser_ExternalEntityParserCreate), METH_METHOD|METH_FASTCALL|METH_KEYWORDS, pyexpat_xmlparser_ExternalEntityParserCreate__doc__},
 
 static PyObject *
 pyexpat_xmlparser_ExternalEntityParserCreate_impl(xmlparseobject *self,
@@ -263,17 +275,53 @@ pyexpat_xmlparser_ExternalEntityParserCreate(xmlparseobject *self, PyTypeObject 
     static const char * const _keywords[] = {"", "", NULL};
     static _PyArg_Parser _parser = {
         .keywords = _keywords,
-        .format = "z|s:ExternalEntityParserCreate",
+        .fname = "ExternalEntityParserCreate",
         .kwtuple = KWTUPLE,
     };
     #undef KWTUPLE
+    PyObject *argsbuf[2];
     const char *context;
     const char *encoding = NULL;
 
-    if (!_PyArg_ParseStackAndKeywords(args, nargs, kwnames, &_parser,
-        &context, &encoding)) {
+    args = _PyArg_UnpackKeywords(args, nargs, NULL, kwnames, &_parser, 1, 2, 0, argsbuf);
+    if (!args) {
         goto exit;
     }
+    if (args[0] == Py_None) {
+        context = NULL;
+    }
+    else if (PyUnicode_Check(args[0])) {
+        Py_ssize_t context_length;
+        context = PyUnicode_AsUTF8AndSize(args[0], &context_length);
+        if (context == NULL) {
+            goto exit;
+        }
+        if (strlen(context) != (size_t)context_length) {
+            PyErr_SetString(PyExc_ValueError, "embedded null character");
+            goto exit;
+        }
+    }
+    else {
+        _PyArg_BadArgument("ExternalEntityParserCreate", "argument 1", "str or None", args[0]);
+        goto exit;
+    }
+    if (nargs < 2) {
+        goto skip_optional_posonly;
+    }
+    if (!PyUnicode_Check(args[1])) {
+        _PyArg_BadArgument("ExternalEntityParserCreate", "argument 2", "str", args[1]);
+        goto exit;
+    }
+    Py_ssize_t encoding_length;
+    encoding = PyUnicode_AsUTF8AndSize(args[1], &encoding_length);
+    if (encoding == NULL) {
+        goto exit;
+    }
+    if (strlen(encoding) != (size_t)encoding_length) {
+        PyErr_SetString(PyExc_ValueError, "embedded null character");
+        goto exit;
+    }
+skip_optional_posonly:
     return_value = pyexpat_xmlparser_ExternalEntityParserCreate_impl(self, cls, context, encoding);
 
 exit:
@@ -326,7 +374,7 @@ PyDoc_STRVAR(pyexpat_xmlparser_UseForeignDTD__doc__,
 "information to the parser. \'flag\' defaults to True if not provided.");
 
 #define PYEXPAT_XMLPARSER_USEFOREIGNDTD_METHODDEF    \
-    {"UseForeignDTD", (PyCFunction)(void(*)(void))pyexpat_xmlparser_UseForeignDTD, METH_METHOD|METH_FASTCALL|METH_KEYWORDS, pyexpat_xmlparser_UseForeignDTD__doc__},
+    {"UseForeignDTD", _PyCFunction_CAST(pyexpat_xmlparser_UseForeignDTD), METH_METHOD|METH_FASTCALL|METH_KEYWORDS, pyexpat_xmlparser_UseForeignDTD__doc__},
 
 static PyObject *
 pyexpat_xmlparser_UseForeignDTD_impl(xmlparseobject *self, PyTypeObject *cls,
@@ -366,16 +414,25 @@ pyexpat_xmlparser_UseForeignDTD(xmlparseobject *self, PyTypeObject *cls, PyObjec
     static const char * const _keywords[] = {"", NULL};
     static _PyArg_Parser _parser = {
         .keywords = _keywords,
-        .format = "|p:UseForeignDTD",
+        .fname = "UseForeignDTD",
         .kwtuple = KWTUPLE,
     };
     #undef KWTUPLE
+    PyObject *argsbuf[1];
     int flag = 1;
 
-    if (!_PyArg_ParseStackAndKeywords(args, nargs, kwnames, &_parser,
-        &flag)) {
+    args = _PyArg_UnpackKeywords(args, nargs, NULL, kwnames, &_parser, 0, 1, 0, argsbuf);
+    if (!args) {
         goto exit;
     }
+    if (nargs < 1) {
+        goto skip_optional_posonly;
+    }
+    flag = PyObject_IsTrue(args[0]);
+    if (flag < 0) {
+        goto exit;
+    }
+skip_optional_posonly:
     return_value = pyexpat_xmlparser_UseForeignDTD_impl(self, cls, flag);
 
 exit:
@@ -392,7 +449,7 @@ PyDoc_STRVAR(pyexpat_ParserCreate__doc__,
 "Return a new XML parser object.");
 
 #define PYEXPAT_PARSERCREATE_METHODDEF    \
-    {"ParserCreate", (PyCFunction)(void(*)(void))pyexpat_ParserCreate, METH_FASTCALL|METH_KEYWORDS, pyexpat_ParserCreate__doc__},
+    {"ParserCreate", _PyCFunction_CAST(pyexpat_ParserCreate), METH_FASTCALL|METH_KEYWORDS, pyexpat_ParserCreate__doc__},
 
 static PyObject *
 pyexpat_ParserCreate_impl(PyObject *module, const char *encoding,
@@ -534,4 +591,4 @@ exit:
 #ifndef PYEXPAT_XMLPARSER_USEFOREIGNDTD_METHODDEF
     #define PYEXPAT_XMLPARSER_USEFOREIGNDTD_METHODDEF
 #endif /* !defined(PYEXPAT_XMLPARSER_USEFOREIGNDTD_METHODDEF) */
-/*[clinic end generated code: output=2e16029c74517c21 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=2fb22276ade96129 input=a9049054013a1b77]*/

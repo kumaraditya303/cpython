@@ -2,6 +2,12 @@
 preserve
 [clinic start generated code]*/
 
+#ifdef Py_BUILD_CORE
+#include "pycore_gc.h"            // PyGC_Head
+#include "pycore_runtime.h"       // _Py_ID()
+#endif
+
+
 PyDoc_STRVAR(_io_FileIO_close__doc__,
 "close($self, /)\n"
 "--\n"
@@ -49,8 +55,40 @@ static int
 _io_FileIO___init__(PyObject *self, PyObject *args, PyObject *kwargs)
 {
     int return_value = -1;
+    #define NUM_KEYWORDS 4
+    #if NUM_KEYWORDS == 0
+
+    #  ifdef Py_BUILD_CORE
+    #    define KWTUPLE (PyObject *)&_Py_SINGLETON(tuple_empty)
+    #  else
+    #    define KWTUPLE NULL
+    #  endif
+
+    #else  // NUM_KEYWORDS != 0
+    #  ifdef Py_BUILD_CORE
+
+    static struct {
+        PyObject_VAR_HEAD
+        PyObject *ob_item[NUM_KEYWORDS];
+    } _kwtuple = {
+        .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
+        .ob_item = { &_Py_ID(file), &_Py_ID(mode), &_Py_ID(closefd), &_Py_ID(opener), },
+    };
+    #  define KWTUPLE ((PyObject *)(&_kwtuple))
+
+    #  else  // !Py_BUILD_CORE
+    #    define KWTUPLE NULL
+    #  endif  // !Py_BUILD_CORE
+    #endif  // NUM_KEYWORDS != 0
+    #undef NUM_KEYWORDS
+
     static const char * const _keywords[] = {"file", "mode", "closefd", "opener", NULL};
-    static _PyArg_Parser _parser = {NULL, _keywords, "FileIO", 0};
+    static _PyArg_Parser _parser = {
+        .keywords = _keywords,
+        .fname = "FileIO",
+        .kwtuple = KWTUPLE,
+    };
+    #undef KWTUPLE
     PyObject *argsbuf[4];
     PyObject * const *fastargs;
     Py_ssize_t nargs = PyTuple_GET_SIZE(args);
@@ -98,7 +136,6 @@ _io_FileIO___init__(PyObject *self, PyObject *args, PyObject *kwargs)
     opener = fastargs[3];
 skip_optional_pos:
     return_value = _io_FileIO___init___impl((fileio *)self, nameobj, mode, closefd, opener);
-
 exit:
     return return_value;
 }
@@ -203,7 +240,6 @@ _io_FileIO_readinto(fileio *self, PyObject *arg)
         goto exit;
     }
     return_value = _io_FileIO_readinto_impl(self, &buffer);
-
 exit:
     /* Cleanup for buffer */
     if (buffer.obj) {
@@ -267,7 +303,6 @@ _io_FileIO_read(fileio *self, PyObject *const *args, Py_ssize_t nargs)
     }
 skip_optional:
     return_value = _io_FileIO_read_impl(self, size);
-
 exit:
     return return_value;
 }
@@ -302,7 +337,6 @@ _io_FileIO_write(fileio *self, PyObject *arg)
         goto exit;
     }
     return_value = _io_FileIO_write_impl(self, &b);
-
 exit:
     /* Cleanup for b */
     if (b.obj) {
@@ -352,7 +386,6 @@ _io_FileIO_seek(fileio *self, PyObject *const *args, Py_ssize_t nargs)
     }
 skip_optional:
     return_value = _io_FileIO_seek_impl(self, pos, whence);
-
 exit:
     return return_value;
 }
@@ -409,7 +442,6 @@ _io_FileIO_truncate(fileio *self, PyObject *const *args, Py_ssize_t nargs)
     posobj = args[0];
 skip_optional:
     return_value = _io_FileIO_truncate_impl(self, posobj);
-
 exit:
     return return_value;
 }
@@ -437,4 +469,4 @@ _io_FileIO_isatty(fileio *self, PyObject *Py_UNUSED(ignored))
 #ifndef _IO_FILEIO_TRUNCATE_METHODDEF
     #define _IO_FILEIO_TRUNCATE_METHODDEF
 #endif /* !defined(_IO_FILEIO_TRUNCATE_METHODDEF) */
-/*[clinic end generated code: output=fdcf0f9277d44415 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=556d623d366ff2b3 input=a9049054013a1b77]*/

@@ -36,7 +36,7 @@ PyDoc_STRVAR(select_select__doc__,
 "descriptors can be used.");
 
 #define SELECT_SELECT_METHODDEF    \
-    {"select", (PyCFunction)(void(*)(void))select_select, METH_FASTCALL, select_select__doc__},
+    {"select", _PyCFunction_CAST(select_select), METH_FASTCALL, select_select__doc__},
 
 static PyObject *
 select_select_impl(PyObject *module, PyObject *rlist, PyObject *wlist,
@@ -83,7 +83,7 @@ PyDoc_STRVAR(select_poll_register__doc__,
 "    an optional bitmask describing the type of events to check for");
 
 #define SELECT_POLL_REGISTER_METHODDEF    \
-    {"register", (PyCFunction)(void(*)(void))select_poll_register, METH_FASTCALL, select_poll_register__doc__},
+    {"register", _PyCFunction_CAST(select_poll_register), METH_FASTCALL, select_poll_register__doc__},
 
 static PyObject *
 select_poll_register_impl(pollObject *self, int fd, unsigned short eventmask);
@@ -131,7 +131,7 @@ PyDoc_STRVAR(select_poll_modify__doc__,
 "    a bitmask describing the type of events to check for");
 
 #define SELECT_POLL_MODIFY_METHODDEF    \
-    {"modify", (PyCFunction)(void(*)(void))select_poll_modify, METH_FASTCALL, select_poll_modify__doc__},
+    {"modify", _PyCFunction_CAST(select_poll_modify), METH_FASTCALL, select_poll_modify__doc__},
 
 static PyObject *
 select_poll_modify_impl(pollObject *self, int fd, unsigned short eventmask);
@@ -207,7 +207,7 @@ PyDoc_STRVAR(select_poll_poll__doc__,
 "report, as a list of (fd, event) 2-tuples.");
 
 #define SELECT_POLL_POLL_METHODDEF    \
-    {"poll", (PyCFunction)(void(*)(void))select_poll_poll, METH_FASTCALL, select_poll_poll__doc__},
+    {"poll", _PyCFunction_CAST(select_poll_poll), METH_FASTCALL, select_poll_poll__doc__},
 
 static PyObject *
 select_poll_poll_impl(pollObject *self, PyObject *timeout_obj);
@@ -250,7 +250,7 @@ PyDoc_STRVAR(select_devpoll_register__doc__,
 "    an optional bitmask describing the type of events to check for");
 
 #define SELECT_DEVPOLL_REGISTER_METHODDEF    \
-    {"register", (PyCFunction)(void(*)(void))select_devpoll_register, METH_FASTCALL, select_devpoll_register__doc__},
+    {"register", _PyCFunction_CAST(select_devpoll_register), METH_FASTCALL, select_devpoll_register__doc__},
 
 static PyObject *
 select_devpoll_register_impl(devpollObject *self, int fd,
@@ -300,7 +300,7 @@ PyDoc_STRVAR(select_devpoll_modify__doc__,
 "    an optional bitmask describing the type of events to check for");
 
 #define SELECT_DEVPOLL_MODIFY_METHODDEF    \
-    {"modify", (PyCFunction)(void(*)(void))select_devpoll_modify, METH_FASTCALL, select_devpoll_modify__doc__},
+    {"modify", _PyCFunction_CAST(select_devpoll_modify), METH_FASTCALL, select_devpoll_modify__doc__},
 
 static PyObject *
 select_devpoll_modify_impl(devpollObject *self, int fd,
@@ -381,7 +381,7 @@ PyDoc_STRVAR(select_devpoll_poll__doc__,
 "report, as a list of (fd, event) 2-tuples.");
 
 #define SELECT_DEVPOLL_POLL_METHODDEF    \
-    {"poll", (PyCFunction)(void(*)(void))select_devpoll_poll, METH_FASTCALL, select_devpoll_poll__doc__},
+    {"poll", _PyCFunction_CAST(select_devpoll_poll), METH_FASTCALL, select_devpoll_poll__doc__},
 
 static PyObject *
 select_devpoll_poll_impl(devpollObject *self, PyObject *timeout_obj);
@@ -693,7 +693,7 @@ PyDoc_STRVAR(select_epoll_register__doc__,
 "The epoll interface supports all file descriptors that support poll.");
 
 #define SELECT_EPOLL_REGISTER_METHODDEF    \
-    {"register", (PyCFunction)(void(*)(void))select_epoll_register, METH_FASTCALL|METH_KEYWORDS, select_epoll_register__doc__},
+    {"register", _PyCFunction_CAST(select_epoll_register), METH_FASTCALL|METH_KEYWORDS, select_epoll_register__doc__},
 
 static PyObject *
 select_epoll_register_impl(pyEpoll_Object *self, int fd,
@@ -779,7 +779,7 @@ PyDoc_STRVAR(select_epoll_modify__doc__,
 "    a bit set composed of the various EPOLL constants");
 
 #define SELECT_EPOLL_MODIFY_METHODDEF    \
-    {"modify", (PyCFunction)(void(*)(void))select_epoll_modify, METH_FASTCALL|METH_KEYWORDS, select_epoll_modify__doc__},
+    {"modify", _PyCFunction_CAST(select_epoll_modify), METH_FASTCALL|METH_KEYWORDS, select_epoll_modify__doc__},
 
 static PyObject *
 select_epoll_modify_impl(pyEpoll_Object *self, int fd,
@@ -858,7 +858,7 @@ PyDoc_STRVAR(select_epoll_unregister__doc__,
 "    the target file descriptor of the operation");
 
 #define SELECT_EPOLL_UNREGISTER_METHODDEF    \
-    {"unregister", (PyCFunction)(void(*)(void))select_epoll_unregister, METH_FASTCALL|METH_KEYWORDS, select_epoll_unregister__doc__},
+    {"unregister", _PyCFunction_CAST(select_epoll_unregister), METH_FASTCALL|METH_KEYWORDS, select_epoll_unregister__doc__},
 
 static PyObject *
 select_epoll_unregister_impl(pyEpoll_Object *self, int fd);
@@ -937,7 +937,7 @@ PyDoc_STRVAR(select_epoll_poll__doc__,
 "as a list of (fd, events) 2-tuples.");
 
 #define SELECT_EPOLL_POLL_METHODDEF    \
-    {"poll", (PyCFunction)(void(*)(void))select_epoll_poll, METH_FASTCALL|METH_KEYWORDS, select_epoll_poll__doc__},
+    {"poll", _PyCFunction_CAST(select_epoll_poll), METH_FASTCALL|METH_KEYWORDS, select_epoll_poll__doc__},
 
 static PyObject *
 select_epoll_poll_impl(pyEpoll_Object *self, PyObject *timeout_obj,
@@ -1041,7 +1041,7 @@ PyDoc_STRVAR(select_epoll___exit____doc__,
 "\n");
 
 #define SELECT_EPOLL___EXIT___METHODDEF    \
-    {"__exit__", (PyCFunction)(void(*)(void))select_epoll___exit__, METH_FASTCALL, select_epoll___exit____doc__},
+    {"__exit__", _PyCFunction_CAST(select_epoll___exit__), METH_FASTCALL, select_epoll___exit____doc__},
 
 static PyObject *
 select_epoll___exit___impl(pyEpoll_Object *self, PyObject *exc_type,
@@ -1221,7 +1221,7 @@ PyDoc_STRVAR(select_kqueue_control__doc__,
 "    This accepts floats for smaller timeouts, too.");
 
 #define SELECT_KQUEUE_CONTROL_METHODDEF    \
-    {"control", (PyCFunction)(void(*)(void))select_kqueue_control, METH_FASTCALL, select_kqueue_control__doc__},
+    {"control", _PyCFunction_CAST(select_kqueue_control), METH_FASTCALL, select_kqueue_control__doc__},
 
 static PyObject *
 select_kqueue_control_impl(kqueue_queue_Object *self, PyObject *changelist,
@@ -1355,4 +1355,4 @@ exit:
 #ifndef SELECT_KQUEUE_CONTROL_METHODDEF
     #define SELECT_KQUEUE_CONTROL_METHODDEF
 #endif /* !defined(SELECT_KQUEUE_CONTROL_METHODDEF) */
-/*[clinic end generated code: output=1aec00cf41d6aa95 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=ef637cf49171d745 input=a9049054013a1b77]*/

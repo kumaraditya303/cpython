@@ -276,7 +276,7 @@ PyDoc_STRVAR(_pickle_Unpickler_find_class__doc__,
 "needed.  Both arguments passed are str objects.");
 
 #define _PICKLE_UNPICKLER_FIND_CLASS_METHODDEF    \
-    {"find_class", (PyCFunction)(void(*)(void))_pickle_Unpickler_find_class, METH_FASTCALL, _pickle_Unpickler_find_class__doc__},
+    {"find_class", _PyCFunction_CAST(_pickle_Unpickler_find_class), METH_FASTCALL, _pickle_Unpickler_find_class__doc__},
 
 static PyObject *
 _pickle_Unpickler_find_class_impl(UnpicklerObject *self,
@@ -556,7 +556,7 @@ PyDoc_STRVAR(_pickle_dump__doc__,
 "*buffer_callback* is not None and *protocol* is None or smaller than 5.");
 
 #define _PICKLE_DUMP_METHODDEF    \
-    {"dump", (PyCFunction)(void(*)(void))_pickle_dump, METH_FASTCALL|METH_KEYWORDS, _pickle_dump__doc__},
+    {"dump", _PyCFunction_CAST(_pickle_dump), METH_FASTCALL|METH_KEYWORDS, _pickle_dump__doc__},
 
 static PyObject *
 _pickle_dump_impl(PyObject *module, PyObject *obj, PyObject *file,
@@ -670,7 +670,7 @@ PyDoc_STRVAR(_pickle_dumps__doc__,
 "*buffer_callback* is not None and *protocol* is None or smaller than 5.");
 
 #define _PICKLE_DUMPS_METHODDEF    \
-    {"dumps", (PyCFunction)(void(*)(void))_pickle_dumps, METH_FASTCALL|METH_KEYWORDS, _pickle_dumps__doc__},
+    {"dumps", _PyCFunction_CAST(_pickle_dumps), METH_FASTCALL|METH_KEYWORDS, _pickle_dumps__doc__},
 
 static PyObject *
 _pickle_dumps_impl(PyObject *module, PyObject *obj, PyObject *protocol,
@@ -786,7 +786,7 @@ PyDoc_STRVAR(_pickle_load__doc__,
 "string instances as bytes objects.");
 
 #define _PICKLE_LOAD_METHODDEF    \
-    {"load", (PyCFunction)(void(*)(void))_pickle_load, METH_FASTCALL|METH_KEYWORDS, _pickle_load__doc__},
+    {"load", _PyCFunction_CAST(_pickle_load), METH_FASTCALL|METH_KEYWORDS, _pickle_load__doc__},
 
 static PyObject *
 _pickle_load_impl(PyObject *module, PyObject *file, int fix_imports,
@@ -921,7 +921,7 @@ PyDoc_STRVAR(_pickle_loads__doc__,
 "string instances as bytes objects.");
 
 #define _PICKLE_LOADS_METHODDEF    \
-    {"loads", (PyCFunction)(void(*)(void))_pickle_loads, METH_FASTCALL|METH_KEYWORDS, _pickle_loads__doc__},
+    {"loads", _PyCFunction_CAST(_pickle_loads), METH_FASTCALL|METH_KEYWORDS, _pickle_loads__doc__},
 
 static PyObject *
 _pickle_loads_impl(PyObject *module, PyObject *data, int fix_imports,
@@ -1034,4 +1034,4 @@ skip_optional_kwonly:
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=414bedc6149b056d input=a9049054013a1b77]*/
+/*[clinic end generated code: output=445cbe5c03d23be3 input=a9049054013a1b77]*/

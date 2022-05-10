@@ -2,6 +2,12 @@
 preserve
 [clinic start generated code]*/
 
+#ifdef Py_BUILD_CORE
+#include "pycore_gc.h"            // PyGC_Head
+#include "pycore_runtime.h"       // _Py_ID()
+#endif
+
+
 static int
 pysqlite_cursor_init_impl(pysqlite_Cursor *self,
                           pysqlite_Connection *connection);
@@ -26,7 +32,6 @@ pysqlite_cursor_init(PyObject *self, PyObject *args, PyObject *kwargs)
     }
     connection = (pysqlite_Connection *)PyTuple_GET_ITEM(args, 0);
     return_value = pysqlite_cursor_init_impl((pysqlite_Cursor *)self, connection);
-
 exit:
     return return_value;
 }
@@ -68,7 +73,6 @@ pysqlite_cursor_execute(pysqlite_Cursor *self, PyObject *const *args, Py_ssize_t
     parameters = args[1];
 skip_optional:
     return_value = pysqlite_cursor_execute_impl(self, sql, parameters);
-
 exit:
     return return_value;
 }
@@ -106,7 +110,6 @@ pysqlite_cursor_executemany(pysqlite_Cursor *self, PyObject *const *args, Py_ssi
     sql = args[0];
     seq_of_parameters = args[1];
     return_value = pysqlite_cursor_executemany_impl(self, sql, seq_of_parameters);
-
 exit:
     return return_value;
 }
@@ -144,7 +147,6 @@ pysqlite_cursor_executescript(pysqlite_Cursor *self, PyObject *arg)
         goto exit;
     }
     return_value = pysqlite_cursor_executescript_impl(self, sql_script);
-
 exit:
     return return_value;
 }
@@ -186,8 +188,40 @@ static PyObject *
 pysqlite_cursor_fetchmany(pysqlite_Cursor *self, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
+    #define NUM_KEYWORDS 1
+    #if NUM_KEYWORDS == 0
+
+    #  ifdef Py_BUILD_CORE
+    #    define KWTUPLE (PyObject *)&_Py_SINGLETON(tuple_empty)
+    #  else
+    #    define KWTUPLE NULL
+    #  endif
+
+    #else  // NUM_KEYWORDS != 0
+    #  ifdef Py_BUILD_CORE
+
+    static struct {
+        PyObject_VAR_HEAD
+        PyObject *ob_item[NUM_KEYWORDS];
+    } _kwtuple = {
+        .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
+        .ob_item = { &_Py_ID(size), },
+    };
+    #  define KWTUPLE ((PyObject *)(&_kwtuple))
+
+    #  else  // !Py_BUILD_CORE
+    #    define KWTUPLE NULL
+    #  endif  // !Py_BUILD_CORE
+    #endif  // NUM_KEYWORDS != 0
+    #undef NUM_KEYWORDS
+
     static const char * const _keywords[] = {"size", NULL};
-    static _PyArg_Parser _parser = {NULL, _keywords, "fetchmany", 0};
+    static _PyArg_Parser _parser = {
+        .keywords = _keywords,
+        .fname = "fetchmany",
+        .kwtuple = KWTUPLE,
+    };
+    #undef KWTUPLE
     PyObject *argsbuf[1];
     Py_ssize_t noptargs = nargs + (kwnames ? PyTuple_GET_SIZE(kwnames) : 0) - 0;
     int maxrows = self->arraysize;
@@ -205,7 +239,6 @@ pysqlite_cursor_fetchmany(pysqlite_Cursor *self, PyObject *const *args, Py_ssize
     }
 skip_optional_pos:
     return_value = pysqlite_cursor_fetchmany_impl(self, maxrows);
-
 exit:
     return return_value;
 }
@@ -267,7 +300,6 @@ pysqlite_cursor_setoutputsize(pysqlite_Cursor *self, PyObject *const *args, Py_s
     column = args[1];
 skip_optional:
     return_value = pysqlite_cursor_setoutputsize_impl(self, size, column);
-
 exit:
     return return_value;
 }
@@ -289,4 +321,4 @@ pysqlite_cursor_close(pysqlite_Cursor *self, PyObject *Py_UNUSED(ignored))
 {
     return pysqlite_cursor_close_impl(self);
 }
-/*[clinic end generated code: output=2b9c6a3ca8a8caff input=a9049054013a1b77]*/
+/*[clinic end generated code: output=8d9ecc6f72482153 input=a9049054013a1b77]*/

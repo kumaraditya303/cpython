@@ -2,6 +2,12 @@
 preserve
 [clinic start generated code]*/
 
+#ifdef Py_BUILD_CORE
+#include "pycore_gc.h"            // PyGC_Head
+#include "pycore_runtime.h"       // _Py_ID()
+#endif
+
+
 #if defined(MS_WINDOWS)
 
 PyDoc_STRVAR(_io__WindowsConsoleIO_close__doc__,
@@ -48,8 +54,40 @@ static int
 _io__WindowsConsoleIO___init__(PyObject *self, PyObject *args, PyObject *kwargs)
 {
     int return_value = -1;
+    #define NUM_KEYWORDS 4
+    #if NUM_KEYWORDS == 0
+
+    #  ifdef Py_BUILD_CORE
+    #    define KWTUPLE (PyObject *)&_Py_SINGLETON(tuple_empty)
+    #  else
+    #    define KWTUPLE NULL
+    #  endif
+
+    #else  // NUM_KEYWORDS != 0
+    #  ifdef Py_BUILD_CORE
+
+    static struct {
+        PyObject_VAR_HEAD
+        PyObject *ob_item[NUM_KEYWORDS];
+    } _kwtuple = {
+        .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
+        .ob_item = { &_Py_ID(file), &_Py_ID(mode), &_Py_ID(closefd), &_Py_ID(opener), },
+    };
+    #  define KWTUPLE ((PyObject *)(&_kwtuple))
+
+    #  else  // !Py_BUILD_CORE
+    #    define KWTUPLE NULL
+    #  endif  // !Py_BUILD_CORE
+    #endif  // NUM_KEYWORDS != 0
+    #undef NUM_KEYWORDS
+
     static const char * const _keywords[] = {"file", "mode", "closefd", "opener", NULL};
-    static _PyArg_Parser _parser = {NULL, _keywords, "_WindowsConsoleIO", 0};
+    static _PyArg_Parser _parser = {
+        .keywords = _keywords,
+        .fname = "_WindowsConsoleIO",
+        .kwtuple = KWTUPLE,
+    };
+    #undef KWTUPLE
     PyObject *argsbuf[4];
     PyObject * const *fastargs;
     Py_ssize_t nargs = PyTuple_GET_SIZE(args);
@@ -97,7 +135,6 @@ _io__WindowsConsoleIO___init__(PyObject *self, PyObject *args, PyObject *kwargs)
     opener = fastargs[3];
 skip_optional_pos:
     return_value = _io__WindowsConsoleIO___init___impl((winconsoleio *)self, nameobj, mode, closefd, opener);
-
 exit:
     return return_value;
 }
@@ -200,7 +237,6 @@ _io__WindowsConsoleIO_readinto(winconsoleio *self, PyObject *arg)
         goto exit;
     }
     return_value = _io__WindowsConsoleIO_readinto_impl(self, &buffer);
-
 exit:
     /* Cleanup for buffer */
     if (buffer.obj) {
@@ -271,7 +307,6 @@ _io__WindowsConsoleIO_read(winconsoleio *self, PyObject *const *args, Py_ssize_t
     }
 skip_optional:
     return_value = _io__WindowsConsoleIO_read_impl(self, size);
-
 exit:
     return return_value;
 }
@@ -309,7 +344,6 @@ _io__WindowsConsoleIO_write(winconsoleio *self, PyObject *arg)
         goto exit;
     }
     return_value = _io__WindowsConsoleIO_write_impl(self, &b);
-
 exit:
     /* Cleanup for b */
     if (b.obj) {
@@ -378,4 +412,4 @@ _io__WindowsConsoleIO_isatty(winconsoleio *self, PyObject *Py_UNUSED(ignored))
 #ifndef _IO__WINDOWSCONSOLEIO_ISATTY_METHODDEF
     #define _IO__WINDOWSCONSOLEIO_ISATTY_METHODDEF
 #endif /* !defined(_IO__WINDOWSCONSOLEIO_ISATTY_METHODDEF) */
-/*[clinic end generated code: output=2d8648fab31ec60e input=a9049054013a1b77]*/
+/*[clinic end generated code: output=6bf985c5e9488cd1 input=a9049054013a1b77]*/

@@ -15,7 +15,7 @@ PyDoc_STRVAR(_curses_panel_panel_bottom__doc__,
 "Push the panel to the bottom of the stack.");
 
 #define _CURSES_PANEL_PANEL_BOTTOM_METHODDEF    \
-    {"bottom", (PyCFunction)(void(*)(void))_curses_panel_panel_bottom, METH_METHOD|METH_FASTCALL|METH_KEYWORDS, _curses_panel_panel_bottom__doc__},
+    {"bottom", _PyCFunction_CAST(_curses_panel_panel_bottom), METH_METHOD|METH_FASTCALL|METH_KEYWORDS, _curses_panel_panel_bottom__doc__},
 
 static PyObject *
 _curses_panel_panel_bottom_impl(PyCursesPanelObject *self, PyTypeObject *cls);
@@ -23,50 +23,11 @@ _curses_panel_panel_bottom_impl(PyCursesPanelObject *self, PyTypeObject *cls);
 static PyObject *
 _curses_panel_panel_bottom(PyCursesPanelObject *self, PyTypeObject *cls, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
-    PyObject *return_value = NULL;
-    #define NUM_KEYWORDS 0
-    #if NUM_KEYWORDS == 0
-
-    #  ifdef Py_BUILD_CORE
-    #    define KWTUPLE (PyObject *)&_Py_SINGLETON(tuple_empty)
-    #  else
-    #    define KWTUPLE NULL
-    #  endif
-
-    #else  // NUM_KEYWORDS != 0
-    #  ifdef Py_BUILD_CORE
-
-    static struct {
-        PyObject_VAR_HEAD
-        PyObject *ob_item[NUM_KEYWORDS];
-    } _kwtuple = {
-        .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
-        .ob_item = {  },
-    };
-    #  define KWTUPLE ((PyObject *)(&_kwtuple))
-
-    #  else  // !Py_BUILD_CORE
-    #    define KWTUPLE NULL
-    #  endif  // !Py_BUILD_CORE
-    #endif  // NUM_KEYWORDS != 0
-    #undef NUM_KEYWORDS
-
-    static const char * const _keywords[] = { NULL};
-    static _PyArg_Parser _parser = {
-        .keywords = _keywords,
-        .format = ":bottom",
-        .kwtuple = KWTUPLE,
-    };
-    #undef KWTUPLE
-
-    if (!_PyArg_ParseStackAndKeywords(args, nargs, kwnames, &_parser
-        )) {
-        goto exit;
+    if (nargs) {
+        PyErr_SetString(PyExc_TypeError, "bottom() takes no arguments");
+        return NULL;
     }
-    return_value = _curses_panel_panel_bottom_impl(self, cls);
-
-exit:
-    return return_value;
+    return _curses_panel_panel_bottom_impl(self, cls);
 }
 
 PyDoc_STRVAR(_curses_panel_panel_hide__doc__,
@@ -78,7 +39,7 @@ PyDoc_STRVAR(_curses_panel_panel_hide__doc__,
 "This does not delete the object, it just makes the window on screen invisible.");
 
 #define _CURSES_PANEL_PANEL_HIDE_METHODDEF    \
-    {"hide", (PyCFunction)(void(*)(void))_curses_panel_panel_hide, METH_METHOD|METH_FASTCALL|METH_KEYWORDS, _curses_panel_panel_hide__doc__},
+    {"hide", _PyCFunction_CAST(_curses_panel_panel_hide), METH_METHOD|METH_FASTCALL|METH_KEYWORDS, _curses_panel_panel_hide__doc__},
 
 static PyObject *
 _curses_panel_panel_hide_impl(PyCursesPanelObject *self, PyTypeObject *cls);
@@ -86,50 +47,11 @@ _curses_panel_panel_hide_impl(PyCursesPanelObject *self, PyTypeObject *cls);
 static PyObject *
 _curses_panel_panel_hide(PyCursesPanelObject *self, PyTypeObject *cls, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
-    PyObject *return_value = NULL;
-    #define NUM_KEYWORDS 0
-    #if NUM_KEYWORDS == 0
-
-    #  ifdef Py_BUILD_CORE
-    #    define KWTUPLE (PyObject *)&_Py_SINGLETON(tuple_empty)
-    #  else
-    #    define KWTUPLE NULL
-    #  endif
-
-    #else  // NUM_KEYWORDS != 0
-    #  ifdef Py_BUILD_CORE
-
-    static struct {
-        PyObject_VAR_HEAD
-        PyObject *ob_item[NUM_KEYWORDS];
-    } _kwtuple = {
-        .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
-        .ob_item = {  },
-    };
-    #  define KWTUPLE ((PyObject *)(&_kwtuple))
-
-    #  else  // !Py_BUILD_CORE
-    #    define KWTUPLE NULL
-    #  endif  // !Py_BUILD_CORE
-    #endif  // NUM_KEYWORDS != 0
-    #undef NUM_KEYWORDS
-
-    static const char * const _keywords[] = { NULL};
-    static _PyArg_Parser _parser = {
-        .keywords = _keywords,
-        .format = ":hide",
-        .kwtuple = KWTUPLE,
-    };
-    #undef KWTUPLE
-
-    if (!_PyArg_ParseStackAndKeywords(args, nargs, kwnames, &_parser
-        )) {
-        goto exit;
+    if (nargs) {
+        PyErr_SetString(PyExc_TypeError, "hide() takes no arguments");
+        return NULL;
     }
-    return_value = _curses_panel_panel_hide_impl(self, cls);
-
-exit:
-    return return_value;
+    return _curses_panel_panel_hide_impl(self, cls);
 }
 
 PyDoc_STRVAR(_curses_panel_panel_show__doc__,
@@ -139,7 +61,7 @@ PyDoc_STRVAR(_curses_panel_panel_show__doc__,
 "Display the panel (which might have been hidden).");
 
 #define _CURSES_PANEL_PANEL_SHOW_METHODDEF    \
-    {"show", (PyCFunction)(void(*)(void))_curses_panel_panel_show, METH_METHOD|METH_FASTCALL|METH_KEYWORDS, _curses_panel_panel_show__doc__},
+    {"show", _PyCFunction_CAST(_curses_panel_panel_show), METH_METHOD|METH_FASTCALL|METH_KEYWORDS, _curses_panel_panel_show__doc__},
 
 static PyObject *
 _curses_panel_panel_show_impl(PyCursesPanelObject *self, PyTypeObject *cls);
@@ -147,50 +69,11 @@ _curses_panel_panel_show_impl(PyCursesPanelObject *self, PyTypeObject *cls);
 static PyObject *
 _curses_panel_panel_show(PyCursesPanelObject *self, PyTypeObject *cls, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
-    PyObject *return_value = NULL;
-    #define NUM_KEYWORDS 0
-    #if NUM_KEYWORDS == 0
-
-    #  ifdef Py_BUILD_CORE
-    #    define KWTUPLE (PyObject *)&_Py_SINGLETON(tuple_empty)
-    #  else
-    #    define KWTUPLE NULL
-    #  endif
-
-    #else  // NUM_KEYWORDS != 0
-    #  ifdef Py_BUILD_CORE
-
-    static struct {
-        PyObject_VAR_HEAD
-        PyObject *ob_item[NUM_KEYWORDS];
-    } _kwtuple = {
-        .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
-        .ob_item = {  },
-    };
-    #  define KWTUPLE ((PyObject *)(&_kwtuple))
-
-    #  else  // !Py_BUILD_CORE
-    #    define KWTUPLE NULL
-    #  endif  // !Py_BUILD_CORE
-    #endif  // NUM_KEYWORDS != 0
-    #undef NUM_KEYWORDS
-
-    static const char * const _keywords[] = { NULL};
-    static _PyArg_Parser _parser = {
-        .keywords = _keywords,
-        .format = ":show",
-        .kwtuple = KWTUPLE,
-    };
-    #undef KWTUPLE
-
-    if (!_PyArg_ParseStackAndKeywords(args, nargs, kwnames, &_parser
-        )) {
-        goto exit;
+    if (nargs) {
+        PyErr_SetString(PyExc_TypeError, "show() takes no arguments");
+        return NULL;
     }
-    return_value = _curses_panel_panel_show_impl(self, cls);
-
-exit:
-    return return_value;
+    return _curses_panel_panel_show_impl(self, cls);
 }
 
 PyDoc_STRVAR(_curses_panel_panel_top__doc__,
@@ -200,7 +83,7 @@ PyDoc_STRVAR(_curses_panel_panel_top__doc__,
 "Push panel to the top of the stack.");
 
 #define _CURSES_PANEL_PANEL_TOP_METHODDEF    \
-    {"top", (PyCFunction)(void(*)(void))_curses_panel_panel_top, METH_METHOD|METH_FASTCALL|METH_KEYWORDS, _curses_panel_panel_top__doc__},
+    {"top", _PyCFunction_CAST(_curses_panel_panel_top), METH_METHOD|METH_FASTCALL|METH_KEYWORDS, _curses_panel_panel_top__doc__},
 
 static PyObject *
 _curses_panel_panel_top_impl(PyCursesPanelObject *self, PyTypeObject *cls);
@@ -208,50 +91,11 @@ _curses_panel_panel_top_impl(PyCursesPanelObject *self, PyTypeObject *cls);
 static PyObject *
 _curses_panel_panel_top(PyCursesPanelObject *self, PyTypeObject *cls, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
-    PyObject *return_value = NULL;
-    #define NUM_KEYWORDS 0
-    #if NUM_KEYWORDS == 0
-
-    #  ifdef Py_BUILD_CORE
-    #    define KWTUPLE (PyObject *)&_Py_SINGLETON(tuple_empty)
-    #  else
-    #    define KWTUPLE NULL
-    #  endif
-
-    #else  // NUM_KEYWORDS != 0
-    #  ifdef Py_BUILD_CORE
-
-    static struct {
-        PyObject_VAR_HEAD
-        PyObject *ob_item[NUM_KEYWORDS];
-    } _kwtuple = {
-        .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
-        .ob_item = {  },
-    };
-    #  define KWTUPLE ((PyObject *)(&_kwtuple))
-
-    #  else  // !Py_BUILD_CORE
-    #    define KWTUPLE NULL
-    #  endif  // !Py_BUILD_CORE
-    #endif  // NUM_KEYWORDS != 0
-    #undef NUM_KEYWORDS
-
-    static const char * const _keywords[] = { NULL};
-    static _PyArg_Parser _parser = {
-        .keywords = _keywords,
-        .format = ":top",
-        .kwtuple = KWTUPLE,
-    };
-    #undef KWTUPLE
-
-    if (!_PyArg_ParseStackAndKeywords(args, nargs, kwnames, &_parser
-        )) {
-        goto exit;
+    if (nargs) {
+        PyErr_SetString(PyExc_TypeError, "top() takes no arguments");
+        return NULL;
     }
-    return_value = _curses_panel_panel_top_impl(self, cls);
-
-exit:
-    return return_value;
+    return _curses_panel_panel_top_impl(self, cls);
 }
 
 PyDoc_STRVAR(_curses_panel_panel_above__doc__,
@@ -315,7 +159,7 @@ PyDoc_STRVAR(_curses_panel_panel_move__doc__,
 "Move the panel to the screen coordinates (y, x).");
 
 #define _CURSES_PANEL_PANEL_MOVE_METHODDEF    \
-    {"move", (PyCFunction)(void(*)(void))_curses_panel_panel_move, METH_METHOD|METH_FASTCALL|METH_KEYWORDS, _curses_panel_panel_move__doc__},
+    {"move", _PyCFunction_CAST(_curses_panel_panel_move), METH_METHOD|METH_FASTCALL|METH_KEYWORDS, _curses_panel_panel_move__doc__},
 
 static PyObject *
 _curses_panel_panel_move_impl(PyCursesPanelObject *self, PyTypeObject *cls,
@@ -355,15 +199,24 @@ _curses_panel_panel_move(PyCursesPanelObject *self, PyTypeObject *cls, PyObject 
     static const char * const _keywords[] = {"", "", NULL};
     static _PyArg_Parser _parser = {
         .keywords = _keywords,
-        .format = "ii:move",
+        .fname = "move",
         .kwtuple = KWTUPLE,
     };
     #undef KWTUPLE
+    PyObject *argsbuf[2];
     int y;
     int x;
 
-    if (!_PyArg_ParseStackAndKeywords(args, nargs, kwnames, &_parser,
-        &y, &x)) {
+    args = _PyArg_UnpackKeywords(args, nargs, NULL, kwnames, &_parser, 2, 2, 0, argsbuf);
+    if (!args) {
+        goto exit;
+    }
+    y = _PyLong_AsInt(args[0]);
+    if (y == -1 && PyErr_Occurred()) {
+        goto exit;
+    }
+    x = _PyLong_AsInt(args[1]);
+    if (x == -1 && PyErr_Occurred()) {
         goto exit;
     }
     return_value = _curses_panel_panel_move_impl(self, cls, y, x);
@@ -397,7 +250,7 @@ PyDoc_STRVAR(_curses_panel_panel_replace__doc__,
 "Change the window associated with the panel to the window win.");
 
 #define _CURSES_PANEL_PANEL_REPLACE_METHODDEF    \
-    {"replace", (PyCFunction)(void(*)(void))_curses_panel_panel_replace, METH_METHOD|METH_FASTCALL|METH_KEYWORDS, _curses_panel_panel_replace__doc__},
+    {"replace", _PyCFunction_CAST(_curses_panel_panel_replace), METH_METHOD|METH_FASTCALL|METH_KEYWORDS, _curses_panel_panel_replace__doc__},
 
 static PyObject *
 _curses_panel_panel_replace_impl(PyCursesPanelObject *self,
@@ -438,16 +291,22 @@ _curses_panel_panel_replace(PyCursesPanelObject *self, PyTypeObject *cls, PyObje
     static const char * const _keywords[] = {"", NULL};
     static _PyArg_Parser _parser = {
         .keywords = _keywords,
-        .format = "O!:replace",
+        .fname = "replace",
         .kwtuple = KWTUPLE,
     };
     #undef KWTUPLE
+    PyObject *argsbuf[1];
     PyCursesWindowObject *win;
 
-    if (!_PyArg_ParseStackAndKeywords(args, nargs, kwnames, &_parser,
-        &PyCursesWindow_Type, &win)) {
+    args = _PyArg_UnpackKeywords(args, nargs, NULL, kwnames, &_parser, 1, 1, 0, argsbuf);
+    if (!args) {
         goto exit;
     }
+    if (!PyObject_TypeCheck(args[0], &PyCursesWindow_Type)) {
+        _PyArg_BadArgument("replace", "argument 1", (&PyCursesWindow_Type)->tp_name, args[0]);
+        goto exit;
+    }
+    win = (PyCursesWindowObject *)args[0];
     return_value = _curses_panel_panel_replace_impl(self, cls, win);
 
 exit:
@@ -461,7 +320,7 @@ PyDoc_STRVAR(_curses_panel_panel_set_userptr__doc__,
 "Set the panel\'s user pointer to obj.");
 
 #define _CURSES_PANEL_PANEL_SET_USERPTR_METHODDEF    \
-    {"set_userptr", (PyCFunction)(void(*)(void))_curses_panel_panel_set_userptr, METH_METHOD|METH_FASTCALL|METH_KEYWORDS, _curses_panel_panel_set_userptr__doc__},
+    {"set_userptr", _PyCFunction_CAST(_curses_panel_panel_set_userptr), METH_METHOD|METH_FASTCALL|METH_KEYWORDS, _curses_panel_panel_set_userptr__doc__},
 
 static PyObject *
 _curses_panel_panel_set_userptr_impl(PyCursesPanelObject *self,
@@ -501,16 +360,18 @@ _curses_panel_panel_set_userptr(PyCursesPanelObject *self, PyTypeObject *cls, Py
     static const char * const _keywords[] = {"", NULL};
     static _PyArg_Parser _parser = {
         .keywords = _keywords,
-        .format = "O:set_userptr",
+        .fname = "set_userptr",
         .kwtuple = KWTUPLE,
     };
     #undef KWTUPLE
+    PyObject *argsbuf[1];
     PyObject *obj;
 
-    if (!_PyArg_ParseStackAndKeywords(args, nargs, kwnames, &_parser,
-        &obj)) {
+    args = _PyArg_UnpackKeywords(args, nargs, NULL, kwnames, &_parser, 1, 1, 0, argsbuf);
+    if (!args) {
         goto exit;
     }
+    obj = args[0];
     return_value = _curses_panel_panel_set_userptr_impl(self, cls, obj);
 
 exit:
@@ -524,7 +385,7 @@ PyDoc_STRVAR(_curses_panel_panel_userptr__doc__,
 "Return the user pointer for the panel.");
 
 #define _CURSES_PANEL_PANEL_USERPTR_METHODDEF    \
-    {"userptr", (PyCFunction)(void(*)(void))_curses_panel_panel_userptr, METH_METHOD|METH_FASTCALL|METH_KEYWORDS, _curses_panel_panel_userptr__doc__},
+    {"userptr", _PyCFunction_CAST(_curses_panel_panel_userptr), METH_METHOD|METH_FASTCALL|METH_KEYWORDS, _curses_panel_panel_userptr__doc__},
 
 static PyObject *
 _curses_panel_panel_userptr_impl(PyCursesPanelObject *self,
@@ -533,50 +394,11 @@ _curses_panel_panel_userptr_impl(PyCursesPanelObject *self,
 static PyObject *
 _curses_panel_panel_userptr(PyCursesPanelObject *self, PyTypeObject *cls, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
-    PyObject *return_value = NULL;
-    #define NUM_KEYWORDS 0
-    #if NUM_KEYWORDS == 0
-
-    #  ifdef Py_BUILD_CORE
-    #    define KWTUPLE (PyObject *)&_Py_SINGLETON(tuple_empty)
-    #  else
-    #    define KWTUPLE NULL
-    #  endif
-
-    #else  // NUM_KEYWORDS != 0
-    #  ifdef Py_BUILD_CORE
-
-    static struct {
-        PyObject_VAR_HEAD
-        PyObject *ob_item[NUM_KEYWORDS];
-    } _kwtuple = {
-        .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
-        .ob_item = {  },
-    };
-    #  define KWTUPLE ((PyObject *)(&_kwtuple))
-
-    #  else  // !Py_BUILD_CORE
-    #    define KWTUPLE NULL
-    #  endif  // !Py_BUILD_CORE
-    #endif  // NUM_KEYWORDS != 0
-    #undef NUM_KEYWORDS
-
-    static const char * const _keywords[] = { NULL};
-    static _PyArg_Parser _parser = {
-        .keywords = _keywords,
-        .format = ":userptr",
-        .kwtuple = KWTUPLE,
-    };
-    #undef KWTUPLE
-
-    if (!_PyArg_ParseStackAndKeywords(args, nargs, kwnames, &_parser
-        )) {
-        goto exit;
+    if (nargs) {
+        PyErr_SetString(PyExc_TypeError, "userptr() takes no arguments");
+        return NULL;
     }
-    return_value = _curses_panel_panel_userptr_impl(self, cls);
-
-exit:
-    return return_value;
+    return _curses_panel_panel_userptr_impl(self, cls);
 }
 
 PyDoc_STRVAR(_curses_panel_bottom_panel__doc__,
@@ -663,4 +485,4 @@ _curses_panel_update_panels(PyObject *module, PyObject *Py_UNUSED(ignored))
 {
     return _curses_panel_update_panels_impl(module);
 }
-/*[clinic end generated code: output=f267ec5bc25eaed5 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=00bac0e3d942cef1 input=a9049054013a1b77]*/

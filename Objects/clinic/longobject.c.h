@@ -134,7 +134,7 @@ PyDoc_STRVAR(int___round____doc__,
 "Rounding with an ndigits argument also returns an integer.");
 
 #define INT___ROUND___METHODDEF    \
-    {"__round__", (PyCFunction)(void(*)(void))int___round__, METH_FASTCALL, int___round____doc__},
+    {"__round__", _PyCFunction_CAST(int___round__), METH_FASTCALL, int___round____doc__},
 
 static PyObject *
 int___round___impl(PyObject *self, PyObject *o_ndigits);
@@ -285,7 +285,7 @@ PyDoc_STRVAR(int_to_bytes__doc__,
 "    is raised.");
 
 #define INT_TO_BYTES_METHODDEF    \
-    {"to_bytes", (PyCFunction)(void(*)(void))int_to_bytes, METH_FASTCALL|METH_KEYWORDS, int_to_bytes__doc__},
+    {"to_bytes", _PyCFunction_CAST(int_to_bytes), METH_FASTCALL|METH_KEYWORDS, int_to_bytes__doc__},
 
 static PyObject *
 int_to_bytes_impl(PyObject *self, Py_ssize_t length, PyObject *byteorder,
@@ -408,7 +408,7 @@ PyDoc_STRVAR(int_from_bytes__doc__,
 "    Indicates whether two\'s complement is used to represent the integer.");
 
 #define INT_FROM_BYTES_METHODDEF    \
-    {"from_bytes", (PyCFunction)(void(*)(void))int_from_bytes, METH_FASTCALL|METH_KEYWORDS|METH_CLASS, int_from_bytes__doc__},
+    {"from_bytes", _PyCFunction_CAST(int_from_bytes), METH_FASTCALL|METH_KEYWORDS|METH_CLASS, int_from_bytes__doc__},
 
 static PyObject *
 int_from_bytes_impl(PyTypeObject *type, PyObject *bytes_obj,
@@ -493,4 +493,4 @@ skip_optional_kwonly:
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=95772815afc13d1e input=a9049054013a1b77]*/
+/*[clinic end generated code: output=7d5b6611de8cb7ad input=a9049054013a1b77]*/

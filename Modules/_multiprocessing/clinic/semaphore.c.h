@@ -2,6 +2,12 @@
 preserve
 [clinic start generated code]*/
 
+#ifdef Py_BUILD_CORE
+#include "pycore_gc.h"            // PyGC_Head
+#include "pycore_runtime.h"       // _Py_ID()
+#endif
+
+
 #if defined(HAVE_MP_SEMAPHORE) && defined(MS_WINDOWS)
 
 PyDoc_STRVAR(_multiprocessing_SemLock_acquire__doc__,
@@ -21,8 +27,40 @@ static PyObject *
 _multiprocessing_SemLock_acquire(SemLockObject *self, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
+    #define NUM_KEYWORDS 2
+    #if NUM_KEYWORDS == 0
+
+    #  ifdef Py_BUILD_CORE
+    #    define KWTUPLE (PyObject *)&_Py_SINGLETON(tuple_empty)
+    #  else
+    #    define KWTUPLE NULL
+    #  endif
+
+    #else  // NUM_KEYWORDS != 0
+    #  ifdef Py_BUILD_CORE
+
+    static struct {
+        PyObject_VAR_HEAD
+        PyObject *ob_item[NUM_KEYWORDS];
+    } _kwtuple = {
+        .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
+        .ob_item = { &_Py_ID(block), &_Py_ID(timeout), },
+    };
+    #  define KWTUPLE ((PyObject *)(&_kwtuple))
+
+    #  else  // !Py_BUILD_CORE
+    #    define KWTUPLE NULL
+    #  endif  // !Py_BUILD_CORE
+    #endif  // NUM_KEYWORDS != 0
+    #undef NUM_KEYWORDS
+
     static const char * const _keywords[] = {"block", "timeout", NULL};
-    static _PyArg_Parser _parser = {NULL, _keywords, "acquire", 0};
+    static _PyArg_Parser _parser = {
+        .keywords = _keywords,
+        .fname = "acquire",
+        .kwtuple = KWTUPLE,
+    };
+    #undef KWTUPLE
     PyObject *argsbuf[2];
     Py_ssize_t noptargs = nargs + (kwnames ? PyTuple_GET_SIZE(kwnames) : 0) - 0;
     int blocking = 1;
@@ -47,7 +85,6 @@ _multiprocessing_SemLock_acquire(SemLockObject *self, PyObject *const *args, Py_
     timeout_obj = args[1];
 skip_optional_pos:
     return_value = _multiprocessing_SemLock_acquire_impl(self, blocking, timeout_obj);
-
 exit:
     return return_value;
 }
@@ -95,8 +132,40 @@ static PyObject *
 _multiprocessing_SemLock_acquire(SemLockObject *self, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
+    #define NUM_KEYWORDS 2
+    #if NUM_KEYWORDS == 0
+
+    #  ifdef Py_BUILD_CORE
+    #    define KWTUPLE (PyObject *)&_Py_SINGLETON(tuple_empty)
+    #  else
+    #    define KWTUPLE NULL
+    #  endif
+
+    #else  // NUM_KEYWORDS != 0
+    #  ifdef Py_BUILD_CORE
+
+    static struct {
+        PyObject_VAR_HEAD
+        PyObject *ob_item[NUM_KEYWORDS];
+    } _kwtuple = {
+        .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
+        .ob_item = { &_Py_ID(block), &_Py_ID(timeout), },
+    };
+    #  define KWTUPLE ((PyObject *)(&_kwtuple))
+
+    #  else  // !Py_BUILD_CORE
+    #    define KWTUPLE NULL
+    #  endif  // !Py_BUILD_CORE
+    #endif  // NUM_KEYWORDS != 0
+    #undef NUM_KEYWORDS
+
     static const char * const _keywords[] = {"block", "timeout", NULL};
-    static _PyArg_Parser _parser = {NULL, _keywords, "acquire", 0};
+    static _PyArg_Parser _parser = {
+        .keywords = _keywords,
+        .fname = "acquire",
+        .kwtuple = KWTUPLE,
+    };
+    #undef KWTUPLE
     PyObject *argsbuf[2];
     Py_ssize_t noptargs = nargs + (kwnames ? PyTuple_GET_SIZE(kwnames) : 0) - 0;
     int blocking = 1;
@@ -121,7 +190,6 @@ _multiprocessing_SemLock_acquire(SemLockObject *self, PyObject *const *args, Py_
     timeout_obj = args[1];
 skip_optional_pos:
     return_value = _multiprocessing_SemLock_acquire_impl(self, blocking, timeout_obj);
-
 exit:
     return return_value;
 }
@@ -160,8 +228,40 @@ static PyObject *
 _multiprocessing_SemLock(PyTypeObject *type, PyObject *args, PyObject *kwargs)
 {
     PyObject *return_value = NULL;
+    #define NUM_KEYWORDS 5
+    #if NUM_KEYWORDS == 0
+
+    #  ifdef Py_BUILD_CORE
+    #    define KWTUPLE (PyObject *)&_Py_SINGLETON(tuple_empty)
+    #  else
+    #    define KWTUPLE NULL
+    #  endif
+
+    #else  // NUM_KEYWORDS != 0
+    #  ifdef Py_BUILD_CORE
+
+    static struct {
+        PyObject_VAR_HEAD
+        PyObject *ob_item[NUM_KEYWORDS];
+    } _kwtuple = {
+        .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
+        .ob_item = { &_Py_ID(kind), &_Py_ID(value), &_Py_ID(maxvalue), &_Py_ID(name), &_Py_ID(unlink), },
+    };
+    #  define KWTUPLE ((PyObject *)(&_kwtuple))
+
+    #  else  // !Py_BUILD_CORE
+    #    define KWTUPLE NULL
+    #  endif  // !Py_BUILD_CORE
+    #endif  // NUM_KEYWORDS != 0
+    #undef NUM_KEYWORDS
+
     static const char * const _keywords[] = {"kind", "value", "maxvalue", "name", "unlink", NULL};
-    static _PyArg_Parser _parser = {NULL, _keywords, "SemLock", 0};
+    static _PyArg_Parser _parser = {
+        .keywords = _keywords,
+        .fname = "SemLock",
+        .kwtuple = KWTUPLE,
+    };
+    #undef KWTUPLE
     PyObject *argsbuf[5];
     PyObject * const *fastargs;
     Py_ssize_t nargs = PyTuple_GET_SIZE(args);
@@ -205,7 +305,6 @@ _multiprocessing_SemLock(PyTypeObject *type, PyObject *args, PyObject *kwargs)
         goto exit;
     }
     return_value = _multiprocessing_SemLock_impl(type, kind, value, maxvalue, name, unlink);
-
 exit:
     return return_value;
 }
@@ -241,7 +340,6 @@ _multiprocessing_SemLock__rebuild(PyTypeObject *type, PyObject *const *args, Py_
         goto exit;
     }
     return_value = _multiprocessing_SemLock__rebuild_impl(type, handle, kind, maxvalue, name);
-
 exit:
     return return_value;
 }
@@ -421,7 +519,6 @@ _multiprocessing_SemLock___exit__(SemLockObject *self, PyObject *const *args, Py
     exc_tb = args[2];
 skip_optional:
     return_value = _multiprocessing_SemLock___exit___impl(self, exc_type, exc_value, exc_tb);
-
 exit:
     return return_value;
 }
@@ -467,4 +564,4 @@ exit:
 #ifndef _MULTIPROCESSING_SEMLOCK___EXIT___METHODDEF
     #define _MULTIPROCESSING_SEMLOCK___EXIT___METHODDEF
 #endif /* !defined(_MULTIPROCESSING_SEMLOCK___EXIT___METHODDEF) */
-/*[clinic end generated code: output=64ba32544811c9e6 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=b42ed31b515b8ee0 input=a9049054013a1b77]*/
