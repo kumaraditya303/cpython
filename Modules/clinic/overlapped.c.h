@@ -2,6 +2,12 @@
 preserve
 [clinic start generated code]*/
 
+#ifdef Py_BUILD_CORE
+#include "pycore_gc.h"            // PyGC_Head
+#include "pycore_runtime.h"       // _Py_ID()
+#endif
+
+
 PyDoc_STRVAR(_overlapped_CreateIoCompletionPort__doc__,
 "CreateIoCompletionPort($module, handle, port, key, concurrency, /)\n"
 "--\n"
@@ -360,8 +366,40 @@ static PyObject *
 _overlapped_Overlapped(PyTypeObject *type, PyObject *args, PyObject *kwargs)
 {
     PyObject *return_value = NULL;
+    #define NUM_KEYWORDS 1
+    #if NUM_KEYWORDS == 0
+
+    #  ifdef Py_BUILD_CORE
+    #    define KWTUPLE (PyObject *)&_Py_SINGLETON(tuple_empty)
+    #  else
+    #    define KWTUPLE NULL
+    #  endif
+
+    #else  // NUM_KEYWORDS != 0
+    #  ifdef Py_BUILD_CORE
+
+    static struct {
+        PyObject_VAR_HEAD
+        PyObject *ob_item[NUM_KEYWORDS];
+    } _kwtuple = {
+        .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
+        .ob_item = { &_Py_ID(event), },
+    };
+    #  define KWTUPLE ((PyObject *)(&_kwtuple))
+
+    #  else  // !Py_BUILD_CORE
+    #    define KWTUPLE NULL
+    #  endif  // !Py_BUILD_CORE
+    #endif  // NUM_KEYWORDS != 0
+    #undef NUM_KEYWORDS
+
     static const char * const _keywords[] = {"event", NULL};
-    static _PyArg_Parser _parser = {"|"F_HANDLE":Overlapped", _keywords, 0};
+    static _PyArg_Parser _parser = {
+        .keywords = _keywords,
+        .format = "|"F_HANDLE":Overlapped",
+        .kwtuple = KWTUPLE,
+    };
+    #undef KWTUPLE
     HANDLE event = INVALID_HANDLE_VALUE;
 
     if (!_PyArg_ParseTupleAndKeywordsFast(args, kwargs, &_parser,
@@ -960,4 +998,4 @@ exit:
 
     return return_value;
 }
-/*[clinic end generated code: output=9078d9f9984864a2 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=98c4f7c00f93aaa4 input=a9049054013a1b77]*/

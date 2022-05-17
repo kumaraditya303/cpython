@@ -2,6 +2,12 @@
 preserve
 [clinic start generated code]*/
 
+#ifdef Py_BUILD_CORE
+#include "pycore_gc.h"            // PyGC_Head
+#include "pycore_runtime.h"       // _Py_ID()
+#endif
+
+
 PyDoc_STRVAR(_contextvars_copy_context__doc__,
 "copy_context($module, /)\n"
 "--\n"
@@ -18,4 +24,4 @@ _contextvars_copy_context(PyObject *module, PyObject *Py_UNUSED(ignored))
 {
     return _contextvars_copy_context_impl(module);
 }
-/*[clinic end generated code: output=26e07024451baf52 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=634aac4f23f57f79 input=a9049054013a1b77]*/

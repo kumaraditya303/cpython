@@ -2,6 +2,12 @@
 preserve
 [clinic start generated code]*/
 
+#ifdef Py_BUILD_CORE
+#include "pycore_gc.h"            // PyGC_Head
+#include "pycore_runtime.h"       // _Py_ID()
+#endif
+
+
 #if defined(HAVE_GETRUSAGE)
 
 PyDoc_STRVAR(resource_getrusage__doc__,
@@ -171,4 +177,4 @@ exit:
 #ifndef RESOURCE_PRLIMIT_METHODDEF
     #define RESOURCE_PRLIMIT_METHODDEF
 #endif /* !defined(RESOURCE_PRLIMIT_METHODDEF) */
-/*[clinic end generated code: output=7c57d4f3688d3f07 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=6b0a04fa06e09068 input=a9049054013a1b77]*/

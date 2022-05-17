@@ -2,6 +2,12 @@
 preserve
 [clinic start generated code]*/
 
+#ifdef Py_BUILD_CORE
+#include "pycore_gc.h"            // PyGC_Head
+#include "pycore_runtime.h"       // _Py_ID()
+#endif
+
+
 PyDoc_STRVAR(_statistics__normal_dist_inv_cdf__doc__,
 "_normal_dist_inv_cdf($module, p, mu, sigma, /)\n"
 "--\n"
@@ -65,4 +71,4 @@ _statistics__normal_dist_inv_cdf(PyObject *module, PyObject *const *args, Py_ssi
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=b807a8243e7801e6 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=c2933cadc5c3a0b2 input=a9049054013a1b77]*/

@@ -834,6 +834,7 @@ extern "C" {
                 INIT_ID(_blksize), \
                 INIT_ID(_bootstrap), \
                 INIT_ID(_dealloc_warn), \
+                INIT_ID(_feature_version), \
                 INIT_ID(_finalizing), \
                 INIT_ID(_find_and_load), \
                 INIT_ID(_fix_up_module), \
@@ -849,95 +850,303 @@ extern "C" {
                 INIT_ID(_uninitialized_submodules), \
                 INIT_ID(_warn_unawaited_coroutine), \
                 INIT_ID(_xoptions), \
+                INIT_ID(a), \
+                INIT_ID(abs_tol), \
+                INIT_ID(access), \
                 INIT_ID(add), \
+                INIT_ID(after_in_child), \
+                INIT_ID(after_in_parent), \
+                INIT_ID(aggregate_class), \
                 INIT_ID(append), \
+                INIT_ID(argdefs), \
+                INIT_ID(arguments), \
+                INIT_ID(argv), \
+                INIT_ID(attribute), \
+                INIT_ID(authorizer_callback), \
+                INIT_ID(b), \
+                INIT_ID(backtick), \
+                INIT_ID(base), \
+                INIT_ID(before), \
                 INIT_ID(big), \
+                INIT_ID(binary_form), \
+                INIT_ID(block), \
                 INIT_ID(buffer), \
+                INIT_ID(buffer_callback), \
+                INIT_ID(buffer_size), \
+                INIT_ID(buffering), \
+                INIT_ID(buffers), \
+                INIT_ID(bufsize), \
                 INIT_ID(builtins), \
+                INIT_ID(byteorder), \
+                INIT_ID(bytes), \
+                INIT_ID(bytes_per_sep), \
                 INIT_ID(c_call), \
                 INIT_ID(c_exception), \
                 INIT_ID(c_return), \
+                INIT_ID(cached_statements), \
+                INIT_ID(cadata), \
+                INIT_ID(cafile), \
                 INIT_ID(call), \
+                INIT_ID(capath), \
+                INIT_ID(category), \
+                INIT_ID(cb_type), \
+                INIT_ID(certfile), \
+                INIT_ID(check_same_thread), \
                 INIT_ID(clear), \
                 INIT_ID(close), \
                 INIT_ID(closed), \
+                INIT_ID(closefd), \
+                INIT_ID(closure), \
+                INIT_ID(co_argcount), \
+                INIT_ID(co_cellvars), \
+                INIT_ID(co_code), \
+                INIT_ID(co_consts), \
+                INIT_ID(co_exceptiontable), \
+                INIT_ID(co_filename), \
+                INIT_ID(co_firstlineno), \
+                INIT_ID(co_flags), \
+                INIT_ID(co_freevars), \
+                INIT_ID(co_kwonlyargcount), \
+                INIT_ID(co_linetable), \
+                INIT_ID(co_name), \
+                INIT_ID(co_names), \
+                INIT_ID(co_nlocals), \
+                INIT_ID(co_posonlyargcount), \
+                INIT_ID(co_qualname), \
+                INIT_ID(co_stacksize), \
+                INIT_ID(co_varnames), \
                 INIT_ID(code), \
+                INIT_ID(command), \
+                INIT_ID(comment_factory), \
+                INIT_ID(context), \
+                INIT_ID(cookie), \
                 INIT_ID(copy), \
                 INIT_ID(copyreg), \
+                INIT_ID(coro), \
+                INIT_ID(count), \
+                INIT_ID(cwd), \
+                INIT_ID(data), \
+                INIT_ID(database), \
                 INIT_ID(decode), \
+                INIT_ID(decoder), \
                 INIT_ID(default), \
                 INIT_ID(defaultaction), \
+                INIT_ID(delete), \
+                INIT_ID(depth), \
+                INIT_ID(detect_types), \
+                INIT_ID(deterministic), \
+                INIT_ID(device), \
+                INIT_ID(dict), \
                 INIT_ID(dictcomp), \
                 INIT_ID(difference_update), \
+                INIT_ID(digest), \
+                INIT_ID(digest_size), \
+                INIT_ID(digestmod), \
+                INIT_ID(dir_fd), \
                 INIT_ID(dispatch_table), \
                 INIT_ID(displayhook), \
+                INIT_ID(dklen), \
+                INIT_ID(doc), \
+                INIT_ID(dont_inherit), \
+                INIT_ID(dst), \
+                INIT_ID(dst_dir_fd), \
+                INIT_ID(duration), \
+                INIT_ID(effective_ids), \
+                INIT_ID(element_factory), \
                 INIT_ID(enable), \
                 INIT_ID(encode), \
                 INIT_ID(encoding), \
+                INIT_ID(end), \
                 INIT_ID(end_lineno), \
                 INIT_ID(end_offset), \
+                INIT_ID(endpos), \
+                INIT_ID(env), \
                 INIT_ID(errors), \
+                INIT_ID(event), \
+                INIT_ID(eventmask), \
+                INIT_ID(exc_type), \
+                INIT_ID(exc_value), \
                 INIT_ID(excepthook), \
                 INIT_ID(exception), \
+                INIT_ID(exp), \
                 INIT_ID(extend), \
+                INIT_ID(factory), \
+                INIT_ID(family), \
+                INIT_ID(fanout), \
+                INIT_ID(fd), \
+                INIT_ID(fd2), \
+                INIT_ID(fdel), \
+                INIT_ID(fget), \
+                INIT_ID(file), \
+                INIT_ID(file_actions), \
                 INIT_ID(filename), \
                 INIT_ID(fileno), \
+                INIT_ID(filepath), \
                 INIT_ID(fillvalue), \
                 INIT_ID(filters), \
+                INIT_ID(final), \
                 INIT_ID(find_class), \
+                INIT_ID(fix_imports), \
+                INIT_ID(flags), \
                 INIT_ID(flush), \
+                INIT_ID(follow_symlinks), \
+                INIT_ID(format), \
+                INIT_ID(frequency), \
+                INIT_ID(fromlist), \
+                INIT_ID(fset), \
+                INIT_ID(func), \
+                INIT_ID(future), \
+                INIT_ID(generation), \
                 INIT_ID(genexpr), \
                 INIT_ID(get), \
                 INIT_ID(get_source), \
                 INIT_ID(getattr), \
                 INIT_ID(getstate), \
+                INIT_ID(gid), \
+                INIT_ID(globals), \
+                INIT_ID(groupindex), \
+                INIT_ID(groups), \
+                INIT_ID(handle), \
+                INIT_ID(hash_name), \
+                INIT_ID(header), \
+                INIT_ID(headers), \
+                INIT_ID(hi), \
+                INIT_ID(hook), \
+                INIT_ID(id), \
                 INIT_ID(ignore), \
+                INIT_ID(imag), \
                 INIT_ID(importlib), \
+                INIT_ID(in_fd), \
+                INIT_ID(incoming), \
+                INIT_ID(indexgroup), \
                 INIT_ID(inf), \
+                INIT_ID(inheritable), \
+                INIT_ID(initial), \
+                INIT_ID(initial_bytes), \
+                INIT_ID(initial_value), \
+                INIT_ID(initval), \
+                INIT_ID(inner_size), \
+                INIT_ID(input), \
+                INIT_ID(insert_comments), \
+                INIT_ID(insert_pis), \
+                INIT_ID(intern), \
                 INIT_ID(intersection), \
                 INIT_ID(isatty), \
                 INIT_ID(isinstance), \
+                INIT_ID(isolation_level), \
+                INIT_ID(istext), \
+                INIT_ID(item), \
                 INIT_ID(items), \
                 INIT_ID(iter), \
+                INIT_ID(iterable), \
+                INIT_ID(iterations), \
                 INIT_ID(join), \
+                INIT_ID(jump), \
+                INIT_ID(keepends), \
+                INIT_ID(key), \
+                INIT_ID(keyfile), \
                 INIT_ID(keys), \
+                INIT_ID(kind), \
                 INIT_ID(lambda), \
+                INIT_ID(last), \
+                INIT_ID(last_node), \
                 INIT_ID(last_traceback), \
                 INIT_ID(last_type), \
                 INIT_ID(last_value), \
                 INIT_ID(latin1), \
+                INIT_ID(leaf_size), \
                 INIT_ID(len), \
+                INIT_ID(length), \
+                INIT_ID(level), \
+                INIT_ID(limit), \
                 INIT_ID(line), \
+                INIT_ID(line_buffering), \
                 INIT_ID(lineno), \
                 INIT_ID(listcomp), \
                 INIT_ID(little), \
+                INIT_ID(lo), \
                 INIT_ID(locale), \
+                INIT_ID(locals), \
+                INIT_ID(loop), \
+                INIT_ID(mapping), \
                 INIT_ID(match), \
+                INIT_ID(max_length), \
+                INIT_ID(maxevents), \
+                INIT_ID(maxmem), \
+                INIT_ID(maxsplit), \
+                INIT_ID(maxvalue), \
+                INIT_ID(memLevel), \
+                INIT_ID(memlimit), \
+                INIT_ID(message), \
                 INIT_ID(metaclass), \
+                INIT_ID(method), \
+                INIT_ID(mod), \
                 INIT_ID(mode), \
                 INIT_ID(modules), \
                 INIT_ID(mro), \
                 INIT_ID(msg), \
+                INIT_ID(n), \
+                INIT_ID(n_arg), \
                 INIT_ID(n_fields), \
                 INIT_ID(n_sequence_fields), \
                 INIT_ID(n_unnamed_fields), \
                 INIT_ID(name), \
+                INIT_ID(namespace_separator), \
+                INIT_ID(namespaces), \
+                INIT_ID(narg), \
+                INIT_ID(ndigits), \
+                INIT_ID(new_limit), \
+                INIT_ID(newline), \
                 INIT_ID(newlines), \
                 INIT_ID(next), \
+                INIT_ID(node_depth), \
+                INIT_ID(node_offset), \
+                INIT_ID(ns), \
+                INIT_ID(number), \
                 INIT_ID(obj), \
+                INIT_ID(object), \
                 INIT_ID(offset), \
+                INIT_ID(offset_dst), \
+                INIT_ID(offset_src), \
+                INIT_ID(on_type_read), \
                 INIT_ID(onceregistry), \
+                INIT_ID(oparg), \
                 INIT_ID(opcode), \
                 INIT_ID(open), \
+                INIT_ID(opener), \
+                INIT_ID(operation), \
+                INIT_ID(optimize), \
+                INIT_ID(options), \
+                INIT_ID(order), \
+                INIT_ID(out_fd), \
+                INIT_ID(outgoing), \
+                INIT_ID(overlapped), \
+                INIT_ID(owner), \
+                INIT_ID(p), \
+                INIT_ID(pages), \
                 INIT_ID(parent), \
                 INIT_ID(partial), \
+                INIT_ID(password), \
                 INIT_ID(path), \
+                INIT_ID(pattern), \
                 INIT_ID(peek), \
                 INIT_ID(persistent_id), \
                 INIT_ID(persistent_load), \
+                INIT_ID(person), \
+                INIT_ID(pi_factory), \
+                INIT_ID(pid), \
+                INIT_ID(policy), \
+                INIT_ID(pos), \
                 INIT_ID(print_file_and_line), \
+                INIT_ID(priority), \
+                INIT_ID(progress), \
+                INIT_ID(progress_handler), \
+                INIT_ID(proto), \
+                INIT_ID(protocol), \
                 INIT_ID(ps1), \
                 INIT_ID(ps2), \
+                INIT_ID(quotetabs), \
+                INIT_ID(r), \
                 INIT_ID(raw), \
                 INIT_ID(read), \
                 INIT_ID(read1), \
@@ -946,36 +1155,115 @@ extern "C" {
                 INIT_ID(readinto), \
                 INIT_ID(readinto1), \
                 INIT_ID(readline), \
+                INIT_ID(readonly), \
+                INIT_ID(real), \
                 INIT_ID(reducer_override), \
+                INIT_ID(rel_tol), \
                 INIT_ID(reload), \
+                INIT_ID(repeat_count), \
+                INIT_ID(repl), \
                 INIT_ID(replace), \
+                INIT_ID(reserved), \
                 INIT_ID(reset), \
+                INIT_ID(resetids), \
                 INIT_ID(return), \
+                INIT_ID(reverse), \
                 INIT_ID(reversed), \
+                INIT_ID(s), \
+                INIT_ID(salt), \
+                INIT_ID(sched_priority), \
+                INIT_ID(scheduler), \
                 INIT_ID(seek), \
                 INIT_ID(seekable), \
+                INIT_ID(selectors), \
                 INIT_ID(send), \
+                INIT_ID(sep), \
+                INIT_ID(sequence), \
+                INIT_ID(server_hostname), \
+                INIT_ID(server_side), \
+                INIT_ID(session), \
                 INIT_ID(setcomp), \
+                INIT_ID(setpgroup), \
+                INIT_ID(setsid), \
+                INIT_ID(setsigdef), \
+                INIT_ID(setsigmask), \
                 INIT_ID(setstate), \
+                INIT_ID(shape), \
+                INIT_ID(show_cmd), \
+                INIT_ID(signed), \
+                INIT_ID(size), \
+                INIT_ID(sizehint), \
+                INIT_ID(sleep), \
+                INIT_ID(sock), \
                 INIT_ID(sort), \
+                INIT_ID(sound), \
+                INIT_ID(source), \
+                INIT_ID(src), \
+                INIT_ID(src_dir_fd), \
+                INIT_ID(stacklevel), \
+                INIT_ID(start), \
+                INIT_ID(statement), \
+                INIT_ID(status), \
                 INIT_ID(stderr), \
                 INIT_ID(stdin), \
                 INIT_ID(stdout), \
+                INIT_ID(step), \
+                INIT_ID(store_name), \
+                INIT_ID(strategy), \
                 INIT_ID(strict), \
+                INIT_ID(strict_mode), \
+                INIT_ID(string), \
+                INIT_ID(sub_key), \
                 INIT_ID(symmetric_difference_update), \
+                INIT_ID(tabsize), \
+                INIT_ID(tag), \
+                INIT_ID(target), \
+                INIT_ID(target_is_directory), \
+                INIT_ID(task), \
+                INIT_ID(tb_frame), \
+                INIT_ID(tb_lasti), \
+                INIT_ID(tb_lineno), \
+                INIT_ID(tb_next), \
                 INIT_ID(tell), \
+                INIT_ID(template), \
+                INIT_ID(term), \
                 INIT_ID(text), \
                 INIT_ID(threading), \
                 INIT_ID(throw), \
+                INIT_ID(timeout), \
+                INIT_ID(times), \
                 INIT_ID(top), \
+                INIT_ID(trace_callback), \
+                INIT_ID(traceback), \
+                INIT_ID(trailers), \
+                INIT_ID(translate), \
                 INIT_ID(truncate), \
+                INIT_ID(twice), \
+                INIT_ID(txt), \
+                INIT_ID(type), \
+                INIT_ID(tz), \
+                INIT_ID(uid), \
+                INIT_ID(unlink), \
                 INIT_ID(unraisablehook), \
+                INIT_ID(uri), \
+                INIT_ID(usedforsecurity), \
+                INIT_ID(value), \
                 INIT_ID(values), \
                 INIT_ID(version), \
                 INIT_ID(warnings), \
                 INIT_ID(warnoptions), \
+                INIT_ID(wbits), \
+                INIT_ID(week), \
+                INIT_ID(weekday), \
+                INIT_ID(which), \
+                INIT_ID(who), \
+                INIT_ID(withdata), \
                 INIT_ID(writable), \
                 INIT_ID(write), \
+                INIT_ID(write_through), \
+                INIT_ID(x), \
+                INIT_ID(year), \
+                INIT_ID(zdict), \
                 INIT_ID(zipimporter), \
             }, \
             .ascii = { \

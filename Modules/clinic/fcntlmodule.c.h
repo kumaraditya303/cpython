@@ -2,6 +2,12 @@
 preserve
 [clinic start generated code]*/
 
+#ifdef Py_BUILD_CORE
+#include "pycore_gc.h"            // PyGC_Head
+#include "pycore_runtime.h"       // _Py_ID()
+#endif
+
+
 PyDoc_STRVAR(fcntl_fcntl__doc__,
 "fcntl($module, fd, cmd, arg=0, /)\n"
 "--\n"
@@ -243,4 +249,4 @@ skip_optional:
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=b8cb14ab35de4c6a input=a9049054013a1b77]*/
+/*[clinic end generated code: output=a4f67481dac2456e input=a9049054013a1b77]*/

@@ -2,6 +2,12 @@
 preserve
 [clinic start generated code]*/
 
+#ifdef Py_BUILD_CORE
+#include "pycore_gc.h"            // PyGC_Head
+#include "pycore_runtime.h"       // _Py_ID()
+#endif
+
+
 PyDoc_STRVAR(audioop_getsample__doc__,
 "getsample($module, fragment, width, index, /)\n"
 "--\n"
@@ -1309,4 +1315,4 @@ exit:
 
     return return_value;
 }
-/*[clinic end generated code: output=a581c3893ef8ad75 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=76ffab00ce9e40f8 input=a9049054013a1b77]*/
