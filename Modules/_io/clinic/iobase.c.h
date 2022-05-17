@@ -2,6 +2,12 @@
 preserve
 [clinic start generated code]*/
 
+#ifdef Py_BUILD_CORE
+#include "pycore_gc.h"            // PyGC_Head
+#include "pycore_runtime.h"       // _Py_ID()
+#endif
+
+
 PyDoc_STRVAR(_io__IOBase_tell__doc__,
 "tell($self, /)\n"
 "--\n"
@@ -310,4 +316,4 @@ _io__RawIOBase_readall(PyObject *self, PyObject *Py_UNUSED(ignored))
 {
     return _io__RawIOBase_readall_impl(self);
 }
-/*[clinic end generated code: output=0362e134da2d8641 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=94aebcb3a05b84a0 input=a9049054013a1b77]*/

@@ -2,6 +2,12 @@
 preserve
 [clinic start generated code]*/
 
+#ifdef Py_BUILD_CORE
+#include "pycore_gc.h"            // PyGC_Head
+#include "pycore_runtime.h"       // _Py_ID()
+#endif
+
+
 PyDoc_STRVAR(pwd_getpwuid__doc__,
 "getpwuid($module, uidobj, /)\n"
 "--\n"
@@ -74,4 +80,4 @@ pwd_getpwall(PyObject *module, PyObject *Py_UNUSED(ignored))
 #ifndef PWD_GETPWALL_METHODDEF
     #define PWD_GETPWALL_METHODDEF
 #endif /* !defined(PWD_GETPWALL_METHODDEF) */
-/*[clinic end generated code: output=7fceab7f1a85da36 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=2a5cb4cf4dc05fd9 input=a9049054013a1b77]*/

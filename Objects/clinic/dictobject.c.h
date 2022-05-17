@@ -2,6 +2,12 @@
 preserve
 [clinic start generated code]*/
 
+#ifdef Py_BUILD_CORE
+#include "pycore_gc.h"            // PyGC_Head
+#include "pycore_runtime.h"       // _Py_ID()
+#endif
+
+
 PyDoc_STRVAR(dict_fromkeys__doc__,
 "fromkeys($type, iterable, value=None, /)\n"
 "--\n"
@@ -191,4 +197,4 @@ dict___reversed__(PyDictObject *self, PyObject *Py_UNUSED(ignored))
 {
     return dict___reversed___impl(self);
 }
-/*[clinic end generated code: output=582766ac0154c8bf input=a9049054013a1b77]*/
+/*[clinic end generated code: output=56f2900d034525f5 input=a9049054013a1b77]*/

@@ -2,6 +2,12 @@
 preserve
 [clinic start generated code]*/
 
+#ifdef Py_BUILD_CORE
+#include "pycore_gc.h"            // PyGC_Head
+#include "pycore_runtime.h"       // _Py_ID()
+#endif
+
+
 PyDoc_STRVAR(_msi_UuidCreate__doc__,
 "UuidCreate($module, /)\n"
 "--\n"
@@ -689,4 +695,4 @@ _msi_CreateRecord(PyObject *module, PyObject *arg)
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=a592695c4315db22 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=6ea189eae80ae58a input=a9049054013a1b77]*/

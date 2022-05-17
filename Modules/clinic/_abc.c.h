@@ -2,6 +2,12 @@
 preserve
 [clinic start generated code]*/
 
+#ifdef Py_BUILD_CORE
+#include "pycore_gc.h"            // PyGC_Head
+#include "pycore_runtime.h"       // _Py_ID()
+#endif
+
+
 PyDoc_STRVAR(_abc__reset_registry__doc__,
 "_reset_registry($module, self, /)\n"
 "--\n"
@@ -159,4 +165,4 @@ _abc_get_cache_token(PyObject *module, PyObject *Py_UNUSED(ignored))
 {
     return _abc_get_cache_token_impl(module);
 }
-/*[clinic end generated code: output=babb3ce445fa9b21 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=e979f498e4a0f4f1 input=a9049054013a1b77]*/

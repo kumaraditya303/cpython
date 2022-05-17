@@ -2,6 +2,12 @@
 preserve
 [clinic start generated code]*/
 
+#ifdef Py_BUILD_CORE
+#include "pycore_gc.h"            // PyGC_Head
+#include "pycore_runtime.h"       // _Py_ID()
+#endif
+
+
 PyDoc_STRVAR(type___instancecheck____doc__,
 "__instancecheck__($self, instance, /)\n"
 "--\n"
@@ -261,4 +267,4 @@ object___dir__(PyObject *self, PyObject *Py_UNUSED(ignored))
 {
     return object___dir___impl(self);
 }
-/*[clinic end generated code: output=a30090032b8e6195 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=6119fe55ec6a524c input=a9049054013a1b77]*/

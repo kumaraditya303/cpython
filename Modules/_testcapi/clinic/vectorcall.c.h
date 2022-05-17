@@ -2,6 +2,12 @@
 preserve
 [clinic start generated code]*/
 
+#ifdef Py_BUILD_CORE
+#include "pycore_gc.h"            // PyGC_Head
+#include "pycore_runtime.h"       // _Py_ID()
+#endif
+
+
 PyDoc_STRVAR(_testcapi_VectorCallClass_set_vectorcall__doc__,
 "set_vectorcall($self, type, /)\n"
 "--\n"
@@ -104,4 +110,4 @@ _testcapi_has_vectorcall_flag(PyObject *module, PyObject *arg)
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=cf39927be151aebd input=a9049054013a1b77]*/
+/*[clinic end generated code: output=774df73bdb52e52e input=a9049054013a1b77]*/

@@ -2,6 +2,12 @@
 preserve
 [clinic start generated code]*/
 
+#ifdef Py_BUILD_CORE
+#include "pycore_gc.h"            // PyGC_Head
+#include "pycore_runtime.h"       // _Py_ID()
+#endif
+
+
 PyDoc_STRVAR(_weakref_getweakrefcount__doc__,
 "getweakrefcount($module, object, /)\n"
 "--\n"
@@ -110,4 +116,4 @@ skip_optional:
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=f4be6b8177fbceb8 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=13bf2685f659c970 input=a9049054013a1b77]*/
