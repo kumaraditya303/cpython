@@ -1859,7 +1859,7 @@ parser_init(struct _PyArg_Parser *parser)
     PyObject *kwtuple;
 
     assert(parser->keywords != NULL);
-    if (parser->kwtuple != NULL) {
+    if (parser->initialized) {
         return 1;
     }
 
@@ -1948,25 +1948,36 @@ parser_init(struct _PyArg_Parser *parser)
     }
 
     nkw = len - parser->pos;
-    kwtuple = PyTuple_New(nkw);
-    if (kwtuple == NULL) {
-        return 0;
-    }
-    keywords = parser->keywords + parser->pos;
-    for (i = 0; i < nkw; i++) {
-        PyObject *str = PyUnicode_FromString(keywords[i]);
-        if (str == NULL) {
-            Py_DECREF(kwtuple);
+    if (parser->kwtuple == NULL || PyTuple_GET_SIZE(parser->kwtuple) != nkw) {
+        if (parser->kwtuple && PyTuple_GET_SIZE(parser->kwtuple) != nkw) {
+            printf("before %s:%ld:%d\n", parser->fname, PyTuple_GET_SIZE(parser->kwtuple), nkw);
+            memcpy(((PyTupleObject *)parser->kwtuple)->ob_item, &PyTuple_GET_ITEM(parser->kwtuple, parser->pos),
+                   sizeof(PyObject *) * nkw);
+            Py_SET_SIZE(parser->kwtuple, nkw);
+            printf("after %s:%ld:%d\n", parser->fname, PyTuple_GET_SIZE(parser->kwtuple), nkw);
+            return 1;
+        }
+        kwtuple = PyTuple_New(nkw);
+        if (kwtuple == NULL) {
             return 0;
         }
-        PyUnicode_InternInPlace(&str);
-        PyTuple_SET_ITEM(kwtuple, i, str);
+        keywords = parser->keywords + parser->pos;
+        for (i = 0; i < nkw; i++) {
+            PyObject *str = PyUnicode_FromString(keywords[i]);
+            if (str == NULL) {
+                Py_DECREF(kwtuple);
+                return 0;
+            }
+            PyUnicode_InternInPlace(&str);
+            PyTuple_SET_ITEM(kwtuple, i, str);
+        }
+        parser->kwtuple = kwtuple;
     }
-    parser->kwtuple = kwtuple;
 
     assert(parser->next == NULL);
-    parser->next = static_arg_parsers;
-    static_arg_parsers = parser;
+    parser->initialized = 1;
+    // parser->next = static_arg_parsers;
+    // static_arg_parsers = parser;
     return 1;
 }
 
