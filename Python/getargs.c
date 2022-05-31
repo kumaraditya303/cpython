@@ -1950,11 +1950,9 @@ parser_init(struct _PyArg_Parser *parser)
     nkw = len - parser->pos;
     if (parser->kwtuple == NULL || PyTuple_GET_SIZE(parser->kwtuple) != nkw) {
         if (parser->kwtuple && PyTuple_GET_SIZE(parser->kwtuple) != nkw) {
-            printf("before %s:%ld:%d\n", parser->fname, PyTuple_GET_SIZE(parser->kwtuple), nkw);
             memcpy(((PyTupleObject *)parser->kwtuple)->ob_item, &PyTuple_GET_ITEM(parser->kwtuple, parser->pos),
                    sizeof(PyObject *) * nkw);
             Py_SET_SIZE(parser->kwtuple, nkw);
-            printf("after %s:%ld:%d\n", parser->fname, PyTuple_GET_SIZE(parser->kwtuple), nkw);
             return 1;
         }
         kwtuple = PyTuple_New(nkw);
