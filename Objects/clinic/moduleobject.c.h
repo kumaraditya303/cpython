@@ -55,6 +55,7 @@ module___init__(PyObject *self, PyObject *args, PyObject *kwargs)
         .keywords = _keywords,
         .fname = "module",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[2];
@@ -86,4 +87,4 @@ skip_optional_pos:
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=665116c1a3d3e78b input=a9049054013a1b77]*/
+/*[clinic end generated code: output=9b5a7b1cb9040ead input=a9049054013a1b77]*/

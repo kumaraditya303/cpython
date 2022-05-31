@@ -144,6 +144,7 @@ _pickle_Pickler___init__(PyObject *self, PyObject *args, PyObject *kwargs)
         .keywords = _keywords,
         .fname = "Pickler",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[4];
@@ -396,6 +397,7 @@ _pickle_Unpickler___init__(PyObject *self, PyObject *args, PyObject *kwargs)
         .keywords = _keywords,
         .fname = "Unpickler",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[5];
@@ -599,6 +601,7 @@ _pickle_dump(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyObject
         .keywords = _keywords,
         .fname = "dump",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[5];
@@ -712,6 +715,7 @@ _pickle_dumps(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyObjec
         .keywords = _keywords,
         .fname = "dumps",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[4];
@@ -829,6 +833,7 @@ _pickle_load(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyObject
         .keywords = _keywords,
         .fname = "load",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[5];
@@ -932,7 +937,7 @@ static PyObject *
 _pickle_loads(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
-    #define NUM_KEYWORDS 5
+    #define NUM_KEYWORDS 4
     #if NUM_KEYWORDS == 0
 
     #  ifdef Py_BUILD_CORE
@@ -949,7 +954,7 @@ _pickle_loads(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyObjec
         PyObject *ob_item[NUM_KEYWORDS];
     } _kwtuple = {
         .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
-        .ob_item = { &_Py_STR(empty), &_Py_ID(fix_imports), &_Py_ID(encoding), &_Py_ID(errors), &_Py_ID(buffers), },
+        .ob_item = { &_Py_ID(fix_imports), &_Py_ID(encoding), &_Py_ID(errors), &_Py_ID(buffers), },
     };
     #  define KWTUPLE ((PyObject *)(&_kwtuple))
 
@@ -964,6 +969,7 @@ _pickle_loads(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyObjec
         .keywords = _keywords,
         .fname = "loads",
         .kwtuple = KWTUPLE,
+        .pos = 1,
     };
     #undef KWTUPLE
     PyObject *argsbuf[5];
@@ -1034,4 +1040,4 @@ skip_optional_kwonly:
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=5511922266ca98ed input=a9049054013a1b77]*/
+/*[clinic end generated code: output=fd22894be9fcb7c3 input=a9049054013a1b77]*/

@@ -386,6 +386,7 @@ _ssl__SSLSocket_get_channel_binding(PySSLSocket *self, PyObject *const *args, Py
         .keywords = _keywords,
         .fname = "get_channel_binding",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[1];
@@ -601,6 +602,7 @@ _ssl__SSLContext_load_cert_chain(PySSLContext *self, PyObject *const *args, Py_s
         .keywords = _keywords,
         .fname = "load_cert_chain",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[3];
@@ -681,6 +683,7 @@ _ssl__SSLContext_load_verify_locations(PySSLContext *self, PyObject *const *args
         .keywords = _keywords,
         .fname = "load_verify_locations",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[3];
@@ -774,6 +777,7 @@ _ssl__SSLContext__wrap_socket(PySSLContext *self, PyObject *const *args, Py_ssiz
         .keywords = _keywords,
         .fname = "_wrap_socket",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[5];
@@ -875,6 +879,7 @@ _ssl__SSLContext__wrap_bio(PySSLContext *self, PyObject *const *args, Py_ssize_t
         .keywords = _keywords,
         .fname = "_wrap_bio",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[6];
@@ -1051,6 +1056,7 @@ _ssl__SSLContext_get_ca_certs(PySSLContext *self, PyObject *const *args, Py_ssiz
         .keywords = _keywords,
         .fname = "get_ca_certs",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[1];
@@ -1380,6 +1386,7 @@ _ssl_txt2obj(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyObject
         .keywords = _keywords,
         .fname = "txt2obj",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[2];
@@ -1502,6 +1509,7 @@ _ssl_enum_certificates(PyObject *module, PyObject *const *args, Py_ssize_t nargs
         .keywords = _keywords,
         .fname = "enum_certificates",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[1];
@@ -1587,6 +1595,7 @@ _ssl_enum_crls(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyObje
         .keywords = _keywords,
         .fname = "enum_crls",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[1];
@@ -1624,4 +1633,4 @@ exit:
 #ifndef _SSL_ENUM_CRLS_METHODDEF
     #define _SSL_ENUM_CRLS_METHODDEF
 #endif /* !defined(_SSL_ENUM_CRLS_METHODDEF) */
-/*[clinic end generated code: output=1c4719f6878f8dee input=a9049054013a1b77]*/
+/*[clinic end generated code: output=e6d1ebb2e576f10e input=a9049054013a1b77]*/

@@ -59,6 +59,7 @@ _testconsole_write_input(PyObject *module, PyObject *const *args, Py_ssize_t nar
         .keywords = _keywords,
         .fname = "write_input",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[2];
@@ -133,6 +134,7 @@ _testconsole_read_output(PyObject *module, PyObject *const *args, Py_ssize_t nar
         .keywords = _keywords,
         .fname = "read_output",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[1];
@@ -158,4 +160,4 @@ exit:
 #ifndef _TESTCONSOLE_READ_OUTPUT_METHODDEF
     #define _TESTCONSOLE_READ_OUTPUT_METHODDEF
 #endif /* !defined(_TESTCONSOLE_READ_OUTPUT_METHODDEF) */
-/*[clinic end generated code: output=a6736de87487df43 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=09d76f1301cfcb91 input=a9049054013a1b77]*/

@@ -123,6 +123,7 @@ _sha1_sha1(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyObject *
         .keywords = _keywords,
         .fname = "sha1",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[2];
@@ -157,4 +158,4 @@ skip_optional_kwonly:
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=46219309faaeca88 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=65f3645ef7448dca input=a9049054013a1b77]*/

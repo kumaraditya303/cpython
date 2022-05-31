@@ -59,6 +59,7 @@ _multiprocessing_SemLock_acquire(SemLockObject *self, PyObject *const *args, Py_
         .keywords = _keywords,
         .fname = "acquire",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[2];
@@ -165,6 +166,7 @@ _multiprocessing_SemLock_acquire(SemLockObject *self, PyObject *const *args, Py_
         .keywords = _keywords,
         .fname = "acquire",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[2];
@@ -262,6 +264,7 @@ _multiprocessing_SemLock(PyTypeObject *type, PyObject *args, PyObject *kwargs)
         .keywords = _keywords,
         .fname = "SemLock",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[5];
@@ -569,4 +572,4 @@ exit:
 #ifndef _MULTIPROCESSING_SEMLOCK___EXIT___METHODDEF
     #define _MULTIPROCESSING_SEMLOCK___EXIT___METHODDEF
 #endif /* !defined(_MULTIPROCESSING_SEMLOCK___EXIT___METHODDEF) */
-/*[clinic end generated code: output=6ea94cbde6463896 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=c24574ff4f56d972 input=a9049054013a1b77]*/

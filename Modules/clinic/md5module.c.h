@@ -123,6 +123,7 @@ _md5_md5(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyObject *kw
         .keywords = _keywords,
         .fname = "md5",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[2];
@@ -157,4 +158,4 @@ skip_optional_kwonly:
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=0dd4816d400f8be0 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=b093138ee99996d9 input=a9049054013a1b77]*/

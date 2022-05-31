@@ -47,6 +47,7 @@ tokenizeriter_new(PyTypeObject *type, PyObject *args, PyObject *kwargs)
         .keywords = _keywords,
         .fname = "tokenizeriter",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[1];
@@ -76,4 +77,4 @@ tokenizeriter_new(PyTypeObject *type, PyObject *args, PyObject *kwargs)
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=5195bbde75e4c827 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=922e92eed0f9855b input=a9049054013a1b77]*/

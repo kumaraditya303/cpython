@@ -48,6 +48,7 @@ sock_initobj(PyObject *self, PyObject *args, PyObject *kwargs)
         .keywords = _keywords,
         .fname = "socket",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[4];
@@ -100,4 +101,4 @@ skip_optional_pos:
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=0a721d06032c4f21 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=7b43358f13cf9f8a input=a9049054013a1b77]*/

@@ -521,6 +521,7 @@ _io_BytesIO___init__(PyObject *self, PyObject *args, PyObject *kwargs)
         .keywords = _keywords,
         .fname = "BytesIO",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[1];
@@ -543,4 +544,4 @@ skip_optional_pos:
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=fb292bdc1412bda2 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=770c04cb23b481b0 input=a9049054013a1b77]*/

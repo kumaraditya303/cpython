@@ -25,7 +25,7 @@ static PyObject *
 _opcode_stack_effect(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
-    #define NUM_KEYWORDS 3
+    #define NUM_KEYWORDS 1
     #if NUM_KEYWORDS == 0
 
     #  ifdef Py_BUILD_CORE
@@ -42,7 +42,7 @@ _opcode_stack_effect(PyObject *module, PyObject *const *args, Py_ssize_t nargs, 
         PyObject *ob_item[NUM_KEYWORDS];
     } _kwtuple = {
         .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
-        .ob_item = { &_Py_STR(empty), &_Py_STR(empty), &_Py_ID(jump), },
+        .ob_item = { &_Py_ID(jump), },
     };
     #  define KWTUPLE ((PyObject *)(&_kwtuple))
 
@@ -57,6 +57,7 @@ _opcode_stack_effect(PyObject *module, PyObject *const *args, Py_ssize_t nargs, 
         .keywords = _keywords,
         .fname = "stack_effect",
         .kwtuple = KWTUPLE,
+        .pos = 2,
     };
     #undef KWTUPLE
     PyObject *argsbuf[3];
@@ -112,4 +113,4 @@ _opcode_get_specialization_stats(PyObject *module, PyObject *Py_UNUSED(ignored))
 {
     return _opcode_get_specialization_stats_impl(module);
 }
-/*[clinic end generated code: output=7246d139d669d54e input=a9049054013a1b77]*/
+/*[clinic end generated code: output=3b563a680e34ac40 input=a9049054013a1b77]*/

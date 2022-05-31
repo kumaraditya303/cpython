@@ -78,6 +78,7 @@ _csv_unregister_dialect(PyObject *module, PyObject *const *args, Py_ssize_t narg
         .keywords = _keywords,
         .fname = "unregister_dialect",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[1];
@@ -144,6 +145,7 @@ _csv_get_dialect(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyOb
         .keywords = _keywords,
         .fname = "get_dialect",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[1];
@@ -213,6 +215,7 @@ _csv_field_size_limit(PyObject *module, PyObject *const *args, Py_ssize_t nargs,
         .keywords = _keywords,
         .fname = "field_size_limit",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[1];
@@ -233,4 +236,4 @@ skip_optional_pos:
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=0ef737dfb4e8c021 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=44517653cce1d3c9 input=a9049054013a1b77]*/

@@ -57,6 +57,7 @@ warnings_warn(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyObjec
         .keywords = _keywords,
         .fname = "warn",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[4];
@@ -158,6 +159,7 @@ warnings_warn_explicit(PyObject *module, PyObject *const *args, Py_ssize_t nargs
         .keywords = _keywords,
         .fname = "warn_explicit",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[8];
@@ -217,4 +219,4 @@ skip_optional_pos:
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=e63d7c32ffc65fc0 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=f1512100572bf38a input=a9049054013a1b77]*/

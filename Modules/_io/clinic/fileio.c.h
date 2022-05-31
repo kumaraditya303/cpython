@@ -87,6 +87,7 @@ _io_FileIO___init__(PyObject *self, PyObject *args, PyObject *kwargs)
         .keywords = _keywords,
         .fname = "FileIO",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[4];
@@ -475,4 +476,4 @@ _io_FileIO_isatty(fileio *self, PyObject *Py_UNUSED(ignored))
 #ifndef _IO_FILEIO_TRUNCATE_METHODDEF
     #define _IO_FILEIO_TRUNCATE_METHODDEF
 #endif /* !defined(_IO_FILEIO_TRUNCATE_METHODDEF) */
-/*[clinic end generated code: output=5eb4602a57084315 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=e97374a067592e96 input=a9049054013a1b77]*/

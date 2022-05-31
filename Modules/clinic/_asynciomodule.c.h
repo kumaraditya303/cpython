@@ -64,6 +64,7 @@ _asyncio_Future___init__(PyObject *self, PyObject *args, PyObject *kwargs)
         .keywords = _keywords,
         .fname = "Future",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[1];
@@ -177,7 +178,7 @@ static PyObject *
 _asyncio_Future_add_done_callback(FutureObj *self, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
-    #define NUM_KEYWORDS 2
+    #define NUM_KEYWORDS 1
     #if NUM_KEYWORDS == 0
 
     #  ifdef Py_BUILD_CORE
@@ -194,7 +195,7 @@ _asyncio_Future_add_done_callback(FutureObj *self, PyObject *const *args, Py_ssi
         PyObject *ob_item[NUM_KEYWORDS];
     } _kwtuple = {
         .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
-        .ob_item = { &_Py_STR(empty), &_Py_ID(context), },
+        .ob_item = { &_Py_ID(context), },
     };
     #  define KWTUPLE ((PyObject *)(&_kwtuple))
 
@@ -209,6 +210,7 @@ _asyncio_Future_add_done_callback(FutureObj *self, PyObject *const *args, Py_ssi
         .keywords = _keywords,
         .fname = "add_done_callback",
         .kwtuple = KWTUPLE,
+        .pos = 1,
     };
     #undef KWTUPLE
     PyObject *argsbuf[2];
@@ -295,6 +297,7 @@ _asyncio_Future_cancel(FutureObj *self, PyObject *const *args, Py_ssize_t nargs,
         .keywords = _keywords,
         .fname = "cancel",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[1];
@@ -440,6 +443,7 @@ _asyncio_Task___init__(PyObject *self, PyObject *args, PyObject *kwargs)
         .keywords = _keywords,
         .fname = "Task",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[4];
@@ -567,6 +571,7 @@ _asyncio_Task_cancel(TaskObj *self, PyObject *const *args, Py_ssize_t nargs, PyO
         .keywords = _keywords,
         .fname = "cancel",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[1];
@@ -698,6 +703,7 @@ _asyncio_Task_get_stack(TaskObj *self, PyObject *const *args, Py_ssize_t nargs, 
         .keywords = _keywords,
         .fname = "get_stack",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[1];
@@ -774,6 +780,7 @@ _asyncio_Task_print_stack(TaskObj *self, PyObject *const *args, Py_ssize_t nargs
         .keywords = _keywords,
         .fname = "print_stack",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[2];
@@ -965,6 +972,7 @@ _asyncio__get_event_loop(PyObject *module, PyObject *const *args, Py_ssize_t nar
         .keywords = _keywords,
         .fname = "_get_event_loop",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[1];
@@ -1059,6 +1067,7 @@ _asyncio__register_task(PyObject *module, PyObject *const *args, Py_ssize_t narg
         .keywords = _keywords,
         .fname = "_register_task",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[1];
@@ -1125,6 +1134,7 @@ _asyncio__unregister_task(PyObject *module, PyObject *const *args, Py_ssize_t na
         .keywords = _keywords,
         .fname = "_unregister_task",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[1];
@@ -1193,6 +1203,7 @@ _asyncio__enter_task(PyObject *module, PyObject *const *args, Py_ssize_t nargs, 
         .keywords = _keywords,
         .fname = "_enter_task",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[2];
@@ -1263,6 +1274,7 @@ _asyncio__leave_task(PyObject *module, PyObject *const *args, Py_ssize_t nargs, 
         .keywords = _keywords,
         .fname = "_leave_task",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[2];
@@ -1280,4 +1292,4 @@ _asyncio__leave_task(PyObject *module, PyObject *const *args, Py_ssize_t nargs, 
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=feb137182f6e0de3 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=548dea3d1863e7b6 input=a9049054013a1b77]*/

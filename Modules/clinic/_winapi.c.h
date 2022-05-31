@@ -144,6 +144,7 @@ _winapi_ConnectNamedPipe(PyObject *module, PyObject *const *args, Py_ssize_t nar
         .keywords = _keywords,
         .format = "" F_HANDLE "|i:ConnectNamedPipe",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     HANDLE handle;
@@ -906,6 +907,7 @@ _winapi_LCMapStringEx(PyObject *module, PyObject *const *args, Py_ssize_t nargs,
         .keywords = _keywords,
         .format = "O&kO&:LCMapStringEx",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     LPCWSTR locale;
@@ -975,6 +977,7 @@ _winapi_ReadFile(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyOb
         .keywords = _keywords,
         .format = "" F_HANDLE "k|i:ReadFile",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     HANDLE handle;
@@ -1232,6 +1235,7 @@ _winapi_WriteFile(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyO
         .keywords = _keywords,
         .format = "" F_HANDLE "O|i:WriteFile",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     HANDLE handle;
@@ -1313,6 +1317,7 @@ _winapi_GetFileType(PyObject *module, PyObject *const *args, Py_ssize_t nargs, P
         .keywords = _keywords,
         .format = "" F_HANDLE ":GetFileType",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     HANDLE handle;
@@ -1384,6 +1389,7 @@ _winapi__mimetypes_read_windows_registry(PyObject *module, PyObject *const *args
         .keywords = _keywords,
         .fname = "_mimetypes_read_windows_registry",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[1];
@@ -1399,4 +1405,4 @@ _winapi__mimetypes_read_windows_registry(PyObject *module, PyObject *const *args
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=7886a77c4a9dbf5e input=a9049054013a1b77]*/
+/*[clinic end generated code: output=83b242335eab355a input=a9049054013a1b77]*/

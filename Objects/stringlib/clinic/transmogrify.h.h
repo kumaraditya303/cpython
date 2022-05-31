@@ -58,6 +58,7 @@ stringlib_expandtabs(PyObject *self, PyObject *const *args, Py_ssize_t nargs, Py
         .keywords = _keywords,
         .fname = "expandtabs",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[1];
@@ -287,4 +288,4 @@ stringlib_zfill(PyObject *self, PyObject *arg)
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=287dfa35f22544b9 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=00b6aafb968d21e2 input=a9049054013a1b77]*/

@@ -55,6 +55,7 @@ _ssl_Certificate_public_bytes(PySSLCertificate *self, PyObject *const *args, Py_
         .keywords = _keywords,
         .fname = "public_bytes",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[1];
@@ -95,4 +96,4 @@ _ssl_Certificate_get_info(PySSLCertificate *self, PyObject *Py_UNUSED(ignored))
 {
     return _ssl_Certificate_get_info_impl(self);
 }
-/*[clinic end generated code: output=e0de1bece6d00065 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=dcef17fc7c128547 input=a9049054013a1b77]*/

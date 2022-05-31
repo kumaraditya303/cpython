@@ -160,7 +160,7 @@ static PyObject *
 array_array_extend(arrayobject *self, PyTypeObject *cls, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
-    #define NUM_KEYWORDS 1
+    #define NUM_KEYWORDS 0
     #if NUM_KEYWORDS == 0
 
     #  ifdef Py_BUILD_CORE
@@ -177,7 +177,7 @@ array_array_extend(arrayobject *self, PyTypeObject *cls, PyObject *const *args, 
         PyObject *ob_item[NUM_KEYWORDS];
     } _kwtuple = {
         .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
-        .ob_item = { &_Py_STR(empty), },
+        .ob_item = {  },
     };
     #  define KWTUPLE ((PyObject *)(&_kwtuple))
 
@@ -192,6 +192,7 @@ array_array_extend(arrayobject *self, PyTypeObject *cls, PyObject *const *args, 
         .keywords = _keywords,
         .fname = "extend",
         .kwtuple = KWTUPLE,
+        .pos = 1,
     };
     #undef KWTUPLE
     PyObject *argsbuf[1];
@@ -335,7 +336,7 @@ static PyObject *
 array_array_fromfile(arrayobject *self, PyTypeObject *cls, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
-    #define NUM_KEYWORDS 2
+    #define NUM_KEYWORDS 0
     #if NUM_KEYWORDS == 0
 
     #  ifdef Py_BUILD_CORE
@@ -352,7 +353,7 @@ array_array_fromfile(arrayobject *self, PyTypeObject *cls, PyObject *const *args
         PyObject *ob_item[NUM_KEYWORDS];
     } _kwtuple = {
         .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
-        .ob_item = { &_Py_STR(empty), &_Py_STR(empty), },
+        .ob_item = {  },
     };
     #  define KWTUPLE ((PyObject *)(&_kwtuple))
 
@@ -367,6 +368,7 @@ array_array_fromfile(arrayobject *self, PyTypeObject *cls, PyObject *const *args
         .keywords = _keywords,
         .fname = "fromfile",
         .kwtuple = KWTUPLE,
+        .pos = 2,
     };
     #undef KWTUPLE
     PyObject *argsbuf[2];
@@ -412,7 +414,7 @@ static PyObject *
 array_array_tofile(arrayobject *self, PyTypeObject *cls, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
-    #define NUM_KEYWORDS 1
+    #define NUM_KEYWORDS 0
     #if NUM_KEYWORDS == 0
 
     #  ifdef Py_BUILD_CORE
@@ -429,7 +431,7 @@ array_array_tofile(arrayobject *self, PyTypeObject *cls, PyObject *const *args, 
         PyObject *ob_item[NUM_KEYWORDS];
     } _kwtuple = {
         .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
-        .ob_item = { &_Py_STR(empty), },
+        .ob_item = {  },
     };
     #  define KWTUPLE ((PyObject *)(&_kwtuple))
 
@@ -444,6 +446,7 @@ array_array_tofile(arrayobject *self, PyTypeObject *cls, PyObject *const *args, 
         .keywords = _keywords,
         .fname = "tofile",
         .kwtuple = KWTUPLE,
+        .pos = 1,
     };
     #undef KWTUPLE
     PyObject *argsbuf[1];
@@ -686,7 +689,7 @@ static PyObject *
 array_array___reduce_ex__(arrayobject *self, PyTypeObject *cls, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
-    #define NUM_KEYWORDS 1
+    #define NUM_KEYWORDS 0
     #if NUM_KEYWORDS == 0
 
     #  ifdef Py_BUILD_CORE
@@ -703,7 +706,7 @@ array_array___reduce_ex__(arrayobject *self, PyTypeObject *cls, PyObject *const 
         PyObject *ob_item[NUM_KEYWORDS];
     } _kwtuple = {
         .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
-        .ob_item = { &_Py_STR(empty), },
+        .ob_item = {  },
     };
     #  define KWTUPLE ((PyObject *)(&_kwtuple))
 
@@ -718,6 +721,7 @@ array_array___reduce_ex__(arrayobject *self, PyTypeObject *cls, PyObject *const 
         .keywords = _keywords,
         .fname = "__reduce_ex__",
         .kwtuple = KWTUPLE,
+        .pos = 1,
     };
     #undef KWTUPLE
     PyObject *argsbuf[1];
@@ -764,4 +768,4 @@ PyDoc_STRVAR(array_arrayiterator___setstate____doc__,
 
 #define ARRAY_ARRAYITERATOR___SETSTATE___METHODDEF    \
     {"__setstate__", (PyCFunction)array_arrayiterator___setstate__, METH_O, array_arrayiterator___setstate____doc__},
-/*[clinic end generated code: output=ea837d4341757e0a input=a9049054013a1b77]*/
+/*[clinic end generated code: output=fb55c39576844bff input=a9049054013a1b77]*/

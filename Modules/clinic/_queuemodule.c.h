@@ -90,6 +90,7 @@ _queue_SimpleQueue_put(simplequeueobject *self, PyObject *const *args, Py_ssize_
         .keywords = _keywords,
         .fname = "put",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[3];
@@ -174,6 +175,7 @@ _queue_SimpleQueue_put_nowait(simplequeueobject *self, PyObject *const *args, Py
         .keywords = _keywords,
         .fname = "put_nowait",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[1];
@@ -247,6 +249,7 @@ _queue_SimpleQueue_get(simplequeueobject *self, PyTypeObject *cls, PyObject *con
         .keywords = _keywords,
         .fname = "get",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[2];
@@ -359,4 +362,4 @@ _queue_SimpleQueue_qsize(simplequeueobject *self, PyObject *Py_UNUSED(ignored))
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=021feba24ea1bc67 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=4a4f91f1a90038cc input=a9049054013a1b77]*/

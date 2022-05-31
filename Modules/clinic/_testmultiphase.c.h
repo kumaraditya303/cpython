@@ -111,6 +111,7 @@ _testmultiphase_StateAccessType_increment_count_clinic(StateAccessTypeObject *se
         .keywords = _keywords,
         .fname = "increment_count_clinic",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[2];
@@ -171,4 +172,4 @@ _testmultiphase_StateAccessType_get_count(StateAccessTypeObject *self, PyTypeObj
     }
     return _testmultiphase_StateAccessType_get_count_impl(self, cls);
 }
-/*[clinic end generated code: output=8356f82c2e404df3 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=6fa1254345ff33ec input=a9049054013a1b77]*/

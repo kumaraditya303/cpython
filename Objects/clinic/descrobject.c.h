@@ -47,6 +47,7 @@ mappingproxy_new(PyTypeObject *type, PyObject *args, PyObject *kwargs)
         .keywords = _keywords,
         .fname = "mappingproxy",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[1];
@@ -142,6 +143,7 @@ property_init(PyObject *self, PyObject *args, PyObject *kwargs)
         .keywords = _keywords,
         .fname = "property",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[4];
@@ -185,4 +187,4 @@ skip_optional_pos:
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=d1ecaaf75914ae46 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=f1fd9dc66500f7e8 input=a9049054013a1b77]*/

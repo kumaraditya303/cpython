@@ -123,6 +123,7 @@ _sha512_sha512(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyObje
         .keywords = _keywords,
         .fname = "sha512",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[2];
@@ -206,6 +207,7 @@ _sha512_sha384(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyObje
         .keywords = _keywords,
         .fname = "sha384",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[2];
@@ -240,4 +242,4 @@ skip_optional_kwonly:
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=539ee3f47910a7cc input=a9049054013a1b77]*/
+/*[clinic end generated code: output=966ff70bbbdf8fb5 input=a9049054013a1b77]*/

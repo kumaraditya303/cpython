@@ -206,6 +206,7 @@ _elementtree_Element_find(ElementObject *self, PyObject *const *args, Py_ssize_t
         .keywords = _keywords,
         .fname = "find",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[2];
@@ -278,6 +279,7 @@ _elementtree_Element_findtext(ElementObject *self, PyObject *const *args, Py_ssi
         .keywords = _keywords,
         .fname = "findtext",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[3];
@@ -356,6 +358,7 @@ _elementtree_Element_findall(ElementObject *self, PyObject *const *args, Py_ssiz
         .keywords = _keywords,
         .fname = "findall",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[2];
@@ -427,6 +430,7 @@ _elementtree_Element_iterfind(ElementObject *self, PyObject *const *args, Py_ssi
         .keywords = _keywords,
         .fname = "iterfind",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[2];
@@ -498,6 +502,7 @@ _elementtree_Element_get(ElementObject *self, PyObject *const *args, Py_ssize_t 
         .keywords = _keywords,
         .fname = "get",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[2];
@@ -568,6 +573,7 @@ _elementtree_Element_iter(ElementObject *self, PyObject *const *args, Py_ssize_t
         .keywords = _keywords,
         .fname = "iter",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[1];
@@ -820,6 +826,7 @@ _elementtree_TreeBuilder___init__(PyObject *self, PyObject *args, PyObject *kwar
         .keywords = _keywords,
         .fname = "TreeBuilder",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[5];
@@ -1063,6 +1070,7 @@ _elementtree_XMLParser___init__(PyObject *self, PyObject *args, PyObject *kwargs
         .keywords = _keywords,
         .fname = "XMLParser",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[2];
@@ -1177,4 +1185,4 @@ skip_optional:
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=0e2032a5a372e75c input=a9049054013a1b77]*/
+/*[clinic end generated code: output=bb52822adbf1f250 input=a9049054013a1b77]*/

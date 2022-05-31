@@ -56,6 +56,7 @@ pysqlite_complete_statement(PyObject *module, PyObject *const *args, Py_ssize_t 
         .keywords = _keywords,
         .fname = "complete_statement",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[1];
@@ -220,4 +221,4 @@ skip_optional:
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=f8d2f1772f0667d2 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=fcb2c12f7d445ac7 input=a9049054013a1b77]*/

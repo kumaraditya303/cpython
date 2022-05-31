@@ -56,6 +56,7 @@ OrderedDict_fromkeys(PyTypeObject *type, PyObject *const *args, Py_ssize_t nargs
         .keywords = _keywords,
         .fname = "fromkeys",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[2];
@@ -130,6 +131,7 @@ OrderedDict_setdefault(PyODictObject *self, PyObject *const *args, Py_ssize_t na
         .keywords = _keywords,
         .fname = "setdefault",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[2];
@@ -205,6 +207,7 @@ OrderedDict_pop(PyODictObject *self, PyObject *const *args, Py_ssize_t nargs, Py
         .keywords = _keywords,
         .fname = "pop",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[2];
@@ -278,6 +281,7 @@ OrderedDict_popitem(PyODictObject *self, PyObject *const *args, Py_ssize_t nargs
         .keywords = _keywords,
         .fname = "popitem",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[1];
@@ -352,6 +356,7 @@ OrderedDict_move_to_end(PyODictObject *self, PyObject *const *args, Py_ssize_t n
         .keywords = _keywords,
         .fname = "move_to_end",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[2];
@@ -377,4 +382,4 @@ skip_optional_pos:
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=8f4fbaf2c6743cae input=a9049054013a1b77]*/
+/*[clinic end generated code: output=06807315bf94b553 input=a9049054013a1b77]*/

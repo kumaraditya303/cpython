@@ -583,6 +583,7 @@ def generate_argparser(*, hasformat: bool = False):
             .keywords = _keywords,
             %s
             .kwtuple = KWTUPLE,
+            .pos = {pos_only_count},
         }};
         #undef KWTUPLE
         """ % (format_ or fname)
@@ -1441,10 +1442,10 @@ class CLanguage(Language):
         template_dict['initializers'] = "\n\n".join(data.initializers)
         template_dict['modifications'] = '\n\n'.join(data.modifications)
         template_dict['keywords_c'] = ' '.join('"' + k + '",' for k in data.keywords)
-        template_dict['num_keywords'] = len(data.keywords)
+        template_dict['num_keywords'] = len([k for k in data.keywords if k])
         template_dict['keywords_py'] = ' '.join(
-                '&_Py_ID(' + k + '),' if k else '&_Py_STR(empty),'
-                for k in data.keywords)
+                '&_Py_ID(' + k + '),'for k in data.keywords if k )
+        template_dict['pos_only_count'] = len([k for k in data.keywords if not k])
         template_dict['format_units'] = ''.join(data.format_units)
         template_dict['parse_arguments'] = ', '.join(data.parse_arguments)
         if data.parse_arguments:

@@ -31,7 +31,7 @@ static PyObject *
 zlib_compress(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
-    #define NUM_KEYWORDS 3
+    #define NUM_KEYWORDS 2
     #if NUM_KEYWORDS == 0
 
     #  ifdef Py_BUILD_CORE
@@ -48,7 +48,7 @@ zlib_compress(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyObjec
         PyObject *ob_item[NUM_KEYWORDS];
     } _kwtuple = {
         .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
-        .ob_item = { &_Py_STR(empty), &_Py_ID(level), &_Py_ID(wbits), },
+        .ob_item = { &_Py_ID(level), &_Py_ID(wbits), },
     };
     #  define KWTUPLE ((PyObject *)(&_kwtuple))
 
@@ -63,6 +63,7 @@ zlib_compress(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyObjec
         .keywords = _keywords,
         .fname = "compress",
         .kwtuple = KWTUPLE,
+        .pos = 1,
     };
     #undef KWTUPLE
     PyObject *argsbuf[3];
@@ -134,7 +135,7 @@ static PyObject *
 zlib_decompress(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
-    #define NUM_KEYWORDS 3
+    #define NUM_KEYWORDS 2
     #if NUM_KEYWORDS == 0
 
     #  ifdef Py_BUILD_CORE
@@ -151,7 +152,7 @@ zlib_decompress(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyObj
         PyObject *ob_item[NUM_KEYWORDS];
     } _kwtuple = {
         .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
-        .ob_item = { &_Py_STR(empty), &_Py_ID(wbits), &_Py_ID(bufsize), },
+        .ob_item = { &_Py_ID(wbits), &_Py_ID(bufsize), },
     };
     #  define KWTUPLE ((PyObject *)(&_kwtuple))
 
@@ -166,6 +167,7 @@ zlib_decompress(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyObj
         .keywords = _keywords,
         .fname = "decompress",
         .kwtuple = KWTUPLE,
+        .pos = 1,
     };
     #undef KWTUPLE
     PyObject *argsbuf[3];
@@ -294,6 +296,7 @@ zlib_compressobj(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyOb
         .keywords = _keywords,
         .fname = "compressobj",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[6];
@@ -430,6 +433,7 @@ zlib_decompressobj(PyObject *module, PyObject *const *args, Py_ssize_t nargs, Py
         .keywords = _keywords,
         .fname = "decompressobj",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[2];
@@ -485,7 +489,7 @@ static PyObject *
 zlib_Compress_compress(compobject *self, PyTypeObject *cls, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
-    #define NUM_KEYWORDS 1
+    #define NUM_KEYWORDS 0
     #if NUM_KEYWORDS == 0
 
     #  ifdef Py_BUILD_CORE
@@ -502,7 +506,7 @@ zlib_Compress_compress(compobject *self, PyTypeObject *cls, PyObject *const *arg
         PyObject *ob_item[NUM_KEYWORDS];
     } _kwtuple = {
         .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
-        .ob_item = { &_Py_STR(empty), },
+        .ob_item = {  },
     };
     #  define KWTUPLE ((PyObject *)(&_kwtuple))
 
@@ -517,6 +521,7 @@ zlib_Compress_compress(compobject *self, PyTypeObject *cls, PyObject *const *arg
         .keywords = _keywords,
         .fname = "compress",
         .kwtuple = KWTUPLE,
+        .pos = 1,
     };
     #undef KWTUPLE
     PyObject *argsbuf[1];
@@ -572,7 +577,7 @@ static PyObject *
 zlib_Decompress_decompress(compobject *self, PyTypeObject *cls, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
-    #define NUM_KEYWORDS 2
+    #define NUM_KEYWORDS 1
     #if NUM_KEYWORDS == 0
 
     #  ifdef Py_BUILD_CORE
@@ -589,7 +594,7 @@ zlib_Decompress_decompress(compobject *self, PyTypeObject *cls, PyObject *const 
         PyObject *ob_item[NUM_KEYWORDS];
     } _kwtuple = {
         .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
-        .ob_item = { &_Py_STR(empty), &_Py_ID(max_length), },
+        .ob_item = { &_Py_ID(max_length), },
     };
     #  define KWTUPLE ((PyObject *)(&_kwtuple))
 
@@ -604,6 +609,7 @@ zlib_Decompress_decompress(compobject *self, PyTypeObject *cls, PyObject *const 
         .keywords = _keywords,
         .fname = "decompress",
         .kwtuple = KWTUPLE,
+        .pos = 1,
     };
     #undef KWTUPLE
     PyObject *argsbuf[2];
@@ -671,7 +677,7 @@ static PyObject *
 zlib_Compress_flush(compobject *self, PyTypeObject *cls, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
-    #define NUM_KEYWORDS 1
+    #define NUM_KEYWORDS 0
     #if NUM_KEYWORDS == 0
 
     #  ifdef Py_BUILD_CORE
@@ -688,7 +694,7 @@ zlib_Compress_flush(compobject *self, PyTypeObject *cls, PyObject *const *args, 
         PyObject *ob_item[NUM_KEYWORDS];
     } _kwtuple = {
         .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
-        .ob_item = { &_Py_STR(empty), },
+        .ob_item = {  },
     };
     #  define KWTUPLE ((PyObject *)(&_kwtuple))
 
@@ -703,6 +709,7 @@ zlib_Compress_flush(compobject *self, PyTypeObject *cls, PyObject *const *args, 
         .keywords = _keywords,
         .fname = "flush",
         .kwtuple = KWTUPLE,
+        .pos = 1,
     };
     #undef KWTUPLE
     PyObject *argsbuf[1];
@@ -795,7 +802,7 @@ static PyObject *
 zlib_Compress___deepcopy__(compobject *self, PyTypeObject *cls, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
-    #define NUM_KEYWORDS 1
+    #define NUM_KEYWORDS 0
     #if NUM_KEYWORDS == 0
 
     #  ifdef Py_BUILD_CORE
@@ -812,7 +819,7 @@ zlib_Compress___deepcopy__(compobject *self, PyTypeObject *cls, PyObject *const 
         PyObject *ob_item[NUM_KEYWORDS];
     } _kwtuple = {
         .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
-        .ob_item = { &_Py_STR(empty), },
+        .ob_item = {  },
     };
     #  define KWTUPLE ((PyObject *)(&_kwtuple))
 
@@ -827,6 +834,7 @@ zlib_Compress___deepcopy__(compobject *self, PyTypeObject *cls, PyObject *const 
         .keywords = _keywords,
         .fname = "__deepcopy__",
         .kwtuple = KWTUPLE,
+        .pos = 1,
     };
     #undef KWTUPLE
     PyObject *argsbuf[1];
@@ -914,7 +922,7 @@ static PyObject *
 zlib_Decompress___deepcopy__(compobject *self, PyTypeObject *cls, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
-    #define NUM_KEYWORDS 1
+    #define NUM_KEYWORDS 0
     #if NUM_KEYWORDS == 0
 
     #  ifdef Py_BUILD_CORE
@@ -931,7 +939,7 @@ zlib_Decompress___deepcopy__(compobject *self, PyTypeObject *cls, PyObject *cons
         PyObject *ob_item[NUM_KEYWORDS];
     } _kwtuple = {
         .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
-        .ob_item = { &_Py_STR(empty), },
+        .ob_item = {  },
     };
     #  define KWTUPLE ((PyObject *)(&_kwtuple))
 
@@ -946,6 +954,7 @@ zlib_Decompress___deepcopy__(compobject *self, PyTypeObject *cls, PyObject *cons
         .keywords = _keywords,
         .fname = "__deepcopy__",
         .kwtuple = KWTUPLE,
+        .pos = 1,
     };
     #undef KWTUPLE
     PyObject *argsbuf[1];
@@ -984,7 +993,7 @@ static PyObject *
 zlib_Decompress_flush(compobject *self, PyTypeObject *cls, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
-    #define NUM_KEYWORDS 1
+    #define NUM_KEYWORDS 0
     #if NUM_KEYWORDS == 0
 
     #  ifdef Py_BUILD_CORE
@@ -1001,7 +1010,7 @@ zlib_Decompress_flush(compobject *self, PyTypeObject *cls, PyObject *const *args
         PyObject *ob_item[NUM_KEYWORDS];
     } _kwtuple = {
         .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
-        .ob_item = { &_Py_STR(empty), },
+        .ob_item = {  },
     };
     #  define KWTUPLE ((PyObject *)(&_kwtuple))
 
@@ -1016,6 +1025,7 @@ zlib_Decompress_flush(compobject *self, PyTypeObject *cls, PyObject *const *args
         .keywords = _keywords,
         .fname = "flush",
         .kwtuple = KWTUPLE,
+        .pos = 1,
     };
     #undef KWTUPLE
     PyObject *argsbuf[1];
@@ -1181,4 +1191,4 @@ exit:
 #ifndef ZLIB_DECOMPRESS___DEEPCOPY___METHODDEF
     #define ZLIB_DECOMPRESS___DEEPCOPY___METHODDEF
 #endif /* !defined(ZLIB_DECOMPRESS___DEEPCOPY___METHODDEF) */
-/*[clinic end generated code: output=3f45e684592f07b6 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=e939c07e34530cbc input=a9049054013a1b77]*/

@@ -65,7 +65,7 @@ static PyObject *
 _dbm_dbm_get(dbmobject *self, PyTypeObject *cls, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
-    #define NUM_KEYWORDS 2
+    #define NUM_KEYWORDS 0
     #if NUM_KEYWORDS == 0
 
     #  ifdef Py_BUILD_CORE
@@ -82,7 +82,7 @@ _dbm_dbm_get(dbmobject *self, PyTypeObject *cls, PyObject *const *args, Py_ssize
         PyObject *ob_item[NUM_KEYWORDS];
     } _kwtuple = {
         .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
-        .ob_item = { &_Py_STR(empty), &_Py_STR(empty), },
+        .ob_item = {  },
     };
     #  define KWTUPLE ((PyObject *)(&_kwtuple))
 
@@ -97,6 +97,7 @@ _dbm_dbm_get(dbmobject *self, PyTypeObject *cls, PyObject *const *args, Py_ssize
         .keywords = _keywords,
         .format = "s#|O:get",
         .kwtuple = KWTUPLE,
+        .pos = 2,
     };
     #undef KWTUPLE
     const char *key;
@@ -132,7 +133,7 @@ static PyObject *
 _dbm_dbm_setdefault(dbmobject *self, PyTypeObject *cls, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
-    #define NUM_KEYWORDS 2
+    #define NUM_KEYWORDS 0
     #if NUM_KEYWORDS == 0
 
     #  ifdef Py_BUILD_CORE
@@ -149,7 +150,7 @@ _dbm_dbm_setdefault(dbmobject *self, PyTypeObject *cls, PyObject *const *args, P
         PyObject *ob_item[NUM_KEYWORDS];
     } _kwtuple = {
         .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
-        .ob_item = { &_Py_STR(empty), &_Py_STR(empty), },
+        .ob_item = {  },
     };
     #  define KWTUPLE ((PyObject *)(&_kwtuple))
 
@@ -164,6 +165,7 @@ _dbm_dbm_setdefault(dbmobject *self, PyTypeObject *cls, PyObject *const *args, P
         .keywords = _keywords,
         .format = "s#|O:setdefault",
         .kwtuple = KWTUPLE,
+        .pos = 2,
     };
     #undef KWTUPLE
     const char *key;
@@ -242,4 +244,4 @@ skip_optional:
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=ba4fd10b8103a2cf input=a9049054013a1b77]*/
+/*[clinic end generated code: output=76e064061daa83d7 input=a9049054013a1b77]*/

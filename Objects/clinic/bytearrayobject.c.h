@@ -48,6 +48,7 @@ bytearray___init__(PyObject *self, PyObject *args, PyObject *kwargs)
         .keywords = _keywords,
         .fname = "bytearray",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[3];
@@ -248,7 +249,7 @@ static PyObject *
 bytearray_translate(PyByteArrayObject *self, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
-    #define NUM_KEYWORDS 2
+    #define NUM_KEYWORDS 1
     #if NUM_KEYWORDS == 0
 
     #  ifdef Py_BUILD_CORE
@@ -265,7 +266,7 @@ bytearray_translate(PyByteArrayObject *self, PyObject *const *args, Py_ssize_t n
         PyObject *ob_item[NUM_KEYWORDS];
     } _kwtuple = {
         .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
-        .ob_item = { &_Py_STR(empty), &_Py_ID(delete), },
+        .ob_item = { &_Py_ID(delete), },
     };
     #  define KWTUPLE ((PyObject *)(&_kwtuple))
 
@@ -280,6 +281,7 @@ bytearray_translate(PyByteArrayObject *self, PyObject *const *args, Py_ssize_t n
         .keywords = _keywords,
         .fname = "translate",
         .kwtuple = KWTUPLE,
+        .pos = 1,
     };
     #undef KWTUPLE
     PyObject *argsbuf[2];
@@ -492,6 +494,7 @@ bytearray_split(PyByteArrayObject *self, PyObject *const *args, Py_ssize_t nargs
         .keywords = _keywords,
         .fname = "split",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[2];
@@ -623,6 +626,7 @@ bytearray_rsplit(PyByteArrayObject *self, PyObject *const *args, Py_ssize_t narg
         .keywords = _keywords,
         .fname = "rsplit",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[2];
@@ -1009,6 +1013,7 @@ bytearray_decode(PyByteArrayObject *self, PyObject *const *args, Py_ssize_t narg
         .keywords = _keywords,
         .fname = "decode",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[2];
@@ -1125,6 +1130,7 @@ bytearray_splitlines(PyByteArrayObject *self, PyObject *const *args, Py_ssize_t 
         .keywords = _keywords,
         .fname = "splitlines",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[1];
@@ -1249,6 +1255,7 @@ bytearray_hex(PyByteArrayObject *self, PyObject *const *args, Py_ssize_t nargs, 
         .keywords = _keywords,
         .fname = "hex",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[2];
@@ -1350,4 +1357,4 @@ bytearray_sizeof(PyByteArrayObject *self, PyObject *Py_UNUSED(ignored))
 {
     return bytearray_sizeof_impl(self);
 }
-/*[clinic end generated code: output=fbc7e06581f75af3 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=486a6a12227aa31e input=a9049054013a1b77]*/

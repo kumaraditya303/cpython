@@ -224,6 +224,7 @@ code_replace(PyCodeObject *self, PyObject *const *args, Py_ssize_t nargs, PyObje
         .keywords = _keywords,
         .fname = "replace",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[18];
@@ -488,6 +489,7 @@ code__varname_from_oparg(PyCodeObject *self, PyObject *const *args, Py_ssize_t n
         .keywords = _keywords,
         .fname = "_varname_from_oparg",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[1];
@@ -506,4 +508,4 @@ code__varname_from_oparg(PyCodeObject *self, PyObject *const *args, Py_ssize_t n
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=6369740acf98cbdd input=a9049054013a1b77]*/
+/*[clinic end generated code: output=8f0d02b616436ab2 input=a9049054013a1b77]*/

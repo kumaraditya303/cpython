@@ -62,6 +62,7 @@ enum_new(PyTypeObject *type, PyObject *args, PyObject *kwargs)
         .keywords = _keywords,
         .fname = "enumerate",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[2];
@@ -116,4 +117,4 @@ reversed_new(PyTypeObject *type, PyObject *args, PyObject *kwargs)
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=2551fdf613600c55 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=37876ad20f8e9125 input=a9049054013a1b77]*/

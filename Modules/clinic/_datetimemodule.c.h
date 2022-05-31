@@ -60,6 +60,7 @@ iso_calendar_date_new(PyTypeObject *type, PyObject *args, PyObject *kwargs)
         .keywords = _keywords,
         .fname = "IsoCalendarDate",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[3];
@@ -144,6 +145,7 @@ datetime_datetime_now(PyTypeObject *type, PyObject *const *args, Py_ssize_t narg
         .keywords = _keywords,
         .fname = "now",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[1];
@@ -164,4 +166,4 @@ skip_optional_pos:
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=74f56c4f62e7aa3b input=a9049054013a1b77]*/
+/*[clinic end generated code: output=eb0685c6ec3d698d input=a9049054013a1b77]*/

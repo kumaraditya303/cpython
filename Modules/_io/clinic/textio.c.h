@@ -62,6 +62,7 @@ _io_IncrementalNewlineDecoder___init__(PyObject *self, PyObject *args, PyObject 
         .keywords = _keywords,
         .fname = "IncrementalNewlineDecoder",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[3];
@@ -140,6 +141,7 @@ _io_IncrementalNewlineDecoder_decode(nldecoder_object *self, PyObject *const *ar
         .keywords = _keywords,
         .fname = "decode",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[2];
@@ -284,6 +286,7 @@ _io_TextIOWrapper___init__(PyObject *self, PyObject *args, PyObject *kwargs)
         .keywords = _keywords,
         .fname = "TextIOWrapper",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[6];
@@ -431,6 +434,7 @@ _io_TextIOWrapper_reconfigure(textio *self, PyObject *const *args, Py_ssize_t na
         .keywords = _keywords,
         .fname = "reconfigure",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[5];
@@ -805,4 +809,4 @@ _io_TextIOWrapper_close(textio *self, PyObject *Py_UNUSED(ignored))
 {
     return _io_TextIOWrapper_close_impl(self);
 }
-/*[clinic end generated code: output=ed181975498d0569 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=d129c7162f895846 input=a9049054013a1b77]*/

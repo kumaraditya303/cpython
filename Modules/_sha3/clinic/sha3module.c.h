@@ -21,7 +21,7 @@ static PyObject *
 py_sha3_new(PyTypeObject *type, PyObject *args, PyObject *kwargs)
 {
     PyObject *return_value = NULL;
-    #define NUM_KEYWORDS 2
+    #define NUM_KEYWORDS 1
     #if NUM_KEYWORDS == 0
 
     #  ifdef Py_BUILD_CORE
@@ -38,7 +38,7 @@ py_sha3_new(PyTypeObject *type, PyObject *args, PyObject *kwargs)
         PyObject *ob_item[NUM_KEYWORDS];
     } _kwtuple = {
         .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
-        .ob_item = { &_Py_STR(empty), &_Py_ID(usedforsecurity), },
+        .ob_item = { &_Py_ID(usedforsecurity), },
     };
     #  define KWTUPLE ((PyObject *)(&_kwtuple))
 
@@ -53,6 +53,7 @@ py_sha3_new(PyTypeObject *type, PyObject *args, PyObject *kwargs)
         .keywords = _keywords,
         .fname = "sha3_224",
         .kwtuple = KWTUPLE,
+        .pos = 1,
     };
     #undef KWTUPLE
     PyObject *argsbuf[2];
@@ -202,4 +203,4 @@ _sha3_shake_128_hexdigest(SHA3object *self, PyObject *arg)
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=437df90a3010fcc2 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=db357ad139b1894f input=a9049054013a1b77]*/

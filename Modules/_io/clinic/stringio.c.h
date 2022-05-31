@@ -293,6 +293,7 @@ _io_StringIO___init__(PyObject *self, PyObject *args, PyObject *kwargs)
         .keywords = _keywords,
         .fname = "StringIO",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[2];
@@ -376,4 +377,4 @@ _io_StringIO_seekable(stringio *self, PyObject *Py_UNUSED(ignored))
 {
     return _io_StringIO_seekable_impl(self);
 }
-/*[clinic end generated code: output=6264c854b983024b input=a9049054013a1b77]*/
+/*[clinic end generated code: output=f65d657057056e02 input=a9049054013a1b77]*/

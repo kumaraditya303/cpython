@@ -133,6 +133,7 @@ _bz2_BZ2Decompressor_decompress(BZ2Decompressor *self, PyObject *const *args, Py
         .keywords = _keywords,
         .fname = "decompress",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[2];
@@ -177,4 +178,4 @@ exit:
 
     return return_value;
 }
-/*[clinic end generated code: output=1160e5001da006ee input=a9049054013a1b77]*/
+/*[clinic end generated code: output=128d6d4bcecd52c5 input=a9049054013a1b77]*/

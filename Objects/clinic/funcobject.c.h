@@ -65,6 +65,7 @@ func_new(PyTypeObject *type, PyObject *args, PyObject *kwargs)
         .keywords = _keywords,
         .fname = "function",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[5];
@@ -113,4 +114,4 @@ skip_optional_pos:
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=9c31d765b59e9073 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=5ec396d3e618e3ae input=a9049054013a1b77]*/

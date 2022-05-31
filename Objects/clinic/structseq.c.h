@@ -47,6 +47,7 @@ structseq_new(PyTypeObject *type, PyObject *args, PyObject *kwargs)
         .keywords = _keywords,
         .fname = "structseq",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[2];
@@ -71,4 +72,4 @@ skip_optional_pos:
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=a71ea2def1aa8fa9 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=53ba2b6bbd272e40 input=a9049054013a1b77]*/

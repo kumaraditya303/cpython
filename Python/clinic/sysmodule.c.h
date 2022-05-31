@@ -56,6 +56,7 @@ sys_addaudithook(PyObject *module, PyObject *const *args, Py_ssize_t nargs, PyOb
         .keywords = _keywords,
         .fname = "addaudithook",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[1];
@@ -495,6 +496,7 @@ sys_set_coroutine_origin_tracking_depth(PyObject *module, PyObject *const *args,
         .keywords = _keywords,
         .fname = "set_coroutine_origin_tracking_depth",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[1];
@@ -1188,4 +1190,4 @@ sys_getandroidapilevel(PyObject *module, PyObject *Py_UNUSED(ignored))
 #ifndef SYS_GETANDROIDAPILEVEL_METHODDEF
     #define SYS_GETANDROIDAPILEVEL_METHODDEF
 #endif /* !defined(SYS_GETANDROIDAPILEVEL_METHODDEF) */
-/*[clinic end generated code: output=594c4ae17d58492e input=a9049054013a1b77]*/
+/*[clinic end generated code: output=9c919db2c07f19b2 input=a9049054013a1b77]*/

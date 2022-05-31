@@ -140,6 +140,7 @@ complex_new(PyTypeObject *type, PyObject *args, PyObject *kwargs)
         .keywords = _keywords,
         .fname = "complex",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[2];
@@ -169,4 +170,4 @@ skip_optional_pos:
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=76e4baf5c58cdaeb input=a9049054013a1b77]*/
+/*[clinic end generated code: output=70bb06fe14fceb56 input=a9049054013a1b77]*/

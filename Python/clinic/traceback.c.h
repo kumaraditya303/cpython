@@ -54,6 +54,7 @@ tb_new(PyTypeObject *type, PyObject *args, PyObject *kwargs)
         .keywords = _keywords,
         .fname = "TracebackType",
         .kwtuple = KWTUPLE,
+        .pos = 0,
     };
     #undef KWTUPLE
     PyObject *argsbuf[4];
@@ -87,4 +88,4 @@ tb_new(PyTypeObject *type, PyObject *args, PyObject *kwargs)
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=f82270864489952f input=a9049054013a1b77]*/
+/*[clinic end generated code: output=3c85e32d6f231c35 input=a9049054013a1b77]*/
