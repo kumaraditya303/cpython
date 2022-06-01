@@ -1791,12 +1791,18 @@ class BlockPrinter:
         write("\n")
 
         if core_includes:
-            write("\n")
-            write('#ifdef Py_BUILD_CORE\n')
-            write('#include "pycore_gc.h"            // PyGC_Head\n')
-            write('#include "pycore_runtime.h"       // _Py_ID()\n')
-            write('#endif\n')
-            write("\n")
+            block.output = "\n" + block.output
+            # write("\n")
+            block.output = '#endif\n' + block.output
+            # write('#ifdef Py_BUILD_CORE\n')
+            block.output = '#include "pycore_runtime.h"       // _Py_ID()\n' + block.output
+            # write('#include "pycore_gc.h"            // PyGC_Head\n')
+            block.output = '#include "pycore_gc.h"            // PyGC_Head\n' + block.output
+            # write('#include "pycore_runtime.h"       // _Py_ID()\n')
+            block.output = '#ifdef Py_BUILD_CORE\n' + block.output
+            # write('#endif\n')
+            block.output = "\n" + block.output
+            # write("\n")
 
         input = ''.join(block.input)
         output = ''.join(block.output)
