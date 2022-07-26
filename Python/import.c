@@ -250,6 +250,11 @@ _PyImport_Fini2(void)
 
 /* Helper for sys */
 
+/* Internal helper for PyImport_GetModuleDict
+   This can used in late Python finalization
+   as it does not raises exception or fatal error
+   when sys.modules is NULL.
+*/
 PyObject *
 _PyImport_GetModuleDict(PyInterpreterState *interp)
 {
