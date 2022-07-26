@@ -3209,6 +3209,7 @@ _PySys_Create(PyThreadState *tstate, PyObject **sysmod_p)
     if (PyDict_SetItemString(sysdict, "modules", modules) < 0) {
         goto error;
     }
+    Py_DECREF(modules);
 
     PyStatus status = _PySys_SetPreliminaryStderr(sysdict);
     if (_PyStatus_EXCEPTION(status)) {
