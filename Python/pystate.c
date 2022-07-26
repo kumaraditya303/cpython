@@ -5,6 +5,7 @@
 #include "pycore_ceval.h"
 #include "pycore_code.h"           // stats
 #include "pycore_frame.h"
+#include "pycore_import.h"
 #include "pycore_initconfig.h"
 #include "pycore_object.h"        // _PyType_InitCache()
 #include "pycore_pyerrors.h"
@@ -404,7 +405,6 @@ interpreter_clear(PyInterpreterState *interp, PyThreadState *tstate)
     Py_CLEAR(interp->codec_search_path);
     Py_CLEAR(interp->codec_search_cache);
     Py_CLEAR(interp->codec_error_registry);
-    Py_CLEAR(interp->modules);
     Py_CLEAR(interp->modules_by_index);
     Py_CLEAR(interp->builtins_copy);
     Py_CLEAR(interp->importlib);
@@ -689,11 +689,12 @@ _PyInterpreterState_RequireIDRef(PyInterpreterState *interp, int required)
 PyObject *
 _PyInterpreterState_GetMainModule(PyInterpreterState *interp)
 {
-    if (interp->modules == NULL) {
+    PyObject *modules = _PyImport_GetModuleDict(interp);
+    if (modules == NULL) {
         PyErr_SetString(PyExc_RuntimeError, "interpreter not initialized");
         return NULL;
     }
-    return PyMapping_GetItemString(interp->modules, "__main__");
+    return PyObject_GetItem(modules, &_Py_ID(__main__));
 }
 
 PyObject *

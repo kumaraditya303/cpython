@@ -251,13 +251,24 @@ _PyImport_Fini2(void)
 /* Helper for sys */
 
 PyObject *
+_PyImport_GetModuleDict(PyInterpreterState *interp)
+{
+    PyObject *sysdict = interp->sysdict;
+    if (sysdict == NULL) {
+        return NULL;
+    }
+    PyObject *modules = PyObject_GetItem(sysdict, &_Py_ID(modules));
+    return modules;
+}
+
+PyObject *
 PyImport_GetModuleDict(void)
 {
-    PyInterpreterState *interp = _PyInterpreterState_GET();
-    if (interp->modules == NULL) {
+    PyObject *modules = _PyImport_GetModuleDict(_PyInterpreterState_GET());
+    if (modules == NULL) {
         Py_FatalError("interpreter has no modules dictionary");
     }
-    return interp->modules;
+    return modules;
 }
 
 /* In some corner cases it is important to be sure that the import
@@ -267,9 +278,8 @@ PyImport_GetModuleDict(void)
 int
 _PyImport_IsInitialized(PyInterpreterState *interp)
 {
-    if (interp->modules == NULL)
-        return 0;
-    return 1;
+    PyObject *modules = _PyImport_GetModuleDict(interp);
+    return modules != NULL;
 }
 
 PyObject *
@@ -285,23 +295,21 @@ _PyImport_GetModuleId(_Py_Identifier *nameid)
 int
 _PyImport_SetModule(PyObject *name, PyObject *m)
 {
-    PyInterpreterState *interp = _PyInterpreterState_GET();
-    PyObject *modules = interp->modules;
+    PyObject *modules = PyImport_GetModuleDict();
     return PyObject_SetItem(modules, name, m);
 }
 
 int
 _PyImport_SetModuleString(const char *name, PyObject *m)
 {
-    PyInterpreterState *interp = _PyInterpreterState_GET();
-    PyObject *modules = interp->modules;
+    PyObject *modules = PyImport_GetModuleDict();
     return PyMapping_SetItemString(modules, name, m);
 }
 
 static PyObject *
 import_get_module(PyThreadState *tstate, PyObject *name)
 {
-    PyObject *modules = tstate->interp->modules;
+    PyObject *modules = _PyImport_GetModuleDict(tstate->interp);
     if (modules == NULL) {
         _PyErr_SetString(tstate, PyExc_RuntimeError,
                          "unable to get sys.modules");
@@ -495,8 +503,8 @@ import_find_extension(PyThreadState *tstate, PyObject *name,
     }
 
     PyObject *mod, *mdict;
-    PyObject *modules = tstate->interp->modules;
-
+    PyObject *modules = _PyImport_GetModuleDict(tstate->interp);
+    assert(modules != NULL);
     if (def->m_size == -1) {
         /* Module does not support repeated initialization */
         if (def->m_base.m_copy == NULL)
@@ -547,7 +555,7 @@ import_find_extension(PyThreadState *tstate, PyObject *name,
 static PyObject *
 import_add_module(PyThreadState *tstate, PyObject *name)
 {
-    PyObject *modules = tstate->interp->modules;
+    PyObject *modules = _PyImport_GetModuleDict(tstate->interp);
     if (modules == NULL) {
         _PyErr_SetString(tstate, PyExc_RuntimeError,
                          "no import module dictionary");
@@ -627,7 +635,8 @@ remove_module(PyThreadState *tstate, PyObject *name)
     PyObject *type, *value, *traceback;
     _PyErr_Fetch(tstate, &type, &value, &traceback);
 
-    PyObject *modules = tstate->interp->modules;
+    PyObject *modules = _PyImport_GetModuleDict(tstate->interp);
+    assert(modules != NULL);
     if (PyDict_CheckExact(modules)) {
         PyObject *mod = _PyDict_Pop(modules, name, Py_None);
         Py_XDECREF(mod);
@@ -963,7 +972,8 @@ create_builtin(PyThreadState *tstate, PyObject *name, PyObject *spec)
         return mod;
     }
 
-    PyObject *modules = tstate->interp->modules;
+    PyObject *modules = _PyImport_GetModuleDict(tstate->interp);
+    assert(modules != NULL);
     for (struct _inittab *p = PyImport_Inittab; p->name != NULL; p++) {
         if (_PyUnicode_EqualToASCIIString(name, p->name)) {
             if (p->initfunc == NULL) {

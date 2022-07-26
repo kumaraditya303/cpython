@@ -766,8 +766,9 @@ pycore_init_builtins(PyThreadState *tstate)
     if (bimod == NULL) {
         goto error;
     }
-
-    if (_PyImport_FixupBuiltin(bimod, "builtins", interp->modules) < 0) {
+    PyObject *modules = _PyImport_GetModuleDict(interp);
+    assert(modules != NULL);
+    if (_PyImport_FixupBuiltin(bimod, "builtins", modules) < 0) {
         goto error;
     }
 
@@ -1517,7 +1518,7 @@ static void
 finalize_modules(PyThreadState *tstate)
 {
     PyInterpreterState *interp = tstate->interp;
-    PyObject *modules = interp->modules;
+    PyObject *modules = _PyImport_GetModuleDict(interp);
     if (modules == NULL) {
         // Already done
         return;
@@ -1583,11 +1584,6 @@ finalize_modules(PyThreadState *tstate)
     // clear PyModuleDef.m_base.m_copy (of extensions not using the multi-phase
     // initialization API)
     _PyInterpreterState_ClearModules(interp);
-
-    // Clear and delete the modules directory.  Actual modules will
-    // still be there only if imported during the execution of some
-    // destructor.
-    Py_SETREF(interp->modules, NULL);
 
     // Collect garbage once more
     _PyGC_CollectNoFail(tstate);
@@ -2635,7 +2631,7 @@ _Py_DumpExtensionModules(int fd, PyInterpreterState *interp)
     if (interp == NULL) {
         return;
     }
-    PyObject *modules = interp->modules;
+    PyObject *modules = _PyImport_GetModuleDict(interp);
     if (modules == NULL || !PyDict_Check(modules)) {
         return;
     }
