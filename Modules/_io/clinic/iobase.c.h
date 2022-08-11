@@ -5,7 +5,8 @@ preserve
 #if defined(Py_BUILD_CORE) && !defined(Py_BUILD_CORE_MODULE)
 #  include "pycore_gc.h"            // PyGC_Head
 #  include "pycore_runtime.h"       // _Py_ID()
-#endif
+#endif  // Py_BUILD_CORE && !Py_BUILD_CORE_MODULE
+
 
 
 PyDoc_STRVAR(_io__IOBase_tell__doc__,
@@ -316,4 +317,4 @@ _io__RawIOBase_readall(PyObject *self, PyObject *Py_UNUSED(ignored))
 {
     return _io__RawIOBase_readall_impl(self);
 }
-/*[clinic end generated code: output=b7246a2087eb966b input=a9049054013a1b77]*/
+/*[clinic end generated code: output=7c096db8b4020a4e input=a9049054013a1b77]*/

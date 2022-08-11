@@ -5,7 +5,8 @@ preserve
 #if defined(Py_BUILD_CORE) && !defined(Py_BUILD_CORE_MODULE)
 #  include "pycore_gc.h"            // PyGC_Head
 #  include "pycore_runtime.h"       // _Py_ID()
-#endif
+#endif  // Py_BUILD_CORE && !Py_BUILD_CORE_MODULE
+
 
 
 PyDoc_STRVAR(method___reduce____doc__,
@@ -86,4 +87,4 @@ instancemethod_new(PyTypeObject *type, PyObject *args, PyObject *kwargs)
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=e3294c26a71d456d input=a9049054013a1b77]*/
+/*[clinic end generated code: output=0144d57db0a829f5 input=a9049054013a1b77]*/

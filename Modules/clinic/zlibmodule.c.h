@@ -5,7 +5,8 @@ preserve
 #if defined(Py_BUILD_CORE) && !defined(Py_BUILD_CORE_MODULE)
 #  include "pycore_gc.h"            // PyGC_Head
 #  include "pycore_runtime.h"       // _Py_ID()
-#endif
+#endif  // Py_BUILD_CORE && !Py_BUILD_CORE_MODULE
+
 
 
 PyDoc_STRVAR(zlib_compress__doc__,
@@ -1191,4 +1192,4 @@ exit:
 #ifndef ZLIB_DECOMPRESS___DEEPCOPY___METHODDEF
     #define ZLIB_DECOMPRESS___DEEPCOPY___METHODDEF
 #endif /* !defined(ZLIB_DECOMPRESS___DEEPCOPY___METHODDEF) */
-/*[clinic end generated code: output=ea8865903fb98344 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=cc677733b1913f8c input=a9049054013a1b77]*/

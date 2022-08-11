@@ -5,7 +5,8 @@ preserve
 #if defined(Py_BUILD_CORE) && !defined(Py_BUILD_CORE_MODULE)
 #  include "pycore_gc.h"            // PyGC_Head
 #  include "pycore_runtime.h"       // _Py_ID()
-#endif
+#endif  // Py_BUILD_CORE && !Py_BUILD_CORE_MODULE
+
 
 
 #if defined(HAVE_GETSPNAM)
@@ -77,4 +78,4 @@ spwd_getspall(PyObject *module, PyObject *Py_UNUSED(ignored))
 #ifndef SPWD_GETSPALL_METHODDEF
     #define SPWD_GETSPALL_METHODDEF
 #endif /* !defined(SPWD_GETSPALL_METHODDEF) */
-/*[clinic end generated code: output=dd61827a7b708e11 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=6ff6bc06aa2ae289 input=a9049054013a1b77]*/

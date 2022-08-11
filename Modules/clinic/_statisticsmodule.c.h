@@ -5,7 +5,8 @@ preserve
 #if defined(Py_BUILD_CORE) && !defined(Py_BUILD_CORE_MODULE)
 #  include "pycore_gc.h"            // PyGC_Head
 #  include "pycore_runtime.h"       // _Py_ID()
-#endif
+#endif  // Py_BUILD_CORE && !Py_BUILD_CORE_MODULE
+
 
 
 PyDoc_STRVAR(_statistics__normal_dist_inv_cdf__doc__,
@@ -71,4 +72,4 @@ _statistics__normal_dist_inv_cdf(PyObject *module, PyObject *const *args, Py_ssi
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=6899dc752cc6b457 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=baa06802c98b2d8b input=a9049054013a1b77]*/
