@@ -27,9 +27,6 @@ extern "C" {
 /* Forward references */
 static PyObject *import_add_module(PyThreadState *tstate, PyObject *name);
 
-/* See _PyImport_FixupExtensionObject() below */
-static PyObject *extensions = NULL;
-
 /* This table is defined in config.c: */
 extern struct _inittab _PyImport_Inittab[];
 
@@ -224,7 +221,8 @@ _imp_release_lock_impl(PyObject *module)
 void
 _PyImport_Fini(void)
 {
-    Py_CLEAR(extensions);
+    PyInterpreterState *interp = _PyInterpreterState_GET();
+    Py_CLEAR(interp->extensions);
     if (import_lock != NULL) {
         PyThread_free_lock(import_lock);
         import_lock = NULL;
@@ -442,11 +440,13 @@ _PyImport_FixupExtensionObject(PyObject *mod, PyObject *name,
             }
         }
 
+        PyObject *extensions = tstate->interp->extensions;
         if (extensions == NULL) {
             extensions = PyDict_New();
             if (extensions == NULL) {
                 return -1;
             }
+            tstate->interp->extensions = extensions;
         }
 
         PyObject *key = PyTuple_Pack(2, filename, name);
@@ -480,7 +480,9 @@ static PyObject *
 import_find_extension(PyThreadState *tstate, PyObject *name,
                       PyObject *filename)
 {
-    if (extensions == NULL) {
+    PyObject *extensions = tstate->interp->extensions;
+
+    if (tstate->interp->extensions == NULL) {
         return NULL;
     }
 

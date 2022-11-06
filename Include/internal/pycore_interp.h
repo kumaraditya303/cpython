@@ -147,6 +147,9 @@ struct _is {
 
     PyObject *dict;  /* Stores per-interpreter state */
 
+    /* Used in _PyImport_FixupExtensionObject */
+    PyObject *extensions;
+
     PyObject *builtins_copy;
     PyObject *import_func;
     // Initialized to _PyEval_EvalFrameDefault().
