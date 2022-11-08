@@ -305,8 +305,12 @@ init_interpreter(PyInterpreterState *interp,
     assert(runtime->interpreters.head == interp);
     assert(next != NULL || (interp == runtime->interpreters.main));
     interp->next = next;
-    assert(interp->import.lock == NULL);
-    interp->import.lock = import_lock;
+    struct import_state *import = &interp->import;
+    assert(import->lock == NULL);
+    assert(import->lock_thread == PYTHREAD_INVALID_THREAD_ID);
+    assert(import->lock_level == 0);
+    assert(import_lock != NULL);
+    import->lock = import_lock;
     _PyEval_InitState(&interp->ceval, pending_lock);
     _PyGC_InitState(&interp->gc);
     PyConfig_InitPythonConfig(&interp->config);
