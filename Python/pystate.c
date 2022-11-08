@@ -289,7 +289,8 @@ static void
 init_interpreter(PyInterpreterState *interp,
                  _PyRuntimeState *runtime, int64_t id,
                  PyInterpreterState *next,
-                 PyThread_type_lock pending_lock)
+                 PyThread_type_lock pending_lock,
+                 PyThread_type_lock import_lock)
 {
     if (interp->_initialized) {
         Py_FatalError("interpreter already initialized");
@@ -304,7 +305,8 @@ init_interpreter(PyInterpreterState *interp,
     assert(runtime->interpreters.head == interp);
     assert(next != NULL || (interp == runtime->interpreters.main));
     interp->next = next;
-
+    assert(interp->import.lock == NULL);
+    interp->import.lock = import_lock;
     _PyEval_InitState(&interp->ceval, pending_lock);
     _PyGC_InitState(&interp->gc);
     PyConfig_InitPythonConfig(&interp->config);
@@ -327,6 +329,15 @@ PyInterpreterState_New(void)
 
     PyThread_type_lock pending_lock = PyThread_allocate_lock();
     if (pending_lock == NULL) {
+        if (tstate != NULL) {
+            _PyErr_NoMemory(tstate);
+        }
+        return NULL;
+    }
+
+    PyThread_type_lock import_lock = PyThread_allocate_lock();
+    if (import_lock == NULL) {
+        PyThread_free_lock(pending_lock);
         if (tstate != NULL) {
             _PyErr_NoMemory(tstate);
         }
@@ -386,7 +397,8 @@ PyInterpreterState_New(void)
     }
     interpreters->head = interp;
 
-    init_interpreter(interp, runtime, id, old_head, pending_lock);
+    init_interpreter(interp, runtime, id, old_head, pending_lock,
+                     import_lock);
 
     HEAD_UNLOCK(runtime);
     return interp;
@@ -395,6 +407,7 @@ error:
     HEAD_UNLOCK(runtime);
 
     PyThread_free_lock(pending_lock);
+    PyThread_free_lock(import_lock);
     if (interp != NULL) {
         free_interpreter(interp);
     }

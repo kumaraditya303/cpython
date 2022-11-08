@@ -86,54 +86,48 @@ _PyImportZip_Init(PyThreadState *tstate)
     return _PyStatus_ERR("initializing zipimport failed");
 }
 
-/* Locking primitives to prevent parallel imports of the same module
-   in different threads to return with a partially loaded module.
-   These calls are serialized by the global interpreter lock. */
-
-static PyThread_type_lock import_lock = NULL;
-static unsigned long import_lock_thread = PYTHREAD_INVALID_THREAD_ID;
-static int import_lock_level = 0;
-
 void
 _PyImport_AcquireLock(void)
 {
+    PyInterpreterState *interp = _PyInterpreterState_GET();
+    struct import_state *import = &interp->import;
+    assert(import->lock != NULL);
     unsigned long me = PyThread_get_thread_ident();
     if (me == PYTHREAD_INVALID_THREAD_ID)
         return; /* Too bad */
-    if (import_lock == NULL) {
-        import_lock = PyThread_allocate_lock();
-        if (import_lock == NULL)
-            return;  /* Nothing much we can do. */
-    }
-    if (import_lock_thread == me) {
-        import_lock_level++;
+    if (import->lock_thread == me) {
+        import->lock_level++;
         return;
     }
-    if (import_lock_thread != PYTHREAD_INVALID_THREAD_ID ||
-        !PyThread_acquire_lock(import_lock, 0))
+    if (import->lock_thread != PYTHREAD_INVALID_THREAD_ID ||
+        !PyThread_acquire_lock(import->lock, 0))
     {
         PyThreadState *tstate = PyEval_SaveThread();
-        PyThread_acquire_lock(import_lock, WAIT_LOCK);
+        PyThread_acquire_lock(import->lock, WAIT_LOCK);
         PyEval_RestoreThread(tstate);
     }
-    assert(import_lock_level == 0);
-    import_lock_thread = me;
-    import_lock_level = 1;
+    assert(import->lock_level == 0);
+    import->lock_thread = me;
+    import->lock_level = 1;
 }
 
 int
 _PyImport_ReleaseLock(void)
 {
+    PyInterpreterState *interp = _PyInterpreterState_GET();
+    struct import_state *import = &interp->import;
+    assert(import->lock != NULL);
     unsigned long me = PyThread_get_thread_ident();
-    if (me == PYTHREAD_INVALID_THREAD_ID || import_lock == NULL)
+    if (me == PYTHREAD_INVALID_THREAD_ID) {
         return 0; /* Too bad */
-    if (import_lock_thread != me)
+    }
+    if (import->lock_thread != me) {
         return -1;
-    import_lock_level--;
-    assert(import_lock_level >= 0);
-    if (import_lock_level == 0) {
-        import_lock_thread = PYTHREAD_INVALID_THREAD_ID;
-        PyThread_release_lock(import_lock);
+    }
+    import->lock_level--;
+    assert(import->lock_level >= 0);
+    if (import->lock_level == 0) {
+        import->lock_thread = PYTHREAD_INVALID_THREAD_ID;
     }
     return 1;
 }
@@ -146,21 +140,22 @@ _PyImport_ReleaseLock(void)
 PyStatus
 _PyImport_ReInitLock(void)
 {
-    if (import_lock != NULL) {
-        if (_PyThread_at_fork_reinit(&import_lock) < 0) {
-            return _PyStatus_ERR("failed to create a new lock");
-        }
+    PyInterpreterState *interp = _PyInterpreterState_GET();
+    struct import_state *import = &interp->import;
+    assert(import->lock != NULL);
+    if (_PyThread_at_fork_reinit(&import->lock) < 0) {
+        return _PyStatus_ERR("failed to create a new lock");
     }
 
-    if (import_lock_level > 1) {
+    if (import->lock_level > 1) {
         /* Forked as a side effect of import */
         unsigned long me = PyThread_get_thread_ident();
-        PyThread_acquire_lock(import_lock, WAIT_LOCK);
-        import_lock_thread = me;
-        import_lock_level--;
+        PyThread_acquire_lock(import->lock, WAIT_LOCK);
+        import->lock_thread = me;
+        import->lock_level--;
     } else {
-        import_lock_thread = PYTHREAD_INVALID_THREAD_ID;
-        import_lock_level = 0;
+        import->lock_thread = PYTHREAD_INVALID_THREAD_ID;
+        import->lock_level = 0;
     }
     return _PyStatus_OK();
 }
@@ -178,7 +173,9 @@ static PyObject *
 _imp_lock_held_impl(PyObject *module)
 /*[clinic end generated code: output=8b89384b5e1963fc input=9b088f9b217d9bdf]*/
 {
-    return PyBool_FromLong(import_lock_thread != PYTHREAD_INVALID_THREAD_ID);
+    PyInterpreterState *interp = _PyInterpreterState_GET();
+    struct import_state *import = &interp->import;
+    return PyBool_FromLong(import->lock_thread != PYTHREAD_INVALID_THREAD_ID);
 }
 
 /*[clinic input]
@@ -222,11 +219,10 @@ void
 _PyImport_Fini(void)
 {
     PyInterpreterState *interp = _PyInterpreterState_GET();
-    Py_CLEAR(interp->extensions);
-    if (import_lock != NULL) {
-        PyThread_free_lock(import_lock);
-        import_lock = NULL;
-    }
+    struct import_state *import = &interp->import;
+    Py_CLEAR(import->extensions);
+    PyThread_free_lock(import->lock);
+    import->lock = NULL;
 }
 
 void
@@ -439,14 +435,14 @@ _PyImport_FixupExtensionObject(PyObject *mod, PyObject *name,
                 return -1;
             }
         }
-
-        PyObject *extensions = tstate->interp->extensions;
+        struct import_state *import = &tstate->interp->import;
+        PyObject *extensions = import->extensions;
         if (extensions == NULL) {
             extensions = PyDict_New();
             if (extensions == NULL) {
                 return -1;
             }
-            tstate->interp->extensions = extensions;
+            import->extensions = extensions;
         }
 
         PyObject *key = PyTuple_Pack(2, filename, name);
@@ -480,9 +476,10 @@ static PyObject *
 import_find_extension(PyThreadState *tstate, PyObject *name,
                       PyObject *filename)
 {
-    PyObject *extensions = tstate->interp->extensions;
+    struct import_state *import = &tstate->interp->import;
+    PyObject *extensions = import->extensions;
 
-    if (tstate->interp->extensions == NULL) {
+    if (extensions == NULL) {
         return NULL;
     }
 

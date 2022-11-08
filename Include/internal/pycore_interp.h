@@ -75,12 +75,15 @@ struct _Py_long_state {
 
 
 /* Used in import.c */
+/* Locking primitives to prevent parallel imports of the same module
+   in different threads to return with a partially loaded module.
+   These calls are serialized by the global interpreter lock. */
 struct import_state {
     PyObject *extensions;
     PyThread_type_lock lock;
     unsigned long lock_thread;
     int lock_level;
-}
+};
 
 /* interpreter state */
 

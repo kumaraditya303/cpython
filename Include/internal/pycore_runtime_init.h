@@ -50,6 +50,9 @@ extern "C" {
         ._static = 1, \
         .id_refcount = -1, \
         DLOPENFLAGS_INIT \
+        .import = { \
+            .lock_thread = PYTHREAD_INVALID_THREAD_ID,  \
+        }, \
         .ceval = { \
             .recursion_limit = Py_DEFAULT_RECURSION_LIMIT, \
         }, \
