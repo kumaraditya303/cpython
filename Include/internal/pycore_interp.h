@@ -74,6 +74,14 @@ struct _Py_long_state {
 };
 
 
+/* Used in import.c */
+struct import_state {
+    PyObject *extensions;
+    PyThread_type_lock lock;
+    unsigned long lock_thread;
+    int lock_level;
+}
+
 /* interpreter state */
 
 /* PyInterpreterState holds the global state for one of the runtime's
@@ -147,8 +155,7 @@ struct _is {
 
     PyObject *dict;  /* Stores per-interpreter state */
 
-    /* Used in _PyImport_FixupExtensionObject */
-    PyObject *extensions;
+    struct import_state import;
 
     PyObject *builtins_copy;
     PyObject *import_func;
