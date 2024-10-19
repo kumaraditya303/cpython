@@ -107,8 +107,9 @@ class SubprocessStreamProtocol(streams.FlowControlMixin,
 
     def _maybe_close_transport(self):
         if len(self._pipe_fds) == 0 and self._process_exited:
-            self._transport.close()
-            self._transport = None
+            if self._transport:
+                self._transport.close()
+                self._transport = None
 
     def _get_close_waiter(self, stream):
         if stream is self.stdin:

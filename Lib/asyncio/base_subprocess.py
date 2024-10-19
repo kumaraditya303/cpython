@@ -53,7 +53,19 @@ class BaseSubprocessTransport(transports.SubprocessTransport):
             logger.debug('process %r created: pid %s',
                          program, self._pid)
 
-        self._loop.create_task(self._connect_pipes(waiter))
+        task = self._loop.create_task(self._connect_pipes(waiter))
+
+        def callback(task):
+            if task.cancelled():
+                for proto in self._pipes.values():
+                    if proto is None:
+                        continue
+                    proto.pipe.close()
+                self._pipes = {}
+                self._pending_calls = None
+                waiter.cancel()
+
+        task.add_done_callback(callback)
 
     def __repr__(self):
         info = [self.__class__.__name__]
