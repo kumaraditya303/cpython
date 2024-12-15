@@ -3,6 +3,7 @@
 # flake8: noqa
 
 import sys
+sys.modules["_asyncio"] = None
 
 # This relies on each of the submodules having an __all__ variable.
 from .base_events import *
