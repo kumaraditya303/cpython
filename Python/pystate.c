@@ -1515,6 +1515,7 @@ init_threadstate(_PyThreadStateImpl *_tstate,
     tstate->dict_global_version = 0;
 
     _tstate->asyncio_running_loop = NULL;
+    llist_init(&_tstate->asyncio_tasks_head);
 
     tstate->delete_later = NULL;
 

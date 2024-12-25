@@ -12,6 +12,7 @@ extern "C" {
 #include "pycore_freelist_state.h"  // struct _Py_freelists
 #include "pycore_mimalloc.h"        // struct _mimalloc_thread_state
 #include "pycore_qsbr.h"            // struct qsbr
+#include "pycore_llist.h"           // struct llist_node
 
 
 // Every PyThreadState is actually allocated as a _PyThreadStateImpl. The
@@ -22,6 +23,8 @@ typedef struct _PyThreadStateImpl {
     PyThreadState base;
 
     PyObject *asyncio_running_loop; // Strong reference
+
+    struct llist_node asyncio_tasks_head;
 
     struct _qsbr_thread_state *qsbr;  // only used by free-threaded build
     struct llist_node mem_free_queue; // delayed free queue
