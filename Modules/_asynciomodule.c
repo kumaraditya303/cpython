@@ -345,10 +345,24 @@ future_ensure_alive(FutureObj *fut)
     } while(0);
 
 
+static void unregister_task(asyncio_state *state, TaskObj *task);
+
 static int
 future_schedule_callbacks(asyncio_state *state, FutureObj *fut)
 {
     _Py_CRITICAL_SECTION_ASSERT_OBJECT_LOCKED(fut);
+
+    // Unregister the task from the linked list of tasks.
+    // Since task is a native task, we directly call the
+    // unregister_task function. Third party event loops
+    // should use the asyncio._unregister_task function.
+    // See https://docs.python.org/3/library/asyncio-extending.html#task-lifetime-support
+
+    if (Task_Check(state, fut)) {
+        TaskObj *task = (TaskObj *)fut;
+
+        unregister_task(state, task);
+    }
 
     if (fut->fut_callback0 != NULL) {
         /* There's a 1st callback */
@@ -1989,15 +2003,18 @@ static  PyMethodDef TaskWakeupDef = {
 static void
 register_task(asyncio_state *state, TaskObj *task)
 {
+    Py_BEGIN_CRITICAL_SECTION(task);
     assert(Task_Check(state, task));
     if (task->task_node.next != NULL) {
         // already registered
         assert(task->task_node.prev != NULL);
-        return;
+        goto exit;
     }
     _PyThreadStateImpl *tstate = (_PyThreadStateImpl *)_PyThreadState_GET();
 
     llist_insert_tail(&tstate->asyncio_tasks_head, &task->task_node);
+exit:
+    Py_END_CRITICAL_SECTION();
 }
 
 static int
@@ -2009,13 +2026,16 @@ register_eager_task(asyncio_state *state, PyObject *task)
 static void
 unregister_task(asyncio_state *state, TaskObj *task)
 {
+    Py_BEGIN_CRITICAL_SECTION(task);
     assert(Task_Check(state, task));
     if (task->task_node.next == NULL) {
         // not registered
         assert(task->task_node.prev == NULL);
-        return;
+        goto exit;
     }
     llist_remove(&task->task_node);
+exit:
+    Py_END_CRITICAL_SECTION();
 }
 
 static int
@@ -2671,14 +2691,14 @@ _asyncio_Task_set_name_impl(TaskObj *self, PyObject *value)
 static void
 TaskObj_finalize(TaskObj *task)
 {
-    asyncio_state *state = get_asyncio_state_by_def((PyObject *)task);
-    // Unregister the task from the linked list of tasks.
-    // Since task is a native task, we directly call the
-    // unregister_task function. Third party event loops
-    // should use the asyncio._unregister_task function.
-    // See https://docs.python.org/3/library/asyncio-extending.html#task-lifetime-support
+    // asyncio_state *state = get_asyncio_state_by_def((PyObject *)task);
+    // // Unregister the task from the linked list of tasks.
+    // // Since task is a native task, we directly call the
+    // // unregister_task function. Third party event loops
+    // // should use the asyncio._unregister_task function.
+    // // See https://docs.python.org/3/library/asyncio-extending.html#task-lifetime-support
 
-    unregister_task(state, task);
+    // unregister_task(state, task);
 
     PyObject *context;
     PyObject *message = NULL;
@@ -3789,18 +3809,20 @@ _asyncio_all_tasks_impl(PyObject *module, PyObject *loop)
         }
         tstate = (_PyThreadStateImpl *)PyThreadState_Next((PyThreadState *)tstate);
     }
-    _PyEval_StartTheWorld(interp);
     struct llist_node *node;
     llist_for_each_safe(node, head) {
         TaskObj *task = llist_data(node, TaskObj, task_node);
+        assert(Task_Check(state, (PyObject *)task));
         Py_INCREF(task);
         if (add_one_task(state, tasks, (PyObject *)task, loop) < 0) {
+            Py_DECREF(task);
             Py_DECREF(tasks);
             Py_DECREF(loop);
             return NULL;
         }
         Py_DECREF(task);
     }
+    _PyEval_StartTheWorld(interp);
     PyObject *scheduled_iter = PyObject_GetIter(state->non_asyncio_tasks);
     if (scheduled_iter == NULL) {
         Py_DECREF(tasks);
