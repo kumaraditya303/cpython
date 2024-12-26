@@ -2005,7 +2005,6 @@ swap_current_task(PyObject *loop, PyObject *task)
     _PyThreadStateImpl *tstate = (_PyThreadStateImpl *)_PyThreadState_GET();
     if (tstate->asyncio_running_loop == loop) {
         PyObject *task = Py_XNewRef(tstate->asyncio_current_task);
-        Py_DECREF(loop);
         Py_XSETREF(tstate->asyncio_current_task, task);
         if (task) {
             return Py_NewRef(task);
@@ -2024,7 +2023,6 @@ swap_current_task(PyObject *loop, PyObject *task)
             PyObject *task = Py_XNewRef(ts->asyncio_current_task);
             Py_XSETREF(ts->asyncio_current_task, task);
             _PyEval_StartTheWorld(interp);
-            Py_DECREF(loop);
             if (task) {
                 return task;
             }

@@ -663,7 +663,7 @@ class BaseEventLoop(events.AbstractEventLoop):
         """
         self._stopping = False
         self._thread_id = None
-        events._set_running_loop(None)
+        # events._set_running_loop(None)
         self._set_coroutine_origin_tracking(False)
         # Restore any pre-existing async generator hooks.
         if self._old_agen_hooks is not None:
