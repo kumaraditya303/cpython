@@ -1999,13 +1999,14 @@ current_task(PyObject *loop)
 
 
 static PyObject *
-swap_current_task(PyObject *loop, PyObject *task)
+swap_current_task(PyObject *loop, PyObject *swap)
 {
     // Fast path if loop is the running loop of the current thread
     _PyThreadStateImpl *tstate = (_PyThreadStateImpl *)_PyThreadState_GET();
     if (tstate->asyncio_running_loop == loop) {
         PyObject *task = Py_XNewRef(tstate->asyncio_current_task);
-        Py_XSETREF(tstate->asyncio_current_task, task);
+        Py_INCREF(swap);
+        Py_XSETREF(tstate->asyncio_current_task, swap);
         if (task) {
             return Py_NewRef(task);
         }
@@ -2021,7 +2022,8 @@ swap_current_task(PyObject *loop, PyObject *task)
     while (ts) {
         if (ts->asyncio_running_loop == loop) {
             PyObject *task = Py_XNewRef(ts->asyncio_current_task);
-            Py_XSETREF(ts->asyncio_current_task, task);
+            Py_INCREF(swap);
+            Py_XSETREF(tstate->asyncio_current_task, swap);
             _PyEval_StartTheWorld(interp);
             if (task) {
                 return task;
