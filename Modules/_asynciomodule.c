@@ -1918,15 +1918,10 @@ unregister_eager_task(asyncio_state *state, PyObject *task)
     return PySet_Discard(state->eager_tasks, task);
 }
 
-static int
-enter_task(PyObject *loop, PyObject *task)
+static inline int
+enter_task_impl(_PyThreadStateImpl *tstate, PyObject *loop, PyObject *task)
 {
-    _PyThreadStateImpl *tstate = (_PyThreadStateImpl *)_PyThreadState_GET();
-    if (loop != tstate->asyncio_running_loop) {
-        PyErr_Format(PyExc_RuntimeError, "loop %R is not the current running loop", loop);
-        return -1;
-    }
-
+    assert(tstate->asyncio_running_loop == loop);
     if (tstate->asyncio_current_task != NULL) {
         PyErr_Format(
             PyExc_RuntimeError,
@@ -1940,17 +1935,39 @@ enter_task(PyObject *loop, PyObject *task)
     return 0;
 }
 
-
 static int
-leave_task(PyObject *loop, PyObject *task)
+enter_task(PyObject *loop, PyObject *task)
 {
     _PyThreadStateImpl *tstate = (_PyThreadStateImpl *)_PyThreadState_GET();
 
-    if (loop != tstate->asyncio_running_loop) {
-        PyErr_Format(PyExc_RuntimeError, "loop %R is not the current running loop", loop);
-        return -1;
+    if (tstate->asyncio_running_loop == loop) {
+        return enter_task_impl(tstate, loop, task);
     }
 
+    // Slow path, stop the world and traverse the thread list checking for matching loop
+    PyInterpreterState *interp = tstate->base.interp;
+    _PyEval_StopTheWorld(interp);
+
+    _PyThreadStateImpl *ts = (_PyThreadStateImpl *)PyInterpreterState_ThreadHead(interp);
+
+    while (ts) {
+        if (ts->asyncio_running_loop == loop) {
+            int res = enter_task_impl(ts, loop, task);
+            _PyEval_StartTheWorld(interp);
+            return res;
+        }
+        ts = (_PyThreadStateImpl *)PyThreadState_Next((PyThreadState *)ts);
+    }
+    _PyEval_StartTheWorld(interp);
+
+    PyErr_Format(PyExc_RuntimeError, "no running thread with %R found", loop);
+    return -1;
+}
+
+static inline int
+leave_task_impl(_PyThreadStateImpl *tstate, PyObject *loop, PyObject *task)
+{
+    assert(tstate->asyncio_running_loop == loop);
     if (task != tstate->asyncio_current_task) {
         PyErr_Format(
             PyExc_RuntimeError,
@@ -1960,6 +1977,36 @@ leave_task(PyObject *loop, PyObject *task)
     }
     Py_CLEAR(tstate->asyncio_current_task);
     return 0;
+}
+
+
+static int
+leave_task(PyObject *loop, PyObject *task)
+{
+ _PyThreadStateImpl *tstate = (_PyThreadStateImpl *)_PyThreadState_GET();
+
+    if (tstate->asyncio_running_loop == loop) {
+        return leave_task_impl(tstate, loop, task);
+    }
+
+    // Slow path, stop the world and traverse the thread list checking for matching loop
+    PyInterpreterState *interp = tstate->base.interp;
+    _PyEval_StopTheWorld(interp);
+
+    _PyThreadStateImpl *ts = (_PyThreadStateImpl *)PyInterpreterState_ThreadHead(interp);
+
+    while (ts) {
+        if (ts->asyncio_running_loop == loop) {
+            int res = leave_task_impl(ts, loop, task);
+            _PyEval_StartTheWorld(interp);
+            return res;
+        }
+        ts = (_PyThreadStateImpl *)PyThreadState_Next((PyThreadState *)ts);
+    }
+    _PyEval_StartTheWorld(interp);
+
+    PyErr_Format(PyExc_RuntimeError, "no running thread with %R found", loop);
+    return -1;
 }
 
 static PyObject *

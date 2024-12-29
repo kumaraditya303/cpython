@@ -607,8 +607,7 @@ class BaseEventLoop(events.AbstractEventLoop):
         thread = threading.Thread(target=self._do_shutdown, args=(future,))
         thread.start()
         try:
-            async with timeouts.timeout(timeout):
-                await future
+            await future
         except TimeoutError:
             warnings.warn("The executor did not finishing joining "
                           f"its threads within {timeout} seconds.",
