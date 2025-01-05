@@ -178,8 +178,6 @@ class _asyncio.Future "FutureObj *" "&Future_Type"
 /*[clinic end generated code: output=da39a3ee5e6b4b0d input=00d3e4abca711e0f]*/
 
 
-/* Get FutureIter from Future */
-static PyObject * future_new_iter(PyObject *);
 
 static PyObject *
 task_step_handle_result_impl(asyncio_state *state, TaskObj *task, PyObject *result);
@@ -1551,6 +1549,67 @@ finally:
     PyErr_SetRaisedException(exc);
 }
 
+
+static PySendResult
+FutureObj_am_send_lock_held(FutureObj *fut, PyObject **result)
+{
+    PyObject *res;
+    _Py_CRITICAL_SECTION_ASSERT_OBJECT_LOCKED(fut);
+
+    *result = NULL;
+
+    if (fut->fut_state == STATE_PENDING) {
+        if (!fut->fut_blocking) {
+            fut->fut_blocking = 1;
+            *result = Py_NewRef(fut);
+            return PYGEN_NEXT;
+        }
+        PyErr_SetString(PyExc_RuntimeError,
+                        "await wasn't used with future");
+        return PYGEN_ERROR;
+    }
+
+    res = _asyncio_Future_result_impl(fut);
+    if (res != NULL) {
+        *result = res;
+        return PYGEN_RETURN;
+    }
+
+    return PYGEN_ERROR;
+}
+
+
+static PySendResult
+FutureObj_am_send(FutureObj *fut,
+                   PyObject *Py_UNUSED(arg),
+                   PyObject **result)
+{
+    /* arg is unused, see the comment on FutureIter_send for clarification */
+    PySendResult res;
+    Py_BEGIN_CRITICAL_SECTION(fut);
+    res = FutureObj_am_send_lock_held(fut, result);
+    Py_END_CRITICAL_SECTION();
+    return res;
+}
+
+static PyObject *
+FutureObj_iternext(FutureObj *it)
+{
+    PyObject *result;
+    switch (FutureObj_am_send(it, Py_None, &result)) {
+        case PYGEN_RETURN:
+            (void)_PyGen_SetStopIterationValue(result);
+            Py_DECREF(result);
+            return NULL;
+        case PYGEN_NEXT:
+            return result;
+        case PYGEN_ERROR:
+            return NULL;
+        default:
+            Py_UNREACHABLE();
+    }
+}
+
 static PyMethodDef FutureType_methods[] = {
     _ASYNCIO_FUTURE_RESULT_METHODDEF
     _ASYNCIO_FUTURE_EXCEPTION_METHODDEF
@@ -1588,7 +1647,6 @@ static PyType_Slot Future_slots[] = {
     {Py_tp_doc, (void *)_asyncio_Future___init____doc__},
     {Py_tp_traverse, (traverseproc)FutureObj_traverse},
     {Py_tp_clear, (inquiry)FutureObj_clear},
-    {Py_tp_iter, (getiterfunc)future_new_iter},
     {Py_tp_methods, FutureType_methods},
     {Py_tp_getset, FutureType_getsetlist},
     {Py_tp_init, (initproc)_asyncio_Future___init__},
@@ -1596,7 +1654,10 @@ static PyType_Slot Future_slots[] = {
     {Py_tp_finalize, (destructor)FutureObj_finalize},
 
     // async slots
-    {Py_am_await, (unaryfunc)future_new_iter},
+    {Py_tp_iter, PyObject_SelfIter},
+    {Py_tp_iternext, (iternextfunc)FutureObj_iternext},
+    {Py_am_send, (sendfunc)FutureObj_am_send},
+    {Py_am_await, PyObject_SelfIter},
     {0, NULL},
 };
 
@@ -1627,247 +1688,6 @@ FutureObj_dealloc(PyObject *self)
     (void)FutureObj_clear(fut);
     tp->tp_free(fut);
     Py_DECREF(tp);
-}
-
-
-/*********************** Future Iterator **************************/
-
-typedef struct futureiterobject {
-    PyObject_HEAD
-    FutureObj *future;
-} futureiterobject;
-
-
-static void
-FutureIter_dealloc(futureiterobject *it)
-{
-    PyTypeObject *tp = Py_TYPE(it);
-
-    assert(_PyType_HasFeature(tp, Py_TPFLAGS_HEAPTYPE));
-
-    PyObject_GC_UnTrack(it);
-    tp->tp_clear((PyObject *)it);
-
-    if (!_Py_FREELIST_PUSH(futureiters, it, Py_futureiters_MAXFREELIST)) {
-        PyObject_GC_Del(it);
-        Py_DECREF(tp);
-    }
-}
-
-static PySendResult
-FutureIter_am_send_lock_held(futureiterobject *it, PyObject **result)
-{
-    PyObject *res;
-    FutureObj *fut = it->future;
-    _Py_CRITICAL_SECTION_ASSERT_OBJECT_LOCKED(fut);
-
-    *result = NULL;
-
-    if (fut->fut_state == STATE_PENDING) {
-        if (!fut->fut_blocking) {
-            fut->fut_blocking = 1;
-            *result = Py_NewRef(fut);
-            return PYGEN_NEXT;
-        }
-        PyErr_SetString(PyExc_RuntimeError,
-                        "await wasn't used with future");
-        return PYGEN_ERROR;
-    }
-
-    res = _asyncio_Future_result_impl(fut);
-    if (res != NULL) {
-        *result = res;
-        return PYGEN_RETURN;
-    }
-
-    return PYGEN_ERROR;
-}
-
-static PySendResult
-FutureIter_am_send(futureiterobject *it,
-                   PyObject *Py_UNUSED(arg),
-                   PyObject **result)
-{
-    /* arg is unused, see the comment on FutureIter_send for clarification */
-    PySendResult res;
-    Py_BEGIN_CRITICAL_SECTION(it->future);
-    res = FutureIter_am_send_lock_held(it, result);
-    Py_END_CRITICAL_SECTION();
-    return res;
-}
-
-
-static PyObject *
-FutureIter_iternext(futureiterobject *it)
-{
-    PyObject *result;
-    switch (FutureIter_am_send(it, Py_None, &result)) {
-        case PYGEN_RETURN:
-            (void)_PyGen_SetStopIterationValue(result);
-            Py_DECREF(result);
-            return NULL;
-        case PYGEN_NEXT:
-            return result;
-        case PYGEN_ERROR:
-            return NULL;
-        default:
-            Py_UNREACHABLE();
-    }
-}
-
-static PyObject *
-FutureIter_send(futureiterobject *self, PyObject *unused)
-{
-    /* Future.__iter__ doesn't care about values that are pushed to the
-     * generator, it just returns self.result().
-     */
-    return FutureIter_iternext(self);
-}
-
-static PyObject *
-FutureIter_throw(futureiterobject *self, PyObject *const *args, Py_ssize_t nargs)
-{
-    PyObject *type, *val = NULL, *tb = NULL;
-    if (!_PyArg_CheckPositional("throw", nargs, 1, 3)) {
-        return NULL;
-    }
-    if (nargs > 1) {
-        if (PyErr_WarnEx(PyExc_DeprecationWarning,
-                            "the (type, exc, tb) signature of throw() is deprecated, "
-                            "use the single-arg signature instead.",
-                            1) < 0) {
-            return NULL;
-        }
-    }
-
-    type = args[0];
-    if (nargs == 3) {
-        val = args[1];
-        tb = args[2];
-    }
-    else if (nargs == 2) {
-        val = args[1];
-    }
-
-    if (val == Py_None) {
-        val = NULL;
-    }
-    if (tb == Py_None ) {
-        tb = NULL;
-    } else if (tb != NULL && !PyTraceBack_Check(tb)) {
-        PyErr_SetString(PyExc_TypeError, "throw() third argument must be a traceback");
-        return NULL;
-    }
-
-    Py_INCREF(type);
-    Py_XINCREF(val);
-    Py_XINCREF(tb);
-
-    if (PyExceptionClass_Check(type)) {
-        PyErr_NormalizeException(&type, &val, &tb);
-        /* No need to call PyException_SetTraceback since we'll be calling
-           PyErr_Restore for `type`, `val`, and `tb`. */
-    } else if (PyExceptionInstance_Check(type)) {
-        if (val) {
-            PyErr_SetString(PyExc_TypeError,
-                            "instance exception may not have a separate value");
-            goto fail;
-        }
-        val = type;
-        type = PyExceptionInstance_Class(type);
-        Py_INCREF(type);
-        if (tb == NULL)
-            tb = PyException_GetTraceback(val);
-    } else {
-        PyErr_SetString(PyExc_TypeError,
-                        "exceptions must be classes deriving BaseException or "
-                        "instances of such a class");
-        goto fail;
-    }
-
-    Py_CLEAR(self->future);
-
-    PyErr_Restore(type, val, tb);
-
-    return NULL;
-
-  fail:
-    Py_DECREF(type);
-    Py_XDECREF(val);
-    Py_XDECREF(tb);
-    return NULL;
-}
-
-static int
-FutureIter_clear(futureiterobject *it)
-{
-    Py_CLEAR(it->future);
-    return 0;
-}
-
-static PyObject *
-FutureIter_close(futureiterobject *self, PyObject *arg)
-{
-    (void)FutureIter_clear(self);
-    Py_RETURN_NONE;
-}
-
-static int
-FutureIter_traverse(futureiterobject *it, visitproc visit, void *arg)
-{
-    Py_VISIT(Py_TYPE(it));
-    Py_VISIT(it->future);
-    return 0;
-}
-
-static PyMethodDef FutureIter_methods[] = {
-    {"send",  (PyCFunction)FutureIter_send, METH_O, NULL},
-    {"throw", _PyCFunction_CAST(FutureIter_throw), METH_FASTCALL, NULL},
-    {"close", (PyCFunction)FutureIter_close, METH_NOARGS, NULL},
-    {NULL, NULL}        /* Sentinel */
-};
-
-static PyType_Slot FutureIter_slots[] = {
-    {Py_tp_dealloc, (destructor)FutureIter_dealloc},
-    {Py_tp_getattro, PyObject_GenericGetAttr},
-    {Py_tp_traverse, (traverseproc)FutureIter_traverse},
-    {Py_tp_clear, FutureIter_clear},
-    {Py_tp_iter, PyObject_SelfIter},
-    {Py_tp_iternext, (iternextfunc)FutureIter_iternext},
-    {Py_tp_methods, FutureIter_methods},
-
-    // async methods
-    {Py_am_send, (sendfunc)FutureIter_am_send},
-    {0, NULL},
-};
-
-static PyType_Spec FutureIter_spec = {
-    .name = "_asyncio.FutureIter",
-    .basicsize = sizeof(futureiterobject),
-    .flags = (Py_TPFLAGS_DEFAULT | Py_TPFLAGS_HAVE_GC |
-              Py_TPFLAGS_IMMUTABLETYPE),
-    .slots = FutureIter_slots,
-};
-
-static PyObject *
-future_new_iter(PyObject *fut)
-{
-    futureiterobject *it;
-
-    asyncio_state *state = get_asyncio_state_by_def((PyObject *)fut);
-    ENSURE_FUTURE_ALIVE(state, fut)
-
-    it = _Py_FREELIST_POP(futureiterobject, futureiters);
-    if (it == NULL) {
-        it = PyObject_GC_New(futureiterobject, state->FutureIterType);
-        if (it == NULL) {
-            return NULL;
-        }
-    }
-
-    it->future = (FutureObj*)Py_NewRef(fut);
-    PyObject_GC_Track(it);
-    return (PyObject*)it;
 }
 
 
@@ -2789,15 +2609,11 @@ static PyType_Slot Task_slots[] = {
     {Py_tp_doc, (void *)_asyncio_Task___init____doc__},
     {Py_tp_traverse, (traverseproc)TaskObj_traverse},
     {Py_tp_clear, (inquiry)TaskObj_clear},
-    {Py_tp_iter, (getiterfunc)future_new_iter},
     {Py_tp_methods, TaskType_methods},
     {Py_tp_getset, TaskType_getsetlist},
     {Py_tp_init, (initproc)_asyncio_Task___init__},
     {Py_tp_new, PyType_GenericNew},
     {Py_tp_finalize, (destructor)TaskObj_finalize},
-
-    // async slots
-    {Py_am_await, (unaryfunc)future_new_iter},
     {0, NULL},
 };
 
@@ -4018,7 +3834,6 @@ module_exec(PyObject *mod)
     } while (0)
 
     CREATE_TYPE(mod, state->TaskStepMethWrapper_Type, &TaskStepMethWrapper_spec, NULL);
-    CREATE_TYPE(mod, state->FutureIterType, &FutureIter_spec, NULL);
     CREATE_TYPE(mod, state->FutureType, &Future_spec, NULL);
     CREATE_TYPE(mod, state->TaskType, &Task_spec, state->FutureType);
 
