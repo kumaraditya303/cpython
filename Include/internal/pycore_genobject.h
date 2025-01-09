@@ -61,6 +61,8 @@ PyAPI_FUNC(int) _PyGen_SetStopIterationValue(PyObject *);
 // Export for '_asyncio' shared extension
 PyAPI_FUNC(int) _PyGen_FetchStopIterationValue(PyObject **);
 
+PyAPI_FUNC(PySendResult) _PyGen_am_send(PyObject *self, PyObject *arg, PyObject **result);
+
 PyAPI_FUNC(PyObject *)_PyCoro_GetAwaitableIter(PyObject *o);
 extern PyObject *_PyAsyncGenValueWrapperNew(PyThreadState *state, PyObject *);
 
