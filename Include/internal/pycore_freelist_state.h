@@ -21,7 +21,9 @@ extern "C" {
 #  define Py_contexts_MAXFREELIST 255
 #  define Py_async_gens_MAXFREELIST 80
 #  define Py_async_gen_asends_MAXFREELIST 80
-#  define Py_futureiters_MAXFREELIST 255
+#  define Py_asyncio_futureiters_MAXFREELIST 255
+#  define Py_asyncio_futures_MAXFREELIST 255
+#  define Py_asyncio_tasks_MAXFREELIST 255
 #  define Py_object_stack_chunks_MAXFREELIST 4
 #  define Py_unicode_writers_MAXFREELIST 1
 #  define Py_pymethodobjects_MAXFREELIST 20
@@ -50,7 +52,9 @@ struct _Py_freelists {
     struct _Py_freelist contexts;
     struct _Py_freelist async_gens;
     struct _Py_freelist async_gen_asends;
-    struct _Py_freelist futureiters;
+    struct _Py_freelist asyncio_futureiters;
+    struct _Py_freelist asyncio_futures;
+    struct _Py_freelist asyncio_tasks;
     struct _Py_freelist object_stack_chunks;
     struct _Py_freelist unicode_writers;
     struct _Py_freelist pymethodobjects;

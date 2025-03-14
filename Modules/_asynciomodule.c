@@ -31,6 +31,8 @@ typedef enum {
     STATE_FINISHED
 } fut_state;
 
+typedef struct asyncio_state asyncio_state;
+
 #define FutureObj_HEAD(prefix)                                              \
     PyObject_HEAD                                                           \
     PyObject *prefix##_loop;                                                \
@@ -44,13 +46,14 @@ typedef enum {
     PyObject *prefix##_cancel_msg;                                          \
     PyObject *prefix##_cancelled_exc;                                       \
     PyObject *prefix##_awaited_by;                                          \
+    asyncio_state *mod_state;                                               \
     fut_state prefix##_state;                                               \
     /* Used by profilers to make traversing the stack from an external      \
-       process faster. */                                                   \
+    process faster. */                                                   \
     char prefix##_is_task;                                                  \
     char prefix##_awaited_by_is_set;                                        \
     /* These bitfields need to be at the end of the struct                  \
-       so that these and bitfields from TaskObj are contiguous.             \
+    so that these and bitfields from TaskObj are contiguous.             \
     */                                                                      \
     unsigned prefix##_log_tb: 1;                                            \
     unsigned prefix##_blocking: 1;                                          \
@@ -132,7 +135,7 @@ GENERATE_DEBUG_SECTION(AsyncioDebug, Py_AsyncioModuleDebugOffsets AsyncioDebug)
        }};
 
 /* State of the _asyncio module */
-typedef struct {
+typedef struct asyncio_state {
     PyTypeObject *FutureIterType;
     PyTypeObject *TaskStepMethWrapper_Type;
     PyTypeObject *FutureType;
@@ -197,12 +200,18 @@ get_asyncio_state_by_cls(PyTypeObject *cls)
 static struct PyModuleDef _asynciomodule;
 
 static inline asyncio_state *
-get_asyncio_state_by_def(PyObject *self)
+get_asyncio_state_by_def_type(PyTypeObject *tp)
 {
-    PyTypeObject *tp = Py_TYPE(self);
     PyObject *mod = PyType_GetModuleByDef(tp, &_asynciomodule);
     assert(mod != NULL);
     return get_asyncio_state(mod);
+}
+
+static inline asyncio_state *
+get_asyncio_state_by_def(PyObject *self)
+{
+    PyTypeObject *tp = Py_TYPE(self);
+    return get_asyncio_state_by_def_type(tp);
 }
 
 #include "clinic/_asynciomodule.c.h"
@@ -488,7 +497,7 @@ future_init(FutureObj *fut, PyObject *loop)
     PyObject *res;
     int is_true;
 
-    Py_CLEAR(fut->fut_loop);
+    // Py_CLEAR(fut->fut_loop);
     Py_CLEAR(fut->fut_callback0);
     Py_CLEAR(fut->fut_context0);
     Py_CLEAR(fut->fut_callbacks);
@@ -905,6 +914,36 @@ _asyncio_Future___init___impl(FutureObj *self, PyObject *loop)
 {
     return future_init(self, loop);
 }
+
+static PyObject *
+FutureObj_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
+{
+    asyncio_state *state = get_asyncio_state_by_def_type(type);
+    FutureObj *res;
+    if (type == state->TaskType) {
+        printf("allocating from Task freelist\n");
+        res = _Py_FREELIST_POP(FutureObj, asyncio_tasks);
+        if (res == NULL) {
+            res = PyObject_GC_New(FutureObj, state->TaskType);
+        }
+    } else if (type == state->FutureType) {
+        printf("allocating from Future freelist\n");
+        res = _Py_FREELIST_POP(FutureObj, asyncio_futures);
+        if (res == NULL) {
+            res = PyObject_GC_New(FutureObj, state->FutureType);
+        }
+    } else {
+        res = (FutureObj *)type->tp_alloc(type, 0);
+    }
+    if (res == NULL) {
+        return NULL;
+    }
+    assert(Future_Check(state, res));
+
+    res->mod_state = state;
+    return (PyObject *)res;
+}
+
 
 static int
 FutureObj_clear(PyObject *op)
@@ -1772,7 +1811,7 @@ static PyType_Slot Future_slots[] = {
     {Py_tp_methods, FutureType_methods},
     {Py_tp_getset, FutureType_getsetlist},
     {Py_tp_init, _asyncio_Future___init__},
-    {Py_tp_new, PyType_GenericNew},
+    {Py_tp_new, FutureObj_new},
     {Py_tp_finalize, FutureObj_finalize},
 
     // async slots
@@ -1803,7 +1842,13 @@ FutureObj_dealloc(PyObject *self)
     PyObject_ClearWeakRefs(self);
 
     (void)FutureObj_clear(self);
-    tp->tp_free(self);
+
+    asyncio_state *state = ((FutureObj *)self)->mod_state;
+
+    if (tp == state->FutureType && _Py_FREELIST_PUSH(asyncio_futures, self, Py_asyncio_tasks_MAXFREELIST)) {
+        return;
+    }
+    PyObject_GC_Del(self);
     Py_DECREF(tp);
 }
 
@@ -1826,7 +1871,7 @@ FutureIter_dealloc(PyObject *it)
     PyObject_GC_UnTrack(it);
     tp->tp_clear(it);
 
-    if (!_Py_FREELIST_PUSH(futureiters, it, Py_futureiters_MAXFREELIST)) {
+    if (!_Py_FREELIST_PUSH(asyncio_futureiters, it, Py_asyncio_futureiters_MAXFREELIST)) {
         PyObject_GC_Del(it);
         Py_DECREF(tp);
     }
@@ -2039,7 +2084,7 @@ future_new_iter(PyObject *fut)
     asyncio_state *state = get_asyncio_state_by_def((PyObject *)fut);
     ENSURE_FUTURE_ALIVE(state, fut)
 
-    it = _Py_FREELIST_POP(futureiterobject, futureiters);
+    it = _Py_FREELIST_POP(futureiterobject, asyncio_futureiters);
     if (it == NULL) {
         it = PyObject_GC_New(futureiterobject, state->FutureIterType);
         if (it == NULL) {
@@ -2956,8 +3001,7 @@ static PyType_Slot Task_slots[] = {
     {Py_tp_methods, TaskType_methods},
     {Py_tp_getset, TaskType_getsetlist},
     {Py_tp_init, (initproc)_asyncio_Task___init__},
-    {Py_tp_new, PyType_GenericNew},
-    {Py_tp_finalize, TaskObj_finalize},
+    {Py_tp_finalize, (destructor)TaskObj_finalize},
 
     // async slots
     {Py_am_await, future_new_iter},
@@ -2993,7 +3037,13 @@ TaskObj_dealloc(PyObject *self)
     PyObject_ClearWeakRefs(self);
 
     (void)TaskObj_clear(self);
-    tp->tp_free(self);
+
+    asyncio_state *state = ((TaskObj *)self)->mod_state;
+
+    if (tp == state->TaskType && _Py_FREELIST_PUSH(asyncio_tasks, self, Py_asyncio_tasks_MAXFREELIST)) {
+        return;
+    }
+    PyObject_GC_Del(self);
     Py_DECREF(tp);
 }
 
