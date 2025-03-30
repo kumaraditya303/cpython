@@ -35,6 +35,7 @@ typedef struct asyncio_state asyncio_state;
 
 #define FutureObj_HEAD(prefix)                                              \
     PyObject_HEAD                                                           \
+    asyncio_state *mod_state;                                               \
     PyObject *prefix##_loop;                                                \
     PyObject *prefix##_callback0;                                           \
     PyObject *prefix##_context0;                                            \
@@ -46,7 +47,6 @@ typedef struct asyncio_state asyncio_state;
     PyObject *prefix##_cancel_msg;                                          \
     PyObject *prefix##_cancelled_exc;                                       \
     PyObject *prefix##_awaited_by;                                          \
-    asyncio_state *mod_state;                                               \
     fut_state prefix##_state;                                               \
     /* Used by profilers to make traversing the stack from an external      \
     process faster. */                                                   \
