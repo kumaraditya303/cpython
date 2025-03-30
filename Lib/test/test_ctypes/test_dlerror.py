@@ -126,6 +126,7 @@ class TestLocalization(unittest.TestCase):
 
     @staticmethod
     def configure_locales(func):
+        func = test.support.thread_unsafe('setlocale not thread safe')(func)
         return test.support.run_with_locale(
             'LC_ALL',
             'fr_FR.iso88591', 'ja_JP.sjis', 'zh_CN.gbk',

@@ -9,7 +9,7 @@ from test import support
 from test.support import import_helper, threading_helper
 _ctypes_test = import_helper.import_module("_ctypes_test")
 
-
+@support.thread_unsafe('not thread safe')
 class CFunctions(unittest.TestCase):
     _dll = CDLL(_ctypes_test.__file__)
 
