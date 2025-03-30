@@ -1683,14 +1683,20 @@ _PyObject_GenericGetAttrWithDict(PyObject *obj, PyObject *name,
                      Py_TYPE(name)->tp_name);
         return NULL;
     }
-    Py_INCREF(name);
 
     if (!_PyType_IsReady(tp)) {
         if (PyType_Ready(tp) < 0)
-            goto done;
+            return NULL;
     }
 
-    descr = _PyType_LookupRef(tp, name);
+    Py_INCREF(name);
+
+    PyThreadState *tstate = _PyThreadState_GET();
+    _PyCStackRef cref;
+    _PyThreadState_PushCStackRef(tstate, &cref);
+
+    _PyType_LookupStackRefAndVersion(tp, name, &cref.ref);
+    descr = PyStackRef_AsPyObjectBorrow(cref.ref);
 
     f = NULL;
     if (descr != NULL) {
@@ -1761,8 +1767,8 @@ _PyObject_GenericGetAttrWithDict(PyObject *obj, PyObject *name,
     }
 
     if (descr != NULL) {
-        res = descr;
-        descr = NULL;
+        res = PyStackRef_AsPyObjectSteal(cref.ref);
+        cref.ref = PyStackRef_NULL;
         goto done;
     }
 
@@ -1774,7 +1780,7 @@ _PyObject_GenericGetAttrWithDict(PyObject *obj, PyObject *name,
         _PyObject_SetAttributeErrorContext(obj, name);
     }
   done:
-    Py_XDECREF(descr);
+    _PyThreadState_PopCStackRef(tstate, &cref);
     Py_DECREF(name);
     return res;
 }
@@ -1808,7 +1814,13 @@ _PyObject_GenericSetAttrWithDict(PyObject *obj, PyObject *name,
 
     Py_INCREF(name);
     Py_INCREF(tp);
-    descr = _PyType_LookupRef(tp, name);
+
+    PyThreadState *tstate = _PyThreadState_GET();
+    _PyCStackRef cref;
+    _PyThreadState_PushCStackRef(tstate, &cref);
+
+    _PyType_LookupStackRefAndVersion(tp, name, &cref.ref);
+    descr = PyStackRef_AsPyObjectBorrow(cref.ref);
 
     if (descr != NULL) {
         f = Py_TYPE(descr)->tp_descr_set;
@@ -1875,7 +1887,7 @@ _PyObject_GenericSetAttrWithDict(PyObject *obj, PyObject *name,
         _PyObject_SetAttributeErrorContext(obj, name);
     }
   done:
-    Py_XDECREF(descr);
+    _PyThreadState_PopCStackRef(tstate, &cref);
     Py_DECREF(tp);
     Py_DECREF(name);
     return res;
