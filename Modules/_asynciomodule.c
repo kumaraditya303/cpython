@@ -497,7 +497,7 @@ future_init(FutureObj *fut, PyObject *loop)
     PyObject *res;
     int is_true;
 
-    // Py_CLEAR(fut->fut_loop);
+    Py_CLEAR(fut->fut_loop);
     Py_CLEAR(fut->fut_callback0);
     Py_CLEAR(fut->fut_context0);
     Py_CLEAR(fut->fut_callbacks);
@@ -921,13 +921,11 @@ FutureObj_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     asyncio_state *state = get_asyncio_state_by_def_type(type);
     FutureObj *res;
     if (type == state->TaskType) {
-        printf("allocating from Task freelist\n");
         res = _Py_FREELIST_POP(FutureObj, asyncio_tasks);
         if (res == NULL) {
             res = PyObject_GC_New(FutureObj, state->TaskType);
         }
     } else if (type == state->FutureType) {
-        printf("allocating from Future freelist\n");
         res = _Py_FREELIST_POP(FutureObj, asyncio_futures);
         if (res == NULL) {
             res = PyObject_GC_New(FutureObj, state->FutureType);
@@ -1845,7 +1843,7 @@ FutureObj_dealloc(PyObject *self)
 
     asyncio_state *state = ((FutureObj *)self)->mod_state;
 
-    if (tp == state->FutureType && _Py_FREELIST_PUSH(asyncio_futures, self, Py_asyncio_tasks_MAXFREELIST)) {
+    if (tp == state->FutureType && _Py_FREELIST_PUSH(asyncio_futures, self, Py_asyncio_futures_MAXFREELIST)) {
         return;
     }
     PyObject_GC_Del(self);
