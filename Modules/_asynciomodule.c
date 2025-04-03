@@ -922,16 +922,16 @@ FutureObj_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     FutureObj *res = NULL;
     if (type == state->FutureType) {
         res = _Py_FREELIST_POP(FutureObj, asyncio_futures);
-    } else if (type == state->TaskType) {
-        res = (FutureObj *)_Py_FREELIST_POP(TaskObj, asyncio_tasks);
+        if (res == NULL) {
+            res = (FutureObj *)type->tp_alloc(type, 0);
+        }
+    } else {
+        res = (FutureObj *)type->tp_alloc(type, 0);
+    }
+    if (res == NULL) {
+        return NULL;
     }
 
-    if (res == NULL) {
-        res = (FutureObj *)type->tp_alloc(type, 0);
-        if (res == NULL) {
-            return NULL;
-        }
-    }
     assert(Future_Check(state, res));
     if (!_PyObject_GC_IS_TRACKED(res)) {
         PyObject_GC_Track(res);
@@ -3035,11 +3035,6 @@ TaskObj_dealloc(PyObject *self)
 
     (void)TaskObj_clear(self);
 
-    asyncio_state *state = ((TaskObj *)self)->mod_state;
-
-    if (tp == state->TaskType && _Py_FREELIST_PUSH(asyncio_tasks, self, Py_asyncio_tasks_MAXFREELIST)) {
-        return;
-    }
     tp->tp_free(self);
     Py_DECREF(tp);
 }
