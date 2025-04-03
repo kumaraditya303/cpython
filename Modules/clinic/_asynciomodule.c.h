@@ -122,25 +122,20 @@ PyDoc_STRVAR(_asyncio_Future_exception__doc__,
 "InvalidStateError.");
 
 #define _ASYNCIO_FUTURE_EXCEPTION_METHODDEF    \
-    {"exception", _PyCFunction_CAST(_asyncio_Future_exception), METH_METHOD|METH_FASTCALL|METH_KEYWORDS, _asyncio_Future_exception__doc__},
+    {"exception", (PyCFunction)_asyncio_Future_exception, METH_NOARGS, _asyncio_Future_exception__doc__},
 
 static PyObject *
-_asyncio_Future_exception_impl(FutureObj *self, PyTypeObject *cls);
+_asyncio_Future_exception_impl(FutureObj *self);
 
 static PyObject *
-_asyncio_Future_exception(PyObject *self, PyTypeObject *cls, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
+_asyncio_Future_exception(PyObject *self, PyObject *Py_UNUSED(ignored))
 {
     PyObject *return_value = NULL;
 
-    if (nargs || (kwnames && PyTuple_GET_SIZE(kwnames))) {
-        PyErr_SetString(PyExc_TypeError, "exception() takes no arguments");
-        goto exit;
-    }
     Py_BEGIN_CRITICAL_SECTION(self);
-    return_value = _asyncio_Future_exception_impl((FutureObj *)self, cls);
+    return_value = _asyncio_Future_exception_impl((FutureObj *)self);
     Py_END_CRITICAL_SECTION();
 
-exit:
     return return_value;
 }
 
@@ -154,43 +149,20 @@ PyDoc_STRVAR(_asyncio_Future_set_result__doc__,
 "InvalidStateError.");
 
 #define _ASYNCIO_FUTURE_SET_RESULT_METHODDEF    \
-    {"set_result", _PyCFunction_CAST(_asyncio_Future_set_result), METH_METHOD|METH_FASTCALL|METH_KEYWORDS, _asyncio_Future_set_result__doc__},
+    {"set_result", (PyCFunction)_asyncio_Future_set_result, METH_O, _asyncio_Future_set_result__doc__},
 
 static PyObject *
-_asyncio_Future_set_result_impl(FutureObj *self, PyTypeObject *cls,
-                                PyObject *result);
+_asyncio_Future_set_result_impl(FutureObj *self, PyObject *result);
 
 static PyObject *
-_asyncio_Future_set_result(PyObject *self, PyTypeObject *cls, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
+_asyncio_Future_set_result(PyObject *self, PyObject *result)
 {
     PyObject *return_value = NULL;
-    #if defined(Py_BUILD_CORE) && !defined(Py_BUILD_CORE_MODULE)
-    #  define KWTUPLE (PyObject *)&_Py_SINGLETON(tuple_empty)
-    #else
-    #  define KWTUPLE NULL
-    #endif
 
-    static const char * const _keywords[] = {"", NULL};
-    static _PyArg_Parser _parser = {
-        .keywords = _keywords,
-        .fname = "set_result",
-        .kwtuple = KWTUPLE,
-    };
-    #undef KWTUPLE
-    PyObject *argsbuf[1];
-    PyObject *result;
-
-    args = _PyArg_UnpackKeywords(args, nargs, NULL, kwnames, &_parser,
-            /*minpos*/ 1, /*maxpos*/ 1, /*minkw*/ 0, /*varpos*/ 0, argsbuf);
-    if (!args) {
-        goto exit;
-    }
-    result = args[0];
     Py_BEGIN_CRITICAL_SECTION(self);
-    return_value = _asyncio_Future_set_result_impl((FutureObj *)self, cls, result);
+    return_value = _asyncio_Future_set_result_impl((FutureObj *)self, result);
     Py_END_CRITICAL_SECTION();
 
-exit:
     return return_value;
 }
 
@@ -204,43 +176,20 @@ PyDoc_STRVAR(_asyncio_Future_set_exception__doc__,
 "InvalidStateError.");
 
 #define _ASYNCIO_FUTURE_SET_EXCEPTION_METHODDEF    \
-    {"set_exception", _PyCFunction_CAST(_asyncio_Future_set_exception), METH_METHOD|METH_FASTCALL|METH_KEYWORDS, _asyncio_Future_set_exception__doc__},
+    {"set_exception", (PyCFunction)_asyncio_Future_set_exception, METH_O, _asyncio_Future_set_exception__doc__},
 
 static PyObject *
-_asyncio_Future_set_exception_impl(FutureObj *self, PyTypeObject *cls,
-                                   PyObject *exception);
+_asyncio_Future_set_exception_impl(FutureObj *self, PyObject *exception);
 
 static PyObject *
-_asyncio_Future_set_exception(PyObject *self, PyTypeObject *cls, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
+_asyncio_Future_set_exception(PyObject *self, PyObject *exception)
 {
     PyObject *return_value = NULL;
-    #if defined(Py_BUILD_CORE) && !defined(Py_BUILD_CORE_MODULE)
-    #  define KWTUPLE (PyObject *)&_Py_SINGLETON(tuple_empty)
-    #else
-    #  define KWTUPLE NULL
-    #endif
 
-    static const char * const _keywords[] = {"", NULL};
-    static _PyArg_Parser _parser = {
-        .keywords = _keywords,
-        .fname = "set_exception",
-        .kwtuple = KWTUPLE,
-    };
-    #undef KWTUPLE
-    PyObject *argsbuf[1];
-    PyObject *exception;
-
-    args = _PyArg_UnpackKeywords(args, nargs, NULL, kwnames, &_parser,
-            /*minpos*/ 1, /*maxpos*/ 1, /*minkw*/ 0, /*varpos*/ 0, argsbuf);
-    if (!args) {
-        goto exit;
-    }
-    exception = args[0];
     Py_BEGIN_CRITICAL_SECTION(self);
-    return_value = _asyncio_Future_set_exception_impl((FutureObj *)self, cls, exception);
+    return_value = _asyncio_Future_set_exception_impl((FutureObj *)self, exception);
     Py_END_CRITICAL_SECTION();
 
-exit:
     return return_value;
 }
 
@@ -255,14 +204,14 @@ PyDoc_STRVAR(_asyncio_Future_add_done_callback__doc__,
 "scheduled with call_soon.");
 
 #define _ASYNCIO_FUTURE_ADD_DONE_CALLBACK_METHODDEF    \
-    {"add_done_callback", _PyCFunction_CAST(_asyncio_Future_add_done_callback), METH_METHOD|METH_FASTCALL|METH_KEYWORDS, _asyncio_Future_add_done_callback__doc__},
+    {"add_done_callback", _PyCFunction_CAST(_asyncio_Future_add_done_callback), METH_FASTCALL|METH_KEYWORDS, _asyncio_Future_add_done_callback__doc__},
 
 static PyObject *
-_asyncio_Future_add_done_callback_impl(FutureObj *self, PyTypeObject *cls,
-                                       PyObject *fn, PyObject *context);
+_asyncio_Future_add_done_callback_impl(FutureObj *self, PyObject *fn,
+                                       PyObject *context);
 
 static PyObject *
-_asyncio_Future_add_done_callback(PyObject *self, PyTypeObject *cls, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
+_asyncio_Future_add_done_callback(PyObject *self, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
     #if defined(Py_BUILD_CORE) && !defined(Py_BUILD_CORE_MODULE)
@@ -309,7 +258,7 @@ _asyncio_Future_add_done_callback(PyObject *self, PyTypeObject *cls, PyObject *c
     context = args[1];
 skip_optional_kwonly:
     Py_BEGIN_CRITICAL_SECTION(self);
-    return_value = _asyncio_Future_add_done_callback_impl((FutureObj *)self, cls, fn, context);
+    return_value = _asyncio_Future_add_done_callback_impl((FutureObj *)self, fn, context);
     Py_END_CRITICAL_SECTION();
 
 exit:
@@ -325,43 +274,20 @@ PyDoc_STRVAR(_asyncio_Future_remove_done_callback__doc__,
 "Returns the number of callbacks removed.");
 
 #define _ASYNCIO_FUTURE_REMOVE_DONE_CALLBACK_METHODDEF    \
-    {"remove_done_callback", _PyCFunction_CAST(_asyncio_Future_remove_done_callback), METH_METHOD|METH_FASTCALL|METH_KEYWORDS, _asyncio_Future_remove_done_callback__doc__},
+    {"remove_done_callback", (PyCFunction)_asyncio_Future_remove_done_callback, METH_O, _asyncio_Future_remove_done_callback__doc__},
 
 static PyObject *
-_asyncio_Future_remove_done_callback_impl(FutureObj *self, PyTypeObject *cls,
-                                          PyObject *fn);
+_asyncio_Future_remove_done_callback_impl(FutureObj *self, PyObject *fn);
 
 static PyObject *
-_asyncio_Future_remove_done_callback(PyObject *self, PyTypeObject *cls, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
+_asyncio_Future_remove_done_callback(PyObject *self, PyObject *fn)
 {
     PyObject *return_value = NULL;
-    #if defined(Py_BUILD_CORE) && !defined(Py_BUILD_CORE_MODULE)
-    #  define KWTUPLE (PyObject *)&_Py_SINGLETON(tuple_empty)
-    #else
-    #  define KWTUPLE NULL
-    #endif
 
-    static const char * const _keywords[] = {"", NULL};
-    static _PyArg_Parser _parser = {
-        .keywords = _keywords,
-        .fname = "remove_done_callback",
-        .kwtuple = KWTUPLE,
-    };
-    #undef KWTUPLE
-    PyObject *argsbuf[1];
-    PyObject *fn;
-
-    args = _PyArg_UnpackKeywords(args, nargs, NULL, kwnames, &_parser,
-            /*minpos*/ 1, /*maxpos*/ 1, /*minkw*/ 0, /*varpos*/ 0, argsbuf);
-    if (!args) {
-        goto exit;
-    }
-    fn = args[0];
     Py_BEGIN_CRITICAL_SECTION(self);
-    return_value = _asyncio_Future_remove_done_callback_impl((FutureObj *)self, cls, fn);
+    return_value = _asyncio_Future_remove_done_callback_impl((FutureObj *)self, fn);
     Py_END_CRITICAL_SECTION();
 
-exit:
     return return_value;
 }
 
@@ -376,14 +302,13 @@ PyDoc_STRVAR(_asyncio_Future_cancel__doc__,
 "return True.");
 
 #define _ASYNCIO_FUTURE_CANCEL_METHODDEF    \
-    {"cancel", _PyCFunction_CAST(_asyncio_Future_cancel), METH_METHOD|METH_FASTCALL|METH_KEYWORDS, _asyncio_Future_cancel__doc__},
+    {"cancel", _PyCFunction_CAST(_asyncio_Future_cancel), METH_FASTCALL|METH_KEYWORDS, _asyncio_Future_cancel__doc__},
 
 static PyObject *
-_asyncio_Future_cancel_impl(FutureObj *self, PyTypeObject *cls,
-                            PyObject *msg);
+_asyncio_Future_cancel_impl(FutureObj *self, PyObject *msg);
 
 static PyObject *
-_asyncio_Future_cancel(PyObject *self, PyTypeObject *cls, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
+_asyncio_Future_cancel(PyObject *self, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
     #if defined(Py_BUILD_CORE) && !defined(Py_BUILD_CORE_MODULE)
@@ -428,7 +353,7 @@ _asyncio_Future_cancel(PyObject *self, PyTypeObject *cls, PyObject *const *args,
     msg = args[0];
 skip_optional_pos:
     Py_BEGIN_CRITICAL_SECTION(self);
-    return_value = _asyncio_Future_cancel_impl((FutureObj *)self, cls, msg);
+    return_value = _asyncio_Future_cancel_impl((FutureObj *)self, msg);
     Py_END_CRITICAL_SECTION();
 
 exit:
@@ -493,25 +418,20 @@ PyDoc_STRVAR(_asyncio_Future_get_loop__doc__,
 "Return the event loop the Future is bound to.");
 
 #define _ASYNCIO_FUTURE_GET_LOOP_METHODDEF    \
-    {"get_loop", _PyCFunction_CAST(_asyncio_Future_get_loop), METH_METHOD|METH_FASTCALL|METH_KEYWORDS, _asyncio_Future_get_loop__doc__},
+    {"get_loop", (PyCFunction)_asyncio_Future_get_loop, METH_NOARGS, _asyncio_Future_get_loop__doc__},
 
 static PyObject *
-_asyncio_Future_get_loop_impl(FutureObj *self, PyTypeObject *cls);
+_asyncio_Future_get_loop_impl(FutureObj *self);
 
 static PyObject *
-_asyncio_Future_get_loop(PyObject *self, PyTypeObject *cls, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
+_asyncio_Future_get_loop(PyObject *self, PyObject *Py_UNUSED(ignored))
 {
     PyObject *return_value = NULL;
 
-    if (nargs || (kwnames && PyTuple_GET_SIZE(kwnames))) {
-        PyErr_SetString(PyExc_TypeError, "get_loop() takes no arguments");
-        goto exit;
-    }
     Py_BEGIN_CRITICAL_SECTION(self);
-    return_value = _asyncio_Future_get_loop_impl((FutureObj *)self, cls);
+    return_value = _asyncio_Future_get_loop_impl((FutureObj *)self);
     Py_END_CRITICAL_SECTION();
 
-exit:
     return return_value;
 }
 
@@ -1275,14 +1195,13 @@ PyDoc_STRVAR(_asyncio_Task_get_stack__doc__,
 "returned for a suspended coroutine.");
 
 #define _ASYNCIO_TASK_GET_STACK_METHODDEF    \
-    {"get_stack", _PyCFunction_CAST(_asyncio_Task_get_stack), METH_METHOD|METH_FASTCALL|METH_KEYWORDS, _asyncio_Task_get_stack__doc__},
+    {"get_stack", _PyCFunction_CAST(_asyncio_Task_get_stack), METH_FASTCALL|METH_KEYWORDS, _asyncio_Task_get_stack__doc__},
 
 static PyObject *
-_asyncio_Task_get_stack_impl(TaskObj *self, PyTypeObject *cls,
-                             PyObject *limit);
+_asyncio_Task_get_stack_impl(TaskObj *self, PyObject *limit);
 
 static PyObject *
-_asyncio_Task_get_stack(PyObject *self, PyTypeObject *cls, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
+_asyncio_Task_get_stack(PyObject *self, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
     #if defined(Py_BUILD_CORE) && !defined(Py_BUILD_CORE_MODULE)
@@ -1326,7 +1245,7 @@ _asyncio_Task_get_stack(PyObject *self, PyTypeObject *cls, PyObject *const *args
     }
     limit = args[0];
 skip_optional_kwonly:
-    return_value = _asyncio_Task_get_stack_impl((TaskObj *)self, cls, limit);
+    return_value = _asyncio_Task_get_stack_impl((TaskObj *)self, limit);
 
 exit:
     return return_value;
@@ -1345,14 +1264,14 @@ PyDoc_STRVAR(_asyncio_Task_print_stack__doc__,
 "to sys.stderr.");
 
 #define _ASYNCIO_TASK_PRINT_STACK_METHODDEF    \
-    {"print_stack", _PyCFunction_CAST(_asyncio_Task_print_stack), METH_METHOD|METH_FASTCALL|METH_KEYWORDS, _asyncio_Task_print_stack__doc__},
+    {"print_stack", _PyCFunction_CAST(_asyncio_Task_print_stack), METH_FASTCALL|METH_KEYWORDS, _asyncio_Task_print_stack__doc__},
 
 static PyObject *
-_asyncio_Task_print_stack_impl(TaskObj *self, PyTypeObject *cls,
-                               PyObject *limit, PyObject *file);
+_asyncio_Task_print_stack_impl(TaskObj *self, PyObject *limit,
+                               PyObject *file);
 
 static PyObject *
-_asyncio_Task_print_stack(PyObject *self, PyTypeObject *cls, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
+_asyncio_Task_print_stack(PyObject *self, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
 {
     PyObject *return_value = NULL;
     #if defined(Py_BUILD_CORE) && !defined(Py_BUILD_CORE_MODULE)
@@ -1403,7 +1322,7 @@ _asyncio_Task_print_stack(PyObject *self, PyTypeObject *cls, PyObject *const *ar
     }
     file = args[1];
 skip_optional_kwonly:
-    return_value = _asyncio_Task_print_stack_impl((TaskObj *)self, cls, limit, file);
+    return_value = _asyncio_Task_print_stack_impl((TaskObj *)self, limit, file);
 
 exit:
     return return_value;
@@ -2232,4 +2151,4 @@ _asyncio_future_discard_from_awaited_by(PyObject *module, PyObject *const *args,
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=b69948ed810591d9 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=b9e9d22ac60f37a9 input=a9049054013a1b77]*/
