@@ -917,12 +917,12 @@ FutureObj_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
         if (res == NULL) {
             return NULL;
         }
+    } else {
+        _PyObject_GC_TRACK(res);
     }
 
+    assert(_PyObject_GC_IS_TRACKED(res));
     assert(Future_Check(state, res));
-    if (!_PyObject_GC_IS_TRACKED(res)) {
-        PyObject_GC_Track(res);
-    }
     res->mod_state = state;
     return (PyObject *)res;
 }
