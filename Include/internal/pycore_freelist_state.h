@@ -21,9 +21,9 @@ extern "C" {
 #  define Py_contexts_MAXFREELIST 255
 #  define Py_async_gens_MAXFREELIST 80
 #  define Py_async_gen_asends_MAXFREELIST 80
-#  define Py_asyncio_futureiters_MAXFREELIST 255
-#  define Py_asyncio_futures_MAXFREELIST 255
-#  define Py_asyncio_tasks_MAXFREELIST 255
+#  define Py_asyncio_futureiters_MAXFREELIST 1024
+#  define Py_asyncio_futures_MAXFREELIST 1024
+#  define Py_asyncio_tasks_MAXFREELIST 1024
 #  define Py_object_stack_chunks_MAXFREELIST 4
 #  define Py_unicode_writers_MAXFREELIST 1
 #  define Py_pymethodobjects_MAXFREELIST 20
