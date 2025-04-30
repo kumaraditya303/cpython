@@ -4392,6 +4392,9 @@ module_exec(PyObject *mod)
         return -1;
     }
 
+    PyInterpreterState *interp = PyInterpreterState_Get();
+    interp->runtime->asyncio_tasks_head_offset= offsetof(TaskObj, task_node);
+
     return 0;
 }
 

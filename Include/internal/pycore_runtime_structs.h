@@ -289,6 +289,8 @@ struct pyruntimestate {
     struct _Py_cached_objects cached_objects;
     struct _Py_static_objects static_objects;
 
+    size_t asyncio_tasks_head_offset;
+
     /* The following fields are here to avoid allocation during init.
        The data is exposed through _PyRuntimeState pointer fields.
        These fields should not be accessed directly outside of init.

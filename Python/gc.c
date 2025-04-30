@@ -1484,6 +1484,7 @@ mark_stacks(PyInterpreterState *interp, PyGC_Head *visited, int visited_space, b
     HEAD_LOCK(runtime);
     PyThreadState* ts = PyInterpreterState_ThreadHead(interp);
     HEAD_UNLOCK(runtime);
+    size_t asyncio_tasks_head_offset = interp->runtime->asyncio_tasks_head_offset;
     while (ts) {
         _PyInterpreterFrame *frame = ts->current_frame;
         while (frame) {
@@ -1522,6 +1523,15 @@ mark_stacks(PyInterpreterState *interp, PyGC_Head *visited, int visited_space, b
             }
             frame->visited = 1;
             frame = frame->previous;
+        }
+        if (asyncio_tasks_head_offset != 0) {
+            _PyThreadStateImpl *ts_impl = (_PyThreadStateImpl *)ts;
+            struct llist_node *head = &ts_impl->asyncio_tasks_head;
+            struct llist_node *node;
+            llist_for_each_safe(node, head) {
+                PyObject *task = ((PyObject *)((char*)node - asyncio_tasks_head_offset));
+                objects_marked += move_to_reachable(task, &reachable, visited_space);
+            }
         }
         HEAD_LOCK(runtime);
         ts = PyThreadState_Next(ts);
