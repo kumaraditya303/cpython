@@ -830,6 +830,7 @@ static int
 gc_visit_thread_stacks_mark_alive(PyInterpreterState *interp, gc_mark_args_t *args)
 {
     int err = 0;
+    size_t asyncio_tasks_head_offset = interp->runtime->asyncio_tasks_head_offset;
     _Py_FOR_EACH_TSTATE_BEGIN(interp, p) {
         for (_PyInterpreterFrame *f = p->current_frame; f != NULL; f = f->previous) {
             if (f->owner >= FRAME_OWNED_BY_INTERPRETER) {
@@ -851,6 +852,18 @@ gc_visit_thread_stacks_mark_alive(PyInterpreterState *interp, gc_mark_args_t *ar
             while (top != f->localsplus) {
                 --top;
                 if (gc_visit_stackref_mark_alive(args, *top) < 0) {
+                    err = -1;
+                    goto exit;
+                }
+            }
+        }
+        if (asyncio_tasks_head_offset != 0) {
+            _PyThreadStateImpl *ts = (_PyThreadStateImpl *)p;
+            struct llist_node *head = &ts->asyncio_tasks_head;
+            struct llist_node *node;
+            llist_for_each_safe(node, head) {
+                PyObject *task = ((PyObject *)((char*)node - asyncio_tasks_head_offset));
+                if (gc_mark_enqueue(task, args) < 0) {
                     err = -1;
                     goto exit;
                 }
