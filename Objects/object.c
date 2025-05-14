@@ -471,7 +471,7 @@ _Py_ExplicitMergeRefcount(PyObject *op, Py_ssize_t extra)
 #endif
 
     // gh-119999: Write to ob_ref_local and ob_tid before merging the refcount.
-    Py_ssize_t local = (Py_ssize_t)op->ob_ref_local;
+    Py_ssize_t local = (Py_ssize_t)(op->ob_ref_local);
     _Py_atomic_store_uint32_relaxed(&op->ob_ref_local, 0);
     _Py_atomic_store_uintptr_relaxed(&op->ob_tid, 0);
 
@@ -1664,6 +1664,107 @@ _PyObject_GetMethod(PyObject *obj, PyObject *name, PyObject **method)
     return 0;
 }
 
+int
+_PyObject_GetMethodStackRef(PyThreadState *ts, PyObject *obj,
+                            PyObject *name, _PyStackRef *method)
+{
+    int meth_found = 0;
+
+    int ret = 0;
+    assert(PyStackRef_IsNull(*method));
+
+    PyTypeObject *tp = Py_TYPE(obj);
+    if (!_PyType_IsReady(tp)) {
+        if (PyType_Ready(tp) < 0) {
+            return 0;
+        }
+    }
+
+    if (tp->tp_getattro != PyObject_GenericGetAttr || !PyUnicode_CheckExact(name)) {
+        *method = PyStackRef_FromPyObjectSteal(PyObject_GetAttr(obj, name));
+        return 0;
+    }
+
+    _PyCStackRef cref;
+    _PyThreadState_PushCStackRef(ts, &cref);
+    _PyType_LookupStackRefAndVersion(tp, name, &cref.ref);
+    PyObject *descr = PyStackRef_AsPyObjectBorrow(cref.ref);
+    descrgetfunc f = NULL;
+    if (descr != NULL) {
+        if (_PyType_HasFeature(Py_TYPE(descr), Py_TPFLAGS_METHOD_DESCRIPTOR)) {
+            meth_found = 1;
+        }
+        else {
+            f = Py_TYPE(descr)->tp_descr_get;
+            if (f != NULL && PyDescr_IsData(descr)) {
+                PyObject *value = f(descr, obj, (PyObject *)Py_TYPE(obj));
+                *method = PyStackRef_FromPyObjectSteal(value);
+                goto exit;
+            }
+        }
+    }
+    PyObject *dict, *attr;
+    if ((tp->tp_flags & Py_TPFLAGS_INLINE_VALUES) &&
+         _PyObject_TryGetInstanceAttribute(obj, name, &attr)) {
+        if (attr != NULL) {
+            *method = PyStackRef_FromPyObjectSteal(attr);
+            goto exit;
+        }
+        dict = NULL;
+    }
+    else if ((tp->tp_flags & Py_TPFLAGS_MANAGED_DICT)) {
+        dict = (PyObject *)_PyObject_GetManagedDict(obj);
+    }
+    else {
+        PyObject **dictptr = _PyObject_ComputedDictPointer(obj);
+        if (dictptr != NULL) {
+            dict = FT_ATOMIC_LOAD_PTR_ACQUIRE(*dictptr);
+        }
+        else {
+            dict = NULL;
+        }
+    }
+    if (dict != NULL) {
+        Py_INCREF(dict);
+        PyObject *value;
+        if (PyDict_GetItemRef(dict, name, &value) != 0) {
+            // found or error
+            Py_DECREF(dict);
+            *method = PyStackRef_FromPyObjectSteal(value);
+            goto exit;
+        }
+        // not found
+        Py_DECREF(dict);
+    }
+
+    if (meth_found) {
+        *method = PyStackRef_FromPyObjectNew(descr);
+        ret = 1;
+        goto exit;
+    }
+
+    if (f != NULL) {
+        PyObject *value = f(descr, obj, (PyObject *)Py_TYPE(obj));
+        *method = PyStackRef_FromPyObjectSteal(value);
+        goto exit;
+    }
+
+    if (descr != NULL) {
+        *method = PyStackRef_FromPyObjectNew(descr);
+        goto exit;
+    }
+
+    PyErr_Format(PyExc_AttributeError,
+                 "'%.100s' object has no attribute '%U'",
+                 tp->tp_name, name);
+
+    _PyObject_SetAttributeErrorContext(obj, name);
+exit:
+    _PyThreadState_PopCStackRef(ts, &cref);
+    return ret;
+}
+
+
 /* Generic GetAttr functions - put these in your tp_[gs]etattro slot. */
 
 PyObject *
@@ -1931,7 +2032,7 @@ PyObject_GenericSetDict(PyObject *obj, PyObject *value, void *context)
         return -1;
     }
     Py_BEGIN_CRITICAL_SECTION(obj);
-    PyObject *olddict = *dictptr;
+    PyObject *olddict = FT_ATOMIC_LOAD_PTR_ACQUIRE(*dictptr);
     FT_ATOMIC_STORE_PTR_RELEASE(*dictptr, Py_NewRef(value));
     Py_XDECREF(olddict);
     Py_END_CRITICAL_SECTION();
