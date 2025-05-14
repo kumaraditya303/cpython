@@ -888,6 +888,8 @@ extern int _PyObject_StoreInstanceAttribute(PyObject *obj,
                                             PyObject *name, PyObject *value);
 extern bool _PyObject_TryGetInstanceAttribute(PyObject *obj, PyObject *name,
                                               PyObject **attr);
+extern bool _PyObject_TryGetInstanceAttributeStackRef(PyObject *obj, PyObject *name,
+                                              _PyStackRef *attr);
 extern PyObject *_PyType_LookupRefAndVersion(PyTypeObject *, PyObject *,
                                              unsigned int *);
 

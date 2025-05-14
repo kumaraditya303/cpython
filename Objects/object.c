@@ -1685,10 +1685,8 @@ _PyObject_GetMethodStackRef(PyThreadState *ts, PyObject *obj,
         return 0;
     }
 
-    _PyCStackRef cref;
-    _PyThreadState_PushCStackRef(ts, &cref);
-    _PyType_LookupStackRefAndVersion(tp, name, &cref.ref);
-    PyObject *descr = PyStackRef_AsPyObjectBorrow(cref.ref);
+    _PyType_LookupStackRefAndVersion(tp, name, method);
+    PyObject *descr = PyStackRef_AsPyObjectBorrow(*method);
     descrgetfunc f = NULL;
     if (descr != NULL) {
         if (_PyType_HasFeature(Py_TYPE(descr), Py_TPFLAGS_METHOD_DESCRIPTOR)) {
@@ -1698,18 +1696,23 @@ _PyObject_GetMethodStackRef(PyThreadState *ts, PyObject *obj,
             f = Py_TYPE(descr)->tp_descr_get;
             if (f != NULL && PyDescr_IsData(descr)) {
                 PyObject *value = f(descr, obj, (PyObject *)Py_TYPE(obj));
+                PyStackRef_CLEAR(*method);
                 *method = PyStackRef_FromPyObjectSteal(value);
                 goto exit;
             }
         }
     }
-    PyObject *dict, *attr;
-    if ((tp->tp_flags & Py_TPFLAGS_INLINE_VALUES) &&
-         _PyObject_TryGetInstanceAttribute(obj, name, &attr)) {
-        if (attr != NULL) {
-            *method = PyStackRef_FromPyObjectSteal(attr);
-            goto exit;
+    PyObject *dict;
+    if (tp->tp_flags & Py_TPFLAGS_INLINE_VALUES) {
+        _PyStackRef attr_ref = PyStackRef_NULL;
+        if (_PyObject_TryGetInstanceAttributeStackRef(obj, name, &attr_ref)) {
+            if (!PyStackRef_IsNull(attr_ref)) {
+                PyStackRef_CLEAR(*method);
+                *method = attr_ref;
+                goto exit;
+            }
         }
+        assert(PyStackRef_IsNull(attr_ref));
         dict = NULL;
     }
     else if ((tp->tp_flags & Py_TPFLAGS_MANAGED_DICT)) {
@@ -1730,6 +1733,7 @@ _PyObject_GetMethodStackRef(PyThreadState *ts, PyObject *obj,
         if (PyDict_GetItemRef(dict, name, &value) != 0) {
             // found or error
             Py_DECREF(dict);
+            PyStackRef_CLEAR(*method);
             *method = PyStackRef_FromPyObjectSteal(value);
             goto exit;
         }
@@ -1738,19 +1742,20 @@ _PyObject_GetMethodStackRef(PyThreadState *ts, PyObject *obj,
     }
 
     if (meth_found) {
-        *method = PyStackRef_FromPyObjectNew(descr);
         ret = 1;
+        assert(!PyStackRef_IsNull(*method));
         goto exit;
     }
 
     if (f != NULL) {
         PyObject *value = f(descr, obj, (PyObject *)Py_TYPE(obj));
+        PyStackRef_CLEAR(*method);
         *method = PyStackRef_FromPyObjectSteal(value);
         goto exit;
     }
 
     if (descr != NULL) {
-        *method = PyStackRef_FromPyObjectNew(descr);
+        assert(!PyStackRef_IsNull(*method));
         goto exit;
     }
 
@@ -1759,8 +1764,8 @@ _PyObject_GetMethodStackRef(PyThreadState *ts, PyObject *obj,
                  tp->tp_name, name);
 
     _PyObject_SetAttributeErrorContext(obj, name);
+    PyStackRef_CLEAR(*method);
 exit:
-    _PyThreadState_PopCStackRef(ts, &cref);
     return ret;
 }
 

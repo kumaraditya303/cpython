@@ -7149,6 +7149,100 @@ _PyObject_TryGetInstanceAttribute(PyObject *obj, PyObject *name, PyObject **attr
 #endif
 }
 
+bool
+_PyObject_TryGetInstanceAttributeStackRef(PyObject *obj, PyObject *name, _PyStackRef *attr)
+{
+    assert(PyUnicode_CheckExact(name));
+    PyDictValues *values = _PyObject_InlineValues(obj);
+    if (!FT_ATOMIC_LOAD_UINT8(values->valid)) {
+        return false;
+    }
+
+    PyDictKeysObject *keys = CACHED_KEYS(Py_TYPE(obj));
+    assert(keys != NULL);
+    Py_ssize_t ix = _PyDictKeys_StringLookupSplit(keys, name);
+    if (ix == DKIX_EMPTY) {
+        *attr = PyStackRef_NULL;
+        return true;
+    }
+
+#ifdef Py_GIL_DISABLED
+    PyObject **addr_of_value = &values->values[ix];
+    PyObject *value = _Py_atomic_load_ptr_acquire(addr_of_value);
+    if (value == NULL) {
+        if (FT_ATOMIC_LOAD_UINT8(values->valid)) {
+            *attr = PyStackRef_NULL;
+            return true;
+        }
+    } else {
+        if (_PyObject_HasDeferredRefcount(value)) {
+            *attr =  (_PyStackRef){ .bits = (uintptr_t)value | Py_TAG_DEFERRED };
+            return true;
+        }
+        if (_Py_TryIncrefCompare(addr_of_value, value)) {
+            *attr = PyStackRef_FromPyObjectSteal(value);
+            return true;
+        }
+    }
+
+    PyDictObject *dict = _PyObject_GetManagedDict(obj);
+    if (dict == NULL) {
+        // No dict, lock the object to prevent one from being
+        // materialized...
+        bool success = false;
+        Py_BEGIN_CRITICAL_SECTION(obj);
+
+        dict = _PyObject_GetManagedDict(obj);
+        if (dict == NULL) {
+            // Still no dict, we can read from the values
+            assert(values->valid);
+            value = values->values[ix];
+            if (value) {
+                _Py_NewRefWithLock(value);
+                *attr = PyStackRef_FromPyObjectSteal(value);
+            }
+            success = true;
+        }
+
+        Py_END_CRITICAL_SECTION();
+
+        if (success) {
+            return true;
+        }
+    }
+
+    // We have a dictionary, we'll need to lock it to prevent
+    // the values from being resized.
+    assert(dict != NULL);
+
+    bool success;
+    Py_BEGIN_CRITICAL_SECTION(dict);
+
+    if (dict->ma_values == values && FT_ATOMIC_LOAD_UINT8(values->valid)) {
+        value = _Py_atomic_load_ptr_relaxed(&values->values[ix]);
+        if (value) {
+            _Py_NewRefWithLock(value);
+            *attr = PyStackRef_FromPyObjectSteal(value);
+        }
+        success = true;
+    } else {
+        // Caller needs to lookup from the dictionary
+        success = false;
+    }
+
+    Py_END_CRITICAL_SECTION();
+
+    return success;
+#else
+    PyObject *value = values->values[ix];
+    if (value) {
+        *attr = PyStackRef_FromPyObjectNew(value);
+    }
+    return true;
+#endif
+}
+
+
 int
 _PyObject_IsInstanceDictEmpty(PyObject *obj)
 {
