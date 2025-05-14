@@ -2032,9 +2032,7 @@ PyObject_GenericSetDict(PyObject *obj, PyObject *value, void *context)
         return -1;
     }
     Py_BEGIN_CRITICAL_SECTION(obj);
-    PyObject *olddict = FT_ATOMIC_LOAD_PTR_ACQUIRE(*dictptr);
-    FT_ATOMIC_STORE_PTR_RELEASE(*dictptr, Py_NewRef(value));
-    Py_XDECREF(olddict);
+    Py_XSETREF(*dictptr, Py_NewRef(value));
     Py_END_CRITICAL_SECTION();
     return 0;
 }
