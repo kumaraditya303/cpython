@@ -1702,15 +1702,13 @@ _PyObject_GetMethodStackRef(PyThreadState *ts, PyObject *obj,
             }
         }
     }
-    PyObject *dict;
-    if (tp->tp_flags & Py_TPFLAGS_INLINE_VALUES) {
-        PyObject *attr;
-        if (_PyObject_TryGetInstanceAttribute(obj, name, &attr)) {
-            if (attr != NULL) {
-                PyStackRef_CLEAR(*method);
-                *method = PyStackRef_FromPyObjectSteal(attr);
-                goto exit;
-            }
+    PyObject *dict, *attr;
+    if ((tp->tp_flags & Py_TPFLAGS_INLINE_VALUES) &&
+         _PyObject_TryGetInstanceAttribute(obj, name, &attr)) {
+        if (attr != NULL) {
+           PyStackRef_CLEAR(*method);
+           *method = PyStackRef_FromPyObjectSteal(attr);
+           goto exit;
         }
         dict = NULL;
     }
