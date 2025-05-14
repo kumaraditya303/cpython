@@ -1671,7 +1671,7 @@ _PyObject_GetMethodStackRef(PyThreadState *ts, PyObject *obj,
     int meth_found = 0;
 
     int ret = 0;
-    assert(PyStackRef_IsNull(*method));
+    *method = PyStackRef_NULL;
 
     PyTypeObject *tp = Py_TYPE(obj);
     if (!_PyType_IsReady(tp)) {
