@@ -1704,15 +1704,14 @@ _PyObject_GetMethodStackRef(PyThreadState *ts, PyObject *obj,
     }
     PyObject *dict;
     if (tp->tp_flags & Py_TPFLAGS_INLINE_VALUES) {
-        _PyStackRef attr_ref = PyStackRef_NULL;
-        if (_PyObject_TryGetInstanceAttributeStackRef(obj, name, &attr_ref)) {
-            if (!PyStackRef_IsNull(attr_ref)) {
+        PyObject *attr;
+        if (_PyObject_TryGetInstanceAttribute(obj, name, &attr)) {
+            if (attr != NULL) {
                 PyStackRef_CLEAR(*method);
-                *method = attr_ref;
+                *method = PyStackRef_FromPyObjectSteal(attr);
                 goto exit;
             }
         }
-        assert(PyStackRef_IsNull(attr_ref));
         dict = NULL;
     }
     else if ((tp->tp_flags & Py_TPFLAGS_MANAGED_DICT)) {
