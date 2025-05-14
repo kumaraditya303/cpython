@@ -1681,7 +1681,10 @@ _PyObject_GetMethodStackRef(PyThreadState *ts, PyObject *obj,
     }
 
     if (tp->tp_getattro != PyObject_GenericGetAttr || !PyUnicode_CheckExact(name)) {
-        *method = PyStackRef_FromPyObjectSteal(PyObject_GetAttr(obj, name));
+        PyObject *res = PyObject_GetAttr(obj, name);
+        if (res != NULL) {
+            *method = PyStackRef_FromPyObjectSteal(res);
+        }
         return 0;
     }
 
@@ -1697,7 +1700,9 @@ _PyObject_GetMethodStackRef(PyThreadState *ts, PyObject *obj,
             if (f != NULL && PyDescr_IsData(descr)) {
                 PyObject *value = f(descr, obj, (PyObject *)Py_TYPE(obj));
                 PyStackRef_CLEAR(*method);
-                *method = PyStackRef_FromPyObjectSteal(value);
+                if (value != NULL) {
+                    *method = PyStackRef_FromPyObjectSteal(value);
+                }
                 goto exit;
             }
         }
@@ -1731,7 +1736,9 @@ _PyObject_GetMethodStackRef(PyThreadState *ts, PyObject *obj,
             // found or error
             Py_DECREF(dict);
             PyStackRef_CLEAR(*method);
-            *method = PyStackRef_FromPyObjectSteal(value);
+            if (value != NULL) {
+                *method = PyStackRef_FromPyObjectSteal(value);
+            }
             goto exit;
         }
         // not found
@@ -1747,7 +1754,9 @@ _PyObject_GetMethodStackRef(PyThreadState *ts, PyObject *obj,
     if (f != NULL) {
         PyObject *value = f(descr, obj, (PyObject *)Py_TYPE(obj));
         PyStackRef_CLEAR(*method);
-        *method = PyStackRef_FromPyObjectSteal(value);
+        if (value) {
+            *method = PyStackRef_FromPyObjectSteal(value);
+        }
         goto exit;
     }
 
