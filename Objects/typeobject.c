@@ -1389,11 +1389,15 @@ assign_version_tag(PyInterpreterState *interp, PyTypeObject *type)
     }
     if (type->tp_flags & Py_TPFLAGS_IMMUTABLETYPE) {
         /* static types */
-        if (NEXT_GLOBAL_VERSION_TAG > _Py_MAX_GLOBAL_TYPE_VERSION_TAG) {
+        unsigned int next_version_tag = FT_ATOMIC_LOAD_UINT_RELAXED(_PyRuntime.types.next_version_tag);
+
+        if (next_version_tag > _Py_MAX_GLOBAL_TYPE_VERSION_TAG) {
             /* We have run out of version numbers */
             return 0;
         }
-        set_version_unlocked(type, NEXT_GLOBAL_VERSION_TAG++);
+        next_version_tag++;
+        set_version_unlocked(type, next_version_tag);
+        FT_ATOMIC_STORE_UINT_RELAXED(_PyRuntime.types.next_version_tag, next_version_tag);
         assert (type->tp_version_tag <= _Py_MAX_GLOBAL_TYPE_VERSION_TAG);
     }
     else {
@@ -9005,7 +9009,7 @@ type_ready_set_new(PyTypeObject *type, int initial)
        default also inherit object.__new__. */
     if (type->tp_new == NULL
         && base == &PyBaseObject_Type
-        && !(type->tp_flags & Py_TPFLAGS_HEAPTYPE))
+        && !(type->tp_flags & Py_TPFLAGS_HEAPTYPE) && initial)
     {
         type_add_flags(type, Py_TPFLAGS_DISALLOW_INSTANTIATION);
     }
@@ -9021,13 +9025,19 @@ type_ready_set_new(PyTypeObject *type, int initial)
             }
         }
         else {
-            // tp_new is NULL: inherit tp_new from base
-            type->tp_new = base->tp_new;
+            if (initial) {
+                // tp_new is NULL: inherit tp_new from base
+                type->tp_new = base->tp_new;
+            } else {
+                assert(type->tp_new == base->tp_new);
+            }
         }
     }
     else {
         // Py_TPFLAGS_DISALLOW_INSTANTIATION sets tp_new to NULL
-        type->tp_new = NULL;
+        if (initial) {
+            type->tp_new = NULL;
+        }
     }
     return 0;
 }
@@ -9160,7 +9170,12 @@ type_ready(PyTypeObject *type, int initial)
     }
 
     /* All done -- set the ready flag */
-    type_add_flags(type, Py_TPFLAGS_READY);
+    if (initial) {
+        type_add_flags(type, Py_TPFLAGS_READY);
+        PyInterpreterState *interp = PyInterpreterState_Get();
+        assign_version_tag(interp, type);
+    }
+
     stop_readying(type);
 
     assert(_PyType_CheckConsistency(type));
@@ -9209,8 +9224,8 @@ init_static_type(PyInterpreterState *interp, PyTypeObject *self,
     assert(!(self->tp_flags & Py_TPFLAGS_MANAGED_DICT));
     assert(!(self->tp_flags & Py_TPFLAGS_MANAGED_WEAKREF));
 
-    if ((self->tp_flags & Py_TPFLAGS_READY) == 0) {
-        assert(initial);
+    if (initial) {
+        assert(!(self->tp_flags & Py_TPFLAGS_READY));
 
         type_add_flags(self, _Py_TPFLAGS_STATIC_BUILTIN);
         type_add_flags(self, Py_TPFLAGS_IMMUTABLETYPE);

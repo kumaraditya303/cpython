@@ -4354,9 +4354,13 @@ _PyExc_InitTypes(PyInterpreterState *interp)
             return -1;
         }
         if (exc->tp_new == BaseException_new
-            && exc->tp_init == BaseException_init)
+            && exc->tp_init == BaseException_init )
         {
-            exc->tp_vectorcall = BaseException_vectorcall;
+            if (_Py_IsMainInterpreter(interp)) {
+                exc->tp_vectorcall = BaseException_vectorcall;
+            } else {
+                assert(exc->tp_vectorcall == BaseException_vectorcall);
+            }
         }
     }
     return 0;
@@ -4466,9 +4470,13 @@ _PyBuiltins_AddExceptions(PyObject *bltinmod)
         return -1;
     }
 
+    PyInterpreterState *interp = PyInterpreterState_Get();
+
 #define INIT_ALIAS(NAME, TYPE) \
     do { \
-        PyExc_ ## NAME = PyExc_ ## TYPE; \
+        if (_Py_IsMainInterpreter(interp)) { \
+            PyExc_ ## NAME = PyExc_ ## TYPE; \
+        } \
         if (PyDict_SetItemString(mod_dict, # NAME, PyExc_ ## TYPE)) { \
             return -1; \
         } \
