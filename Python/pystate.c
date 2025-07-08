@@ -464,14 +464,14 @@ static PyInterpreterState *
 alloc_interpreter(void)
 {
     size_t alignment = _Alignof(PyInterpreterState);
-    size_t allocsize = sizeof(PyInterpreterState) + alignment - 1;
+    size_t allocsize = sizeof(PyInterpreterState) + alignment - 1 + sizeof(void *);
     void *mem = PyMem_RawCalloc(1, allocsize);
     if (mem == NULL) {
         return NULL;
     }
-    PyInterpreterState *interp = _Py_ALIGN_UP(mem, alignment);
+    PyInterpreterState *interp = _Py_ALIGN_UP((char *)mem + sizeof(void *), alignment);
+    ((void **)interp)[-1] = mem;
     assert(_Py_IS_ALIGNED(interp, alignment));
-    interp->_malloced = mem;
     return interp;
 }
 
@@ -487,7 +487,7 @@ free_interpreter(PyInterpreterState *interp)
             interp->obmalloc = NULL;
         }
         assert(_Py_IS_ALIGNED(interp, _Alignof(PyInterpreterState)));
-        PyMem_RawFree(interp->_malloced);
+        PyMem_RawFree(((void **)interp)[-1]);
     }
 }
 

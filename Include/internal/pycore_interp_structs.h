@@ -776,7 +776,6 @@ struct _is {
      * to avoid undefined behaviors during LOAD and STORE. The '_malloced'
      * field stores the allocated pointer address that will later be freed.
      */
-    void *_malloced;
 
     PyInterpreterState *next;
 
