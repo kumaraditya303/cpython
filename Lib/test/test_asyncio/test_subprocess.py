@@ -880,6 +880,34 @@ class SubprocessMixin:
         self.loop.run_until_complete(main())
 
 
+    def test_transport_gc_kill_running(self):
+        import weakref
+        kill_called = False
+        async def kill_running():
+            loop = asyncio.get_running_loop()
+            create = loop.subprocess_exec(asyncio.SubprocessProtocol,
+                                           *PROGRAM_BLOCKED)
+            transport, protocol = await create
+
+            def kill():
+                nonlocal kill_called
+                kill_called = True
+                orig_kill()
+
+            proc = transport.get_extra_info('subprocess')
+            orig_kill = proc.kill
+            proc.kill = kill
+            wr = weakref.ref(transport)
+            del transport, protocol
+            await asyncio.sleep(0.1)
+            breakpoint()
+
+        # Ignore "Close running child process: kill ..." log
+        with test_utils.disable_logger():
+            asyncio.run(kill_running())
+            support.gc_collect()
+        self.assertTrue(kill_called)
+
 if sys.platform != 'win32':
     # Unix
     class SubprocessWatcherMixin(SubprocessMixin):
