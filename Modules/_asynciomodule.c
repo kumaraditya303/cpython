@@ -161,9 +161,6 @@ typedef struct {
     /* An isinstance type cache for the 'is_coroutine()' function. */
     PyObject *iscoroutine_typecache;
 
-    /* Imports from asyncio.events. */
-    PyObject *asyncio_get_event_loop_policy;
-
     /* Imports from asyncio.base_futures. */
     PyObject *asyncio_future_repr_func;
 
@@ -351,14 +348,6 @@ get_event_loop(asyncio_state *state)
         return loop;
     }
 
-    policy = PyObject_CallNoArgs(state->asyncio_get_event_loop_policy);
-    if (policy == NULL) {
-        return NULL;
-    }
-
-    loop = PyObject_CallMethodNoArgs(policy, &_Py_ID(get_event_loop));
-    Py_DECREF(policy);
-    return loop;
 }
 
 
@@ -3658,8 +3647,6 @@ When called from a coroutine or a callback (e.g. scheduled with
 call_soon or similar API), this function will always return the
 running event loop.
 
-If there is no running event loop set, the function will return
-the result of `get_event_loop_policy().get_event_loop()` call.
 [clinic start generated code]*/
 
 static PyObject *

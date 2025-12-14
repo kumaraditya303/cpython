@@ -19,26 +19,6 @@ def interrupt_self():
     _thread.interrupt_main()
 
 
-class TestPolicy(asyncio.events._AbstractEventLoopPolicy):
-
-    def __init__(self, loop_factory):
-        self.loop_factory = loop_factory
-        self.loop = None
-
-    def get_event_loop(self):
-        # shouldn't ever be called by asyncio.run()
-        raise RuntimeError
-
-    def new_event_loop(self):
-        return self.loop_factory()
-
-    def set_event_loop(self, loop):
-        if loop is not None:
-            # we want to check if the loop is closed
-            # in BaseTest.tearDown
-            self.loop = loop
-
-
 class BaseTest(unittest.TestCase):
 
     def new_loop(self):
