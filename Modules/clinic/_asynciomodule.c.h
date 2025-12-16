@@ -868,6 +868,148 @@ _asyncio_Future__make_cancelled_error(PyObject *self, PyObject *Py_UNUSED(ignore
     return return_value;
 }
 
+static int
+_asyncio_Handle___init___impl(HandleObj *self, PyObject *callback,
+                              PyObject *args, PyObject *loop,
+                              PyObject *context);
+
+static int
+_asyncio_Handle___init__(PyObject *self, PyObject *args, PyObject *kwargs)
+{
+    int return_value = -1;
+    #if defined(Py_BUILD_CORE) && !defined(Py_BUILD_CORE_MODULE)
+
+    #define NUM_KEYWORDS 4
+    static struct {
+        PyGC_Head _this_is_not_used;
+        PyObject_VAR_HEAD
+        Py_hash_t ob_hash;
+        PyObject *ob_item[NUM_KEYWORDS];
+    } _kwtuple = {
+        .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
+        .ob_hash = -1,
+        .ob_item = { &_Py_ID(callback), &_Py_ID(args), &_Py_ID(loop), &_Py_ID(context), },
+    };
+    #undef NUM_KEYWORDS
+    #define KWTUPLE (&_kwtuple.ob_base.ob_base)
+
+    #else  // !Py_BUILD_CORE
+    #  define KWTUPLE NULL
+    #endif  // !Py_BUILD_CORE
+
+    static const char * const _keywords[] = {"callback", "args", "loop", "context", NULL};
+    static _PyArg_Parser _parser = {
+        .keywords = _keywords,
+        .fname = "Handle",
+        .kwtuple = KWTUPLE,
+    };
+    #undef KWTUPLE
+    PyObject *argsbuf[4];
+    PyObject * const *fastargs;
+    Py_ssize_t nargs = PyTuple_GET_SIZE(args);
+    Py_ssize_t noptargs = nargs + (kwargs ? PyDict_GET_SIZE(kwargs) : 0) - 3;
+    PyObject *callback;
+    PyObject *__clinic_args;
+    PyObject *loop;
+    PyObject *context = NULL;
+
+    fastargs = _PyArg_UnpackKeywords(_PyTuple_CAST(args)->ob_item, nargs, kwargs, NULL, &_parser,
+            /*minpos*/ 3, /*maxpos*/ 4, /*minkw*/ 0, /*varpos*/ 0, argsbuf);
+    if (!fastargs) {
+        goto exit;
+    }
+    callback = fastargs[0];
+    __clinic_args = fastargs[1];
+    loop = fastargs[2];
+    if (!noptargs) {
+        goto skip_optional_pos;
+    }
+    context = fastargs[3];
+skip_optional_pos:
+    return_value = _asyncio_Handle___init___impl((HandleObj *)self, callback, __clinic_args, loop, context);
+
+exit:
+    return return_value;
+}
+
+PyDoc_STRVAR(_asyncio_Handle_get_context__doc__,
+"get_context($self, /)\n"
+"--\n"
+"\n");
+
+#define _ASYNCIO_HANDLE_GET_CONTEXT_METHODDEF    \
+    {"get_context", (PyCFunction)_asyncio_Handle_get_context, METH_NOARGS, _asyncio_Handle_get_context__doc__},
+
+static PyObject *
+_asyncio_Handle_get_context_impl(HandleObj *self);
+
+static PyObject *
+_asyncio_Handle_get_context(PyObject *self, PyObject *Py_UNUSED(ignored))
+{
+    return _asyncio_Handle_get_context_impl((HandleObj *)self);
+}
+
+PyDoc_STRVAR(_asyncio_Handle_cancel__doc__,
+"cancel($self, /)\n"
+"--\n"
+"\n");
+
+#define _ASYNCIO_HANDLE_CANCEL_METHODDEF    \
+    {"cancel", (PyCFunction)_asyncio_Handle_cancel, METH_NOARGS, _asyncio_Handle_cancel__doc__},
+
+static PyObject *
+_asyncio_Handle_cancel_impl(HandleObj *self);
+
+static PyObject *
+_asyncio_Handle_cancel(PyObject *self, PyObject *Py_UNUSED(ignored))
+{
+    return _asyncio_Handle_cancel_impl((HandleObj *)self);
+}
+
+PyDoc_STRVAR(_asyncio_Handle_cancelled__doc__,
+"cancelled($self, /)\n"
+"--\n"
+"\n");
+
+#define _ASYNCIO_HANDLE_CANCELLED_METHODDEF    \
+    {"cancelled", (PyCFunction)_asyncio_Handle_cancelled, METH_NOARGS, _asyncio_Handle_cancelled__doc__},
+
+static int
+_asyncio_Handle_cancelled_impl(HandleObj *self);
+
+static PyObject *
+_asyncio_Handle_cancelled(PyObject *self, PyObject *Py_UNUSED(ignored))
+{
+    PyObject *return_value = NULL;
+    int _return_value;
+
+    _return_value = _asyncio_Handle_cancelled_impl((HandleObj *)self);
+    if ((_return_value == -1) && PyErr_Occurred()) {
+        goto exit;
+    }
+    return_value = PyBool_FromLong((long)_return_value);
+
+exit:
+    return return_value;
+}
+
+PyDoc_STRVAR(_asyncio_Handle__run__doc__,
+"_run($self, /)\n"
+"--\n"
+"\n");
+
+#define _ASYNCIO_HANDLE__RUN_METHODDEF    \
+    {"_run", (PyCFunction)_asyncio_Handle__run, METH_NOARGS, _asyncio_Handle__run__doc__},
+
+static PyObject *
+_asyncio_Handle__run_impl(HandleObj *self);
+
+static PyObject *
+_asyncio_Handle__run(PyObject *self, PyObject *Py_UNUSED(ignored))
+{
+    return _asyncio_Handle__run_impl((HandleObj *)self);
+}
+
 PyDoc_STRVAR(_asyncio_Task___init____doc__,
 "Task(coro, *, loop=None, name=None, context=None, eager_start=False)\n"
 "--\n"
@@ -2232,4 +2374,4 @@ _asyncio_future_discard_from_awaited_by(PyObject *module, PyObject *const *args,
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=b69948ed810591d9 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=8980587753f5d427 input=a9049054013a1b77]*/

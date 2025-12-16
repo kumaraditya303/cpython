@@ -72,6 +72,21 @@ typedef struct TaskObj {
 #endif
 } TaskObj;
 
+typedef struct HandleObj {
+    PyObject_HEAD
+    PyObject *handle_callback;
+    PyObject *handle_args;
+    PyObject *handle_loop;
+    PyObject *handle_context;
+    bool handle_cancelled;
+    struct llist_node handle_node;
+} HandleObj;
+
+typedef struct TimerHandleObj {
+    HandleObj handle_base;
+    double timer_when;
+} TimerHandleObj;
+
 typedef struct {
     PyObject_HEAD
     TaskObj *sw_task;
@@ -2065,6 +2080,116 @@ future_new_iter(PyObject *fut)
     return (PyObject*)it;
 }
 
+/*********************** Handle **************************/
+
+/*[clinic input]
+class _asyncio.Handle "HandleObj *" "&Handle_Type"
+[clinic start generated code]*/
+/*[clinic end generated code: output=da39a3ee5e6b4b0d input=92a82af1d5118b5e]*/
+
+
+/*[clinic input]
+_asyncio.Handle.__init__
+    callback: object
+    args: object
+    loop: object
+    context: object(c_default="NULL") = None
+[clinic start generated code]*/
+
+static int
+_asyncio_Handle___init___impl(HandleObj *self, PyObject *callback,
+                              PyObject *args, PyObject *loop,
+                              PyObject *context)
+/*[clinic end generated code: output=40a28e55725495e2 input=e916ed4843ef734f]*/
+{
+    if (context == NULL) {
+        context = PyContext_CopyCurrent();
+        if (context == NULL) {
+            return -1;
+        }
+    }
+    self->handle_callback = Py_NewRef(callback);
+    self->handle_args = Py_NewRef(args);
+    self->handle_loop = Py_NewRef(loop);
+    self->handle_context = context;
+    self->handle_cancelled = 0;
+    return 0;
+}
+
+/*[clinic input]
+_asyncio.Handle.get_context
+
+[clinic start generated code]*/
+
+static PyObject *
+_asyncio_Handle_get_context_impl(HandleObj *self)
+/*[clinic end generated code: output=533e37d94822a513 input=d1908e69834cf8f4]*/
+{
+    return Py_NewRef(self->handle_context);
+}
+
+
+/*[clinic input]
+_asyncio.Handle.cancel
+
+[clinic start generated code]*/
+
+static PyObject *
+_asyncio_Handle_cancel_impl(HandleObj *self)
+/*[clinic end generated code: output=ddb39234782aab82 input=bcf9e56046aa7e46]*/
+{
+    self->handle_cancelled = 1;
+    Py_RETURN_NONE;
+}
+
+/*[clinic input]
+_asyncio.Handle.cancelled -> bool
+
+[clinic start generated code]*/
+
+static int
+_asyncio_Handle_cancelled_impl(HandleObj *self)
+/*[clinic end generated code: output=76ba4ba14d1806dc input=eb58b69deae0456b]*/
+{
+    return self->handle_cancelled;
+}
+
+/*[clinic input]
+_asyncio.Handle._run
+
+[clinic start generated code]*/
+
+static PyObject *
+_asyncio_Handle__run_impl(HandleObj *self)
+/*[clinic end generated code: output=1b186b710881500a input=3b1e218df3dcd278]*/
+{
+    if (PyContext_Enter(self->handle_context) < 0) {
+        return NULL;
+    }
+
+    PyObject *result = PyObject_CallObject(self->handle_callback, self->handle_args);
+
+    if (PyContext_Exit(self->handle_context) < 0) {
+        Py_XDECREF(result);
+        return NULL;
+    }
+    return result;
+}
+
+static PyMethodDef HandleType_methods[] = {
+    _ASYNCIO_HANDLE_GET_CONTEXT_METHODDEF
+    _ASYNCIO_HANDLE_CANCEL_METHODDEF
+    _ASYNCIO_HANDLE_CANCELLED_METHODDEF
+    _ASYNCIO_HANDLE__RUN_METHODDEF
+    {NULL, NULL}        /* Sentinel */
+};
+
+/*********************** Event Loop Base **************************/
+
+/*[clinic input]
+_asyncio.BaseEventLoop.
+
+[clinic start generated code]*/
 
 /*********************** Task **************************/
 
