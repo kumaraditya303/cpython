@@ -824,11 +824,23 @@ pycore_init_builtins(PyThreadState *tstate)
         goto error;
     }
 
+    PyObject *min = PyDict_GetItemWithError(builtins_dict, &_Py_ID(min));
+    if (!min) {
+        goto error;
+    }
+
+    PyObject *max = PyDict_GetItemWithError(builtins_dict, &_Py_ID(max));
+    if (!max) {
+        goto error;
+    }
+
     interp->common_consts[CONSTANT_ASSERTIONERROR] = PyExc_AssertionError;
     interp->common_consts[CONSTANT_NOTIMPLEMENTEDERROR] = PyExc_NotImplementedError;
     interp->common_consts[CONSTANT_BUILTIN_TUPLE] = (PyObject*)&PyTuple_Type;
     interp->common_consts[CONSTANT_BUILTIN_ALL] = all;
     interp->common_consts[CONSTANT_BUILTIN_ANY] = any;
+    interp->common_consts[CONSTANT_BUILTIN_MIN] = min;
+    interp->common_consts[CONSTANT_BUILTIN_MAX] = max;
 
     for (int i=0; i < NUM_COMMON_CONSTANTS; i++) {
         assert(interp->common_consts[i] != NULL);

@@ -1875,6 +1875,7 @@ extern "C" {
     INIT_ID(mapping), \
     INIT_ID(mask), \
     INIT_ID(match), \
+    INIT_ID(max), \
     INIT_ID(max_length), \
     INIT_ID(maxdigits), \
     INIT_ID(maxevents), \
@@ -1892,6 +1893,7 @@ extern "C" {
     INIT_ID(microsecond), \
     INIT_ID(microseconds), \
     INIT_ID(milliseconds), \
+    INIT_ID(min), \
     INIT_ID(minute), \
     INIT_ID(minutes), \
     INIT_ID(mod), \

@@ -3863,11 +3863,7 @@ maybe_optimize_function_call(compiler *c, expr_ty e, jump_target_label end)
     asdl_keyword_seq *kwds = e->v.Call.keywords;
     expr_ty func = e->v.Call.func;
 
-    if (! (func->kind == Name_kind &&
-           asdl_seq_LEN(args) == 1 &&
-           asdl_seq_LEN(kwds) == 0 &&
-           asdl_seq_GET(args, 0)->kind == GeneratorExp_kind))
-    {
+    if (!(func->kind == Name_kind && asdl_seq_LEN(kwds) == 0)) {
         return 0;
     }
 
@@ -3876,69 +3872,110 @@ maybe_optimize_function_call(compiler *c, expr_ty e, jump_target_label end)
     int optimized = 0;
     NEW_JUMP_TARGET_LABEL(c, skip_optimization);
 
-    int const_oparg = -1;
-    PyObject *initial_res = NULL;
-    int continue_jump_opcode = -1;
-    if (_PyUnicode_EqualToASCIIString(func->v.Name.id, "all")) {
-        const_oparg = CONSTANT_BUILTIN_ALL;
-        initial_res = Py_True;
-        continue_jump_opcode = POP_JUMP_IF_TRUE;
-    }
-    else if (_PyUnicode_EqualToASCIIString(func->v.Name.id, "any")) {
-        const_oparg = CONSTANT_BUILTIN_ANY;
-        initial_res = Py_False;
-        continue_jump_opcode = POP_JUMP_IF_FALSE;
-    }
-    else if (_PyUnicode_EqualToASCIIString(func->v.Name.id, "tuple")) {
-        const_oparg = CONSTANT_BUILTIN_TUPLE;
-    }
-    if (const_oparg != -1) {
-        ADDOP_I(c, loc, COPY, 1); // the function
+    Py_ssize_t arglen = asdl_seq_LEN(args);
+
+    // optimization for min(a, b)
+    int is_min = _PyUnicode_EqualToASCIIString(func->v.Name.id, "min");
+    if (arglen == 2 && is_min) {
+
+        ADDOP_I(c, loc, COPY, 1); // Copy the function
+        int const_oparg = CONSTANT_BUILTIN_MIN;
         ADDOP_I(c, loc, LOAD_COMMON_CONSTANT, const_oparg);
         ADDOP_COMPARE(c, loc, Is);
         ADDOP_JUMP(c, loc, POP_JUMP_IF_FALSE, skip_optimization);
         ADDOP(c, loc, POP_TOP);
 
-        if (const_oparg == CONSTANT_BUILTIN_TUPLE) {
-            ADDOP_I(c, loc, BUILD_LIST, 0);
-        }
-        expr_ty generator_exp = asdl_seq_GET(args, 0);
-        VISIT(c, expr, generator_exp);
+        VISIT(c, expr, asdl_seq_GET(args, 0));  // arg1 on stack
+        VISIT(c, expr, asdl_seq_GET(args, 1));  // arg2 on stack
 
-        NEW_JUMP_TARGET_LABEL(c, loop);
-        NEW_JUMP_TARGET_LABEL(c, cleanup);
-
-        ADDOP(c, loc, PUSH_NULL); // Push NULL index for loop
-        USE_LABEL(c, loop);
-        ADDOP_JUMP(c, loc, FOR_ITER, cleanup);
-        if (const_oparg == CONSTANT_BUILTIN_TUPLE) {
-            ADDOP_I(c, loc, LIST_APPEND, 3);
-            ADDOP_JUMP(c, loc, JUMP, loop);
-        }
-        else {
-            ADDOP(c, loc, TO_BOOL);
-            ADDOP_JUMP(c, loc, continue_jump_opcode, loop);
-        }
-
-        ADDOP(c, NO_LOCATION, POP_ITER);
-        if (const_oparg != CONSTANT_BUILTIN_TUPLE) {
-            ADDOP_LOAD_CONST(c, loc, initial_res == Py_True ? Py_False : Py_True);
-        }
+        // duplicate args so originals stay on stack while comparing arg2 < arg1
+        ADDOP_I(c, loc, COPY, 2);
+        ADDOP_I(c, loc, COPY, 2);
+        ADDOP_I(c, loc, SWAP, 2);
+        ADDOP_COMPARE(c, loc, Lt);
+        // add to bool
+        ADDOP(c, loc, TO_BOOL);
+        // jump if arg2 < arg1 so we keep stability when values are equal
+        NEW_JUMP_TARGET_LABEL(c, arg2_smaller);
+        ADDOP_JUMP(c, loc, POP_JUMP_IF_TRUE, arg2_smaller);
+        // arg1 is the result, drop arg2
+        ADDOP(c, loc, POP_TOP);
         ADDOP_JUMP(c, loc, JUMP, end);
 
-        USE_LABEL(c, cleanup);
-        ADDOP(c, NO_LOCATION, END_FOR);
-        ADDOP(c, NO_LOCATION, POP_ITER);
-        if (const_oparg == CONSTANT_BUILTIN_TUPLE) {
-            ADDOP_I(c, loc, CALL_INTRINSIC_1, INTRINSIC_LIST_TO_TUPLE);
-        }
-        else {
-            ADDOP_LOAD_CONST(c, loc, initial_res);
-        }
-
+        USE_LABEL(c, arg2_smaller);
+        // arg2 is smaller, drop arg1
+        ADDOP_I(c, loc, SWAP, 2);
+        ADDOP(c, loc, POP_TOP);
+        ADDOP_JUMP(c, loc, JUMP, end);
         optimized = 1;
-        ADDOP_JUMP(c, loc, JUMP, end);
     }
+    // Original optimization for all(), any(), tuple() with generator expressions
+    else if (arglen == 1 && asdl_seq_GET(args, 0)->kind == GeneratorExp_kind) {
+        int const_oparg = -1;
+        PyObject *initial_res = NULL;
+        int continue_jump_opcode = -1;
+        if (_PyUnicode_EqualToASCIIString(func->v.Name.id, "all")) {
+            const_oparg = CONSTANT_BUILTIN_ALL;
+            initial_res = Py_True;
+            continue_jump_opcode = POP_JUMP_IF_TRUE;
+        }
+        else if (_PyUnicode_EqualToASCIIString(func->v.Name.id, "any")) {
+            const_oparg = CONSTANT_BUILTIN_ANY;
+            initial_res = Py_False;
+            continue_jump_opcode = POP_JUMP_IF_FALSE;
+        }
+        else if (_PyUnicode_EqualToASCIIString(func->v.Name.id, "tuple")) {
+            const_oparg = CONSTANT_BUILTIN_TUPLE;
+        }
+        if (const_oparg != -1) {
+            ADDOP_I(c, loc, COPY, 1); // the function
+            ADDOP_I(c, loc, LOAD_COMMON_CONSTANT, const_oparg);
+            ADDOP_COMPARE(c, loc, Is);
+            ADDOP_JUMP(c, loc, POP_JUMP_IF_FALSE, skip_optimization);
+            ADDOP(c, loc, POP_TOP);
+
+            if (const_oparg == CONSTANT_BUILTIN_TUPLE) {
+                ADDOP_I(c, loc, BUILD_LIST, 0);
+            }
+            expr_ty generator_exp = asdl_seq_GET(args, 0);
+            VISIT(c, expr, generator_exp);
+
+            NEW_JUMP_TARGET_LABEL(c, loop);
+            NEW_JUMP_TARGET_LABEL(c, cleanup);
+
+            ADDOP(c, loc, PUSH_NULL); // Push NULL index for loop
+            USE_LABEL(c, loop);
+            ADDOP_JUMP(c, loc, FOR_ITER, cleanup);
+            if (const_oparg == CONSTANT_BUILTIN_TUPLE) {
+                ADDOP_I(c, loc, LIST_APPEND, 3);
+                ADDOP_JUMP(c, loc, JUMP, loop);
+            }
+            else {
+                ADDOP(c, loc, TO_BOOL);
+                ADDOP_JUMP(c, loc, continue_jump_opcode, loop);
+            }
+
+            ADDOP(c, NO_LOCATION, POP_ITER);
+            if (const_oparg != CONSTANT_BUILTIN_TUPLE) {
+                ADDOP_LOAD_CONST(c, loc, initial_res == Py_True ? Py_False : Py_True);
+            }
+            ADDOP_JUMP(c, loc, JUMP, end);
+
+            USE_LABEL(c, cleanup);
+            ADDOP(c, NO_LOCATION, END_FOR);
+            ADDOP(c, NO_LOCATION, POP_ITER);
+            if (const_oparg == CONSTANT_BUILTIN_TUPLE) {
+                ADDOP_I(c, loc, CALL_INTRINSIC_1, INTRINSIC_LIST_TO_TUPLE);
+            }
+            else {
+                ADDOP_LOAD_CONST(c, loc, initial_res);
+            }
+
+            optimized = 1;
+            ADDOP_JUMP(c, loc, JUMP, end);
+        }
+    }
+
     USE_LABEL(c, skip_optimization);
     return optimized;
 }

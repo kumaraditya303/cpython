@@ -1877,6 +1877,7 @@ _PyStaticObjects_CheckRefcnt(PyInterpreterState *interp) {
     _PyStaticObject_CheckRefcnt((PyObject *)&_Py_ID(mapping));
     _PyStaticObject_CheckRefcnt((PyObject *)&_Py_ID(mask));
     _PyStaticObject_CheckRefcnt((PyObject *)&_Py_ID(match));
+    _PyStaticObject_CheckRefcnt((PyObject *)&_Py_ID(max));
     _PyStaticObject_CheckRefcnt((PyObject *)&_Py_ID(max_length));
     _PyStaticObject_CheckRefcnt((PyObject *)&_Py_ID(maxdigits));
     _PyStaticObject_CheckRefcnt((PyObject *)&_Py_ID(maxevents));
@@ -1894,6 +1895,7 @@ _PyStaticObjects_CheckRefcnt(PyInterpreterState *interp) {
     _PyStaticObject_CheckRefcnt((PyObject *)&_Py_ID(microsecond));
     _PyStaticObject_CheckRefcnt((PyObject *)&_Py_ID(microseconds));
     _PyStaticObject_CheckRefcnt((PyObject *)&_Py_ID(milliseconds));
+    _PyStaticObject_CheckRefcnt((PyObject *)&_Py_ID(min));
     _PyStaticObject_CheckRefcnt((PyObject *)&_Py_ID(minute));
     _PyStaticObject_CheckRefcnt((PyObject *)&_Py_ID(minutes));
     _PyStaticObject_CheckRefcnt((PyObject *)&_Py_ID(mod));
