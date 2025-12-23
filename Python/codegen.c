@@ -3874,43 +3874,61 @@ maybe_optimize_function_call(compiler *c, expr_ty e, jump_target_label end)
 
     Py_ssize_t arglen = asdl_seq_LEN(args);
 
-    // optimization for min(a, b) and max(a, b)
+    // optimization for min/max with only positional arguments
     int is_min = _PyUnicode_EqualToASCIIString(func->v.Name.id, "min");
     int is_max = _PyUnicode_EqualToASCIIString(func->v.Name.id, "max");
-    if (arglen == 2 && (is_min || is_max)) {
-        ADDOP_I(c, loc, COPY, 1); // Copy the function
-        if (is_min) {
-            ADDOP_I(c, loc, LOAD_COMMON_CONSTANT, CONSTANT_BUILTIN_MIN);
-        } else {
-            ADDOP_I(c, loc, LOAD_COMMON_CONSTANT, CONSTANT_BUILTIN_MAX);
+    if ((is_min || is_max) && arglen >= 2) {
+        bool can_optimize = true;
+        for (Py_ssize_t i = 0; i < arglen; i++) {
+            expr_ty arg = asdl_seq_GET(args, i);
+            if (arg->kind == Starred_kind) {
+                can_optimize = false;
+                break;
+            }
         }
-        ADDOP_COMPARE(c, loc, Is);
-        ADDOP_JUMP(c, loc, POP_JUMP_IF_FALSE, skip_optimization);
-        ADDOP(c, loc, POP_TOP);
+        if (can_optimize) {
+            ADDOP_I(c, loc, COPY, 1); // Copy the function
+            if (is_min) {
+                ADDOP_I(c, loc, LOAD_COMMON_CONSTANT, CONSTANT_BUILTIN_MIN);
+            } else {
+                ADDOP_I(c, loc, LOAD_COMMON_CONSTANT, CONSTANT_BUILTIN_MAX);
+            }
+            ADDOP_COMPARE(c, loc, Is);
+            ADDOP_JUMP(c, loc, POP_JUMP_IF_FALSE, skip_optimization);
+            ADDOP(c, loc, POP_TOP);
 
-        VISIT(c, expr, asdl_seq_GET(args, 0));
-        VISIT(c, expr, asdl_seq_GET(args, 1));
+            VISIT(c, expr, asdl_seq_GET(args, 0));
 
-        if (is_min) {
-            ADDOP_I(c, loc, COPY, 1);
-            ADDOP_I(c, loc, COPY, 3);
+            for (Py_ssize_t i = 1; i < arglen; i++) {
+                expr_ty arg = asdl_seq_GET(args, i);
+                VISIT(c, expr, arg);
+
+                if (is_min) {
+                    ADDOP_I(c, loc, COPY, 1);
+                    ADDOP_I(c, loc, COPY, 3);
+                }
+                else {
+                    ADDOP_I(c, loc, COPY, 2);
+                    ADDOP_I(c, loc, COPY, 2);
+                }
+                ADDOP_COMPARE(c, loc, Lt);
+                ADDOP(c, loc, TO_BOOL);
+                NEW_JUMP_TARGET_LABEL(c, candidate_better);
+                NEW_JUMP_TARGET_LABEL(c, next_arg);
+
+                ADDOP_JUMP(c, loc, POP_JUMP_IF_TRUE, candidate_better);
+                ADDOP(c, loc, POP_TOP);
+                ADDOP_JUMP(c, loc, JUMP, next_arg);
+
+                USE_LABEL(c, candidate_better);
+                ADDOP_I(c, loc, SWAP, 2);
+                ADDOP(c, loc, POP_TOP);
+
+                USE_LABEL(c, next_arg);
+            }
+            optimized = 1;
+            ADDOP_JUMP(c, loc, JUMP, end);
         }
-        else {
-            ADDOP_I(c, loc, COPY, 2);
-            ADDOP_I(c, loc, COPY, 2);
-        }
-        ADDOP_COMPARE(c, loc, Lt);
-        ADDOP(c, loc, TO_BOOL);
-        NEW_JUMP_TARGET_LABEL(c, arg2_smaller);
-        ADDOP_JUMP(c, loc, POP_JUMP_IF_TRUE, arg2_smaller);
-        ADDOP(c, loc, POP_TOP);
-        ADDOP_JUMP(c, loc, JUMP, end);
-
-        USE_LABEL(c, arg2_smaller);
-        ADDOP_I(c, loc, SWAP, 2);
-        ADDOP(c, loc, POP_TOP);
-        ADDOP_JUMP(c, loc, JUMP, end);
-        optimized = 1;
     }
     // Original optimization for all(), any(), tuple() with generator expressions
     else if (arglen == 1 && asdl_seq_GET(args, 0)->kind == GeneratorExp_kind) {
