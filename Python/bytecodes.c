@@ -1807,6 +1807,22 @@ dummy_func(
             DECREF_INPUTS();
         }
 
+        op(_UNPACK_SEQUENCE_UNIQUE_LIST, (seq -- values[oparg])) {
+            PyObject *seq_o = PyStackRef_AsPyObjectSteal(seq);
+            assert(PyList_CheckExact(seq_o));
+            assert(_PyObject_IsUniquelyReferenced(seq_o));
+            if (PyList_GET_SIZE(seq_o) != oparg) {
+                EXIT_IF(true);
+            }
+            STAT_INC(UNPACK_SEQUENCE, hit);
+            PyObject **items = _PyList_ITEMS(seq_o);
+            for (int i = oparg; --i >= 0; ) {
+                *values++ = PyStackRef_FromPyObjectSteal(items[i]);
+            }
+            PyObject_GC_UnTrack(seq_o);
+            _PyStolenList_Free(seq_o);
+        }
+
         inst(UNPACK_EX, (seq -- unused[oparg & 0xFF], unused, unused[oparg >> 8], top[0])) {
             PyObject *seq_o = PyStackRef_AsPyObjectSteal(seq);
             int res = _PyEval_UnpackIterableStackRef(tstate, seq_o, oparg & 0xFF, oparg >> 8, top);

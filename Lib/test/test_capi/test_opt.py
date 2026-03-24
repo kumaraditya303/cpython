@@ -2148,6 +2148,45 @@ class TestUopsOptimization(unittest.TestCase):
         self.assertNotIn("_UNPACK_SEQUENCE_TUPLE", uops)
         self.assertNotIn("_UNPACK_SEQUENCE_UNIQUE_TWO_TUPLE", uops)
 
+    def test_unique_list_unpack(self):
+        def f(n):
+            def list_func(x):
+                return [x, x, x]
+            hits = 0
+            for i in range(n):
+                x, y, z = list_func(1)
+                hits += x + y + z
+            return hits
+
+        res, ex = self._run_with_optimizer(f, TIER2_THRESHOLD)
+        self.assertEqual(res, TIER2_THRESHOLD * 3)
+        self.assertIsNotNone(ex)
+        uops = get_opnames(ex)
+
+        self.assertIn("_BUILD_LIST", uops)
+        self.assertIn("_UNPACK_SEQUENCE_UNIQUE_LIST", uops)
+        self.assertNotIn("_UNPACK_SEQUENCE_LIST", uops)
+
+    def test_non_unique_list_unpack(self):
+        def f(n):
+            def list_func(x):
+                return [x, x, x]
+            hits = 0
+            for i in range(n):
+                l = list_func(1)
+                x, y, z = l
+                hits += x + y + z
+            return hits
+
+        res, ex = self._run_with_optimizer(f, TIER2_THRESHOLD)
+        self.assertEqual(res, TIER2_THRESHOLD * 3)
+        self.assertIsNotNone(ex)
+        uops = get_opnames(ex)
+
+        self.assertIn("_BUILD_LIST", uops)
+        self.assertIn("_UNPACK_SEQUENCE_LIST", uops)
+        self.assertNotIn("_UNPACK_SEQUENCE_UNIQUE_LIST", uops)
+
     def test_remove_guard_for_known_type_set(self):
         def f(n):
             x = 0

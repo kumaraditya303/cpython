@@ -1332,7 +1332,7 @@ dummy_func(void) {
     }
 
     op(_BUILD_LIST, (values[oparg] -- list)) {
-        list = sym_new_type(ctx, &PyList_Type);
+        list = PyJitRef_MakeUnique(sym_new_type(ctx, &PyList_Type));
     }
 
     op(_BUILD_SLICE, (args[oparg] -- slice)) {
@@ -1379,6 +1379,15 @@ dummy_func(void) {
         }
         for (int i = 0; i < oparg; i++) {
             values[i] = sym_tuple_getitem(ctx, seq, oparg - i - 1);
+        }
+    }
+
+    op(_UNPACK_SEQUENCE_LIST, (seq -- values[oparg])) {
+        if (PyJitRef_IsUnique(seq)) {
+            ADD_OP(_UNPACK_SEQUENCE_UNIQUE_LIST, oparg, 0);
+        }
+        for (int i = 0; i < oparg; i++) {
+            values[i] = sym_new_not_null(ctx);
         }
     }
 

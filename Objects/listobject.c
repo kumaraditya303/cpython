@@ -549,6 +549,16 @@ PyList_Append(PyObject *op, PyObject *newitem)
     return -1;
 }
 
+void
+_PyStolenList_Free(PyObject *op)
+{
+    PyListObject *list = (PyListObject *)op;
+    assert(!_PyObject_GC_IS_TRACKED(op));
+    assert(list->ob_item != NULL);
+    free_list_items(list->ob_item, false);
+    _Py_FREELIST_FREE(lists, op, PyObject_GC_Del);
+}
+
 /* Methods */
 
 static void
