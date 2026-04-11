@@ -4668,6 +4668,29 @@ class TestUopsOptimization(unittest.TestCase):
         # This is a sign the optimizer ran and didn't hit contradiction.
         self.assertIn("_INSERT_2_LOAD_CONST_INLINE_BORROW", uops)
 
+    def test_load_attr_descriptor_frame(self):
+        class Descriptor:
+            def __get__(self, obj, objtype=None):
+                return 42
+            def __set__(self, obj, value):
+                pass
+
+        class MyClass:
+            attr = Descriptor()
+
+        def testfunc(n):
+            x = 0
+            obj = MyClass()
+            for _ in range(n):
+                x += obj.attr
+            return x
+
+        res, ex = self._run_with_optimizer(testfunc, TIER2_THRESHOLD)
+        self.assertEqual(res, 42 * TIER2_THRESHOLD)
+        self.assertIsNotNone(ex)
+        uops = get_opnames(ex)
+        self.assertIn("_LOAD_ATTR_DESCRIPTOR_FRAME", uops)
+
     def test_unary_negative(self):
         def testfunc(n):
             a = 3

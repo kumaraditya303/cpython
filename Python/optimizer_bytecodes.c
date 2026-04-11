@@ -907,6 +907,32 @@ dummy_func(void) {
                 attr = sym_new_not_null(ctx);
                 self_or_null[0] = sym_new_unknown(ctx);
             }
+        } else if (!(oparg & 1) && type != NULL && PyType_Check(type)) {
+            PyObject *name = get_co_name(ctx, oparg >> 1);
+            PyObject *descr = _PyType_Lookup(type, name);
+            if (descr != NULL && Py_TYPE(descr)->tp_descr_get != NULL && PyDescr_IsData(descr)) {
+                PyObject *get = _PyType_Lookup(Py_TYPE(descr), &_Py_ID(__get__));
+                if (get != NULL && Py_IS_TYPE(get, &PyFunction_Type)) {
+                    PyFunctionObject *get_func = (PyFunctionObject *)get;
+                    PyCodeObject *code = (PyCodeObject *)get_func->func_code;
+                    if (code->co_argcount == 3 && !code->co_kwonlyargcount &&
+                        (code->co_flags & (CO_VARKEYWORDS | CO_VARARGS | CO_OPTIMIZED)) == CO_OPTIMIZED)
+                    {
+                        ADD_OP(_GUARD_TYPE_VERSION, 0, type->tp_version_tag);
+                        ADD_OP(_LOAD_ATTR_DESCRIPTOR_FRAME, 0, (uintptr_t)get);
+                        uop_buffer_last(&ctx->out_buffer)->operand1 = (uintptr_t)descr;
+                        ADD_OP(_SAVE_RETURN_OFFSET, (1 + INLINE_CACHE_ENTRIES_LOAD_ATTR), 0);
+                        ADD_OP(_PUSH_FRAME, 0, 0);
+
+                        PyType_Watch(TYPE_WATCHER_ID, (PyObject *)type);
+                        _Py_BloomFilter_Add(dependencies, (PyTypeObject *)type);
+                        PyType_Watch(TYPE_WATCHER_ID, (PyObject *)Py_TYPE(descr));
+                        _Py_BloomFilter_Add(dependencies, Py_TYPE(descr));
+                        break;
+                    }
+                }
+            }
+            attr = sym_new_not_null(ctx);
         } else {
             attr = sym_new_not_null(ctx);
         }
@@ -1001,6 +1027,19 @@ dummy_func(void) {
                                  su_type, obj_type, name,
                                  _INSERT_1_LOAD_CONST_INLINE_BORROW,
                                  _INSERT_1_LOAD_CONST_INLINE);
+    }
+
+    op(_LOAD_ATTR_DESCRIPTOR_FRAME, (descr_get/4, descr/4, owner -- new_frame)) {
+        (void)descr;
+        PyCodeObject *co = (PyCodeObject *)((PyFunctionObject *)descr_get)->func_code;
+        _Py_UOpsAbstractFrame *f = frame_new(ctx, co, NULL, 0);
+        if (f == NULL) {
+            break;
+        }
+        f->locals[0] = sym_new_not_null(ctx);  // descriptor (self)
+        f->locals[1] = owner;                   // obj
+        f->locals[2] = sym_new_not_null(ctx);   // objtype
+        new_frame = PyJitRef_WrapInvalid(f);
     }
 
     op(_LOAD_ATTR_PROPERTY_FRAME, (fget/4, owner -- new_frame)) {

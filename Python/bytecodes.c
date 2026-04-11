@@ -5988,6 +5988,26 @@ dummy_func(
             value = PyStackRef_FromPyObjectBorrow(ptr);
         }
 
+        tier2 op(_LOAD_ATTR_DESCRIPTOR_FRAME, (descr_get/4, descr/4, owner -- new_frame)) {
+            assert(Py_IS_TYPE(descr_get, &PyFunction_Type));
+            PyFunctionObject *f = (PyFunctionObject *)descr_get;
+            PyCodeObject *code = (PyCodeObject *)f->func_code;
+            EXIT_IF((code->co_flags & (CO_VARKEYWORDS | CO_VARARGS | CO_OPTIMIZED)) != CO_OPTIMIZED);
+            EXIT_IF(code->co_kwonlyargcount);
+            EXIT_IF(code->co_argcount != 3);
+            EXIT_IF(!_PyThreadState_HasStackSpace(tstate, code->co_framesize));
+            STAT_INC(LOAD_ATTR, hit);
+            PyObject *descriptor = (PyObject *)descr;
+            PyObject *owner_o = PyStackRef_AsPyObjectBorrow(owner);
+            _PyInterpreterFrame *pushed_frame = _PyFrame_PushUnchecked(
+                tstate, PyStackRef_FromPyObjectNew(descr_get), 3, frame);
+            pushed_frame->localsplus[0] = PyStackRef_FromPyObjectNew(descriptor);
+            pushed_frame->localsplus[1] = owner;
+            DEAD(owner);
+            pushed_frame->localsplus[2] = PyStackRef_FromPyObjectNew((PyObject *)Py_TYPE(owner_o));
+            new_frame = PyStackRef_Wrap(pushed_frame);
+        }
+
         tier2 op(_START_EXECUTOR, (executor/4 --)) {
 #ifndef _Py_JIT
             assert(current_executor == (_PyExecutorObject*)executor);
