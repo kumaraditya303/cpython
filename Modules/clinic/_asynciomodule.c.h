@@ -1581,7 +1581,8 @@ PyDoc_STRVAR(_asyncio_get_event_loop__doc__,
 "running event loop.\n"
 "\n"
 "If there is no running event loop set, the function will return\n"
-"the result of `get_event_loop_policy().get_event_loop()` call.");
+"the loop set by `set_event_loop()`, or raise a RuntimeError if\n"
+"no loop has been set.");
 
 #define _ASYNCIO_GET_EVENT_LOOP_METHODDEF    \
     {"get_event_loop", (PyCFunction)_asyncio_get_event_loop, METH_NOARGS, _asyncio_get_event_loop__doc__},
@@ -2232,4 +2233,4 @@ _asyncio_future_discard_from_awaited_by(PyObject *module, PyObject *const *args,
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=b69948ed810591d9 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=60e0d4f74b52d47a input=a9049054013a1b77]*/

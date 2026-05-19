@@ -5449,7 +5449,7 @@ class LogRecordTest(BaseTest):
                 logging.logAsyncioTasks = False
                 runner.run(make_record(self.assertIsNone))
         finally:
-            asyncio.events._set_event_loop_policy(None)
+            asyncio.set_event_loop(None)
 
     @support.requires_working_socket()
     def test_taskName_without_asyncio_imported(self):
@@ -5461,7 +5461,7 @@ class LogRecordTest(BaseTest):
                 logging.logAsyncioTasks = False
                 runner.run(make_record(self.assertIsNone))
         finally:
-            asyncio.events._set_event_loop_policy(None)
+            asyncio.set_event_loop(None)
 
 
 class BasicConfigTest(unittest.TestCase):
@@ -5786,7 +5786,7 @@ class BasicConfigTest(unittest.TestCase):
                 data = f.read().strip()
             self.assertRegex(data, r'Task-\d+ - hello world')
         finally:
-            asyncio.events._set_event_loop_policy(None)
+            asyncio.set_event_loop(None)
             if handler:
                 handler.close()
 

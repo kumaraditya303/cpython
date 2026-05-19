@@ -1,0 +1,6 @@
+Remove the deprecated :mod:`asyncio` event loop policy system, including
+:func:`!asyncio.get_event_loop_policy`, :func:`!asyncio.set_event_loop_policy`,
+and the :class:`!asyncio.AbstractEventLoopPolicy`,
+:class:`!asyncio.DefaultEventLoopPolicy`,
+:class:`!asyncio.WindowsSelectorEventLoopPolicy` and
+:class:`!asyncio.WindowsProactorEventLoopPolicy` classes. Patch by Kumar Aditya.
