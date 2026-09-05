@@ -961,6 +961,43 @@ class BaseProactorEventLoopTests(test_utils.TestCase):
         tr._protocol.error_received.assert_called_with(err)
         close_transport(tr)
 
+    def test_datagram_loop_reading_error_rearms(self):
+        # gh-127057: a transient OSError from recvfrom() must not leave
+        # the read loop dead; it must be reported and then re-armed.
+        tr = self.datagram_transport()
+        tr._protocol.error_received = mock.Mock()
+        test_utils.run_briefly(self.loop)  # arm the initial read
+        self.assertEqual(self.loop._proactor.recvfrom.call_count, 1)
+
+        # The read completes, but re-arming recvfrom() fails.
+        err = ConnectionResetError()
+        self.loop._proactor.recvfrom.side_effect = [err, mock.DEFAULT]
+        res = self.loop.create_future()
+        res.set_result((b'data', ('127.0.0.1', 12068)))
+        tr._read_fut = res
+        tr._loop_reading(res)
+        tr._protocol.error_received.assert_called_once_with(err)
+        self.assertIsNone(tr._read_fut)
+
+        test_utils.run_briefly(self.loop)
+        self.assertEqual(self.loop._proactor.recvfrom.call_count, 3)
+        self.assertIsNotNone(tr._read_fut)
+        close_transport(tr)
+
+    def test_datagram_loop_reading_error_closed(self):
+        # ... but not if the protocol closed the transport from
+        # error_received().
+        err = self.loop._proactor.recvfrom.side_effect = ConnectionResetError()
+
+        tr = self.datagram_transport()
+        tr._protocol.error_received = mock.Mock(side_effect=lambda exc: tr.close())
+        tr._loop_reading()
+        tr._protocol.error_received.assert_called_once_with(err)
+
+        test_utils.run_briefly(self.loop)
+        self.assertEqual(self.loop._proactor.recvfrom.call_count, 1)
+        self.assertIsNone(tr._read_fut)
+
     def test_datagram_loop_writing_aborted(self):
         err = self.loop._proactor.sendto.side_effect = ConnectionAbortedError()
 

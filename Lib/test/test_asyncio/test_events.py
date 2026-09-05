@@ -1583,6 +1583,62 @@ class EventLoopTestsMixin:
         transport_1.close()
         transport_2.close()
 
+    def test_datagram_recv_connection_reset_recovers(self):
+        # gh-127057: on Windows, a UDP socket that sent to an address
+        # that isn't listening reports the ICMP port-unreachable on the
+        # next receive as ConnectionResetError.  The error must be
+        # reported via error_received() and the transport must keep
+        # receiving afterwards.
+        loop = self.loop
+
+        class Protocol(asyncio.DatagramProtocol):
+            def connection_made(self, transport):
+                self.errors = []
+                self.received = loop.create_future()
+                self.done = loop.create_future()
+
+            def datagram_received(self, data, addr):
+                if not self.received.done():
+                    self.received.set_result(data)
+
+            def error_received(self, exc):
+                self.errors.append(exc)
+
+            def connection_lost(self, exc):
+                self.done.set_result(None)
+
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        sock.setblocking(False)
+        sock.bind(('127.0.0.1', 0))
+        addr = sock.getsockname()
+
+        # Bind and immediately close a socket to get an address that
+        # isn't listening.
+        closed = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        closed.bind(('127.0.0.1', 0))
+        closed_addr = closed.getsockname()
+        closed.close()
+
+        # Trigger the ICMP error before the transport arms its first
+        # receive so that the receive itself fails.
+        sock.sendto(b'x', closed_addr)
+
+        transport, protocol = loop.run_until_complete(
+            loop.create_datagram_endpoint(Protocol, sock=sock))
+
+        transport.sendto(b'ping', addr)
+        self.assertEqual(loop.run_until_complete(
+            asyncio.wait_for(protocol.received, support.SHORT_TIMEOUT)),
+            b'ping')
+
+        if sys.platform == 'win32':
+            self.assertEqual(len(protocol.errors), 1)
+            self.assertIsInstance(protocol.errors[0], ConnectionResetError)
+
+        transport.close()
+        loop.run_until_complete(
+            asyncio.wait_for(protocol.done, support.SHORT_TIMEOUT))
+
     def test_internal_fds(self):
         loop = self.create_event_loop()
         if not isinstance(loop, selector_events.BaseSelectorEventLoop):

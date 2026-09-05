@@ -573,6 +573,10 @@ class _ProactorDatagramTransport(_ProactorBasePipeTransport,
                                                                self.max_size)
         except OSError as exc:
             self._protocol.error_received(exc)
+            if not self._closing and not self._conn_lost:
+                # The error may be transient (e.g. ICMP port unreachable
+                # on Windows); keep reading (gh-127057).
+                self._loop.call_soon(self._loop_reading)
         except exceptions.CancelledError:
             if not self._closing:
                 raise

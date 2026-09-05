@@ -1,0 +1,3 @@
+Fix :class:`asyncio.ProactorEventLoop` datagram transports no longer
+receiving after sending to an address that isn't listening. The error is now
+reported via :meth:`~asyncio.DatagramProtocol.error_received`.
