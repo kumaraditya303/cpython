@@ -3494,99 +3494,97 @@ static struct PyModuleDef builtinsmodule = {
 
 /* Builtins implemented in Python.
 
-   The source below is compiled by _PyBuiltin_InitPythonFunctions(), which
-   runs late in interpreter init (after the common constants and builtin
-   exceptions exist, since the code is executed by the bytecode
-   interpreter), and the listed functions are copied from the resulting
-   namespace into the builtins dict. */
+   Each entry below pairs the name of a builtin with the Python source that
+   defines it.  _PyBuiltin_InitPythonFunctions() compiles and runs each
+   source in a shared private namespace and copies the named function into
+   the builtins dict.
 
-static const char builtin_python_source[] =
-"_NOT_GIVEN = object()\n"
-"\n"
-"\n"
-"def anext(async_iterator, default=_NOT_GIVEN, /):\n"
-"    \"\"\"Return the next item from the async iterator.\n"
-"\n"
-"    If default is given and the async iterator is exhausted,\n"
-"    it is returned instead of raising StopAsyncIteration.\n"
-"    \"\"\"\n"
-"    cls = type(async_iterator)\n"
-"    try:\n"
-"        # Looked up on the type, like the C slot am_anext.\n"
-"        anext_method = cls.__anext__\n"
-"    except AttributeError:\n"
-"        raise TypeError(\n"
-"            f\"'{cls.__name__}' object is not an async iterator\"\n"
-"        ) from None\n"
-"    awaitable = anext_method(async_iterator)\n"
-"    if default is _NOT_GIVEN:\n"
-"        return awaitable\n"
-"    return _anext_with_default(awaitable, default)\n"
-"\n"
-"\n"
-"async def _anext_with_default(awaitable, default):\n"
-"    try:\n"
-"        return await awaitable\n"
-"    except StopAsyncIteration:\n"
-"        return default\n"
-;
+*/
 
-/* Names to export from builtin_python_source into the builtins dict. */
-static const char * const builtin_python_names[] = {
-    "anext",
-    NULL,
+static const char anext_source[] =
+    "_NOT_GIVEN = object()\n"
+    "\n"
+    "\n"
+    "def anext(async_iterator, default=_NOT_GIVEN, /):\n"
+    "    \"\"\"Return the next item from the async iterator.\n"
+    "\n"
+    "    If default is given and the async iterator is exhausted,\n"
+    "    it is returned instead of raising StopAsyncIteration.\n"
+    "    \"\"\"\n"
+    "    cls = type(async_iterator)\n"
+    "    try:\n"
+    "        # Looked up on the type, like the C slot am_anext.\n"
+    "        anext_method = cls.__anext__\n"
+    "    except AttributeError:\n"
+    "        raise TypeError(\n"
+    "            f\"'{cls.__name__}' object is not an async iterator\"\n"
+    "        ) from None\n"
+    "    awaitable = anext_method(async_iterator)\n"
+    "    if default is _NOT_GIVEN:\n"
+    "        return awaitable\n"
+    "    return _anext_with_default(awaitable, default)\n"
+    "\n"
+    "\n"
+    "async def _anext_with_default(awaitable, default):\n"
+    "    try:\n"
+    "        return await awaitable\n"
+    "    except StopAsyncIteration:\n"
+    "        return default\n";
+
+struct builtin_python_function {
+    PyObject *name;
+    const char *source;
 };
+
+static const struct builtin_python_function builtin_python_functions[] = {
+    {&_Py_ID(anext), anext_source},
+    {NULL, NULL},
+};
+
+_Py_DECLARE_STR(anon_builtins, "<builtins>");
 
 int
 _PyBuiltin_InitPythonFunctions(PyObject *dict)
 {
     int rc = -1;
-    PyObject *filename = NULL, *code = NULL, *globals = NULL, *result = NULL;
 
-    filename = PyUnicode_FromString("<builtins>");
-    if (filename == NULL) {
-        goto done;
-    }
-    code = Py_CompileStringObject(builtin_python_source, filename,
-                                  Py_file_input, NULL, 0);
-    if (code == NULL) {
-        goto done;
-    }
-
-    /* Run the source in a private namespace so that helpers do not leak
-       into builtins.  The functions keep this dict as their __globals__. */
-    globals = PyDict_New();
+    PyObject *globals = PyDict_New();
     if (globals == NULL) {
+        return -1;
+    }
+    if (PyDict_SetItem(globals, &_Py_ID(__builtins__), dict) < 0) {
         goto done;
     }
-    if (PyDict_SetItemString(globals, "__builtins__", dict) < 0) {
-        goto done;
-    }
-    PyObject *name = PyUnicode_FromString("builtins");
-    if (name == NULL) {
-        goto done;
-    }
-    int r = PyDict_SetItemString(globals, "__name__", name);
-    Py_DECREF(name);
-    if (r < 0) {
+    if (PyDict_SetItem(globals, &_Py_ID(__name__), &_Py_ID(builtins)) < 0) {
         goto done;
     }
 
-    result = PyEval_EvalCode(code, globals, globals);
-    if (result == NULL) {
-        goto done;
-    }
+    for (const struct builtin_python_function *f = builtin_python_functions;
+         f->name != NULL; f++)
+    {
+        PyObject *code = Py_CompileStringObject(f->source,
+                                                &_Py_STR(anon_builtins),
+                                                Py_file_input, NULL, 0);
+        if (code == NULL) {
+            goto done;
+        }
+        PyObject *result = PyEval_EvalCode(code, globals, globals);
+        Py_DECREF(code);
+        if (result == NULL) {
+            goto done;
+        }
+        Py_DECREF(result);
 
-    for (const char * const *p = builtin_python_names; *p != NULL; p++) {
         PyObject *func;
-        if (PyDict_GetItemStringRef(globals, *p, &func) != 1) {
+        if (PyDict_GetItemRef(globals, f->name, &func) != 1) {
             if (!PyErr_Occurred()) {
                 PyErr_Format(PyExc_SystemError,
-                             "builtin %s not defined by Python source", *p);
+                             "builtin %U not defined by its Python source",
+                             f->name);
             }
             goto done;
         }
-        r = PyDict_SetItemString(dict, *p, func);
+        int r = PyDict_SetItem(dict, f->name, func);
         Py_DECREF(func);
         if (r < 0) {
             goto done;
@@ -3595,10 +3593,7 @@ _PyBuiltin_InitPythonFunctions(PyObject *dict)
     rc = 0;
 
 done:
-    Py_XDECREF(result);
-    Py_XDECREF(globals);
-    Py_XDECREF(code);
-    Py_XDECREF(filename);
+    Py_DECREF(globals);
     return rc;
 }
 
