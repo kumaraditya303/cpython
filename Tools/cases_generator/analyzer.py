@@ -661,6 +661,7 @@ NON_ESCAPING_FUNCTIONS = (
     "_PyFunction_SetVersion",
     "_PyGen_GetGeneratorFromFrame",
     "gen_try_set_executing",
+    "gen_is_just_started",
     "_PyInterpreterState_GET",
     "_PyList_AppendTakeRef",
     "_PyList_ITEMS",

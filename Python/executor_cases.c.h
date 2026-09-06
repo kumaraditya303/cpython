@@ -8961,6 +8961,14 @@
                 SET_CURRENT_CACHED_VALUES(3);
                 JUMP_TO_JUMP_TARGET();
             }
+            if (!PyStackRef_IsNone(v) && gen_is_just_started(gen)) {
+                UOP_STAT_INC(uopcode, miss);
+                _tos_cache2 = v;
+                _tos_cache1 = _stack_item_1;
+                _tos_cache0 = receiver;
+                SET_CURRENT_CACHED_VALUES(3);
+                JUMP_TO_JUMP_TARGET();
+            }
             if (!gen_try_set_executing((PyGenObject *)gen)) {
                 UOP_STAT_INC(uopcode, miss);
                 _tos_cache2 = v;

@@ -23,6 +23,7 @@ PyGenObject *_PyGen_GetGeneratorFromFrame(_PyInterpreterFrame *frame)
 
 PyAPI_FUNC(PyObject *)_PyGen_yf(PyGenObject *);
 extern int _PyGen_ClearFrame(PyGenObject *self);
+extern int _PyGen_InitSendMethod(PyInterpreterState *interp);
 
 // Export for '_asyncio' shared extension
 PyAPI_FUNC(int) _PyGen_SetStopIterationValue(PyObject *);

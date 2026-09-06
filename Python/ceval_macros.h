@@ -564,6 +564,14 @@ check_periodics_at_end(PyThreadState *tstate, _PyInterpreterFrame *frame) {
     return 0;
 }
 
+// A just-started generator cannot be sent a non-None value; SEND must
+// leave that to the C path so that the TypeError is raised.
+static inline bool
+gen_is_just_started(PyGenObject *gen)
+{
+    return FT_ATOMIC_LOAD_INT8_RELAXED(gen->gi_frame_state) == FRAME_CREATED;
+}
+
 // Mark the generator as executing. Returns true if the state was changed,
 // false if it was already executing or finished.
 static inline bool

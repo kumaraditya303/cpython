@@ -5,11 +5,14 @@
 #include "Python.h"
 #include "pycore_call.h"          // _PyObject_CallNoArgs()
 #include "pycore_ceval.h"         // _PyEval_EvalFrame()
+#include "pycore_code.h"          // INLINE_CACHE_ENTRIES_SEND
 #include "pycore_frame.h"         // _PyInterpreterFrame
 #include "pycore_freelist.h"      // _Py_FREELIST_FREE()
+#include "pycore_function.h"      // _PyFunction_SetVersion()
 #include "pycore_gc.h"            // _PyGC_CLEAR_FINALIZED()
 #include "pycore_genobject.h"     // _PyGen_SetStopIterationValue()
 #include "pycore_interpframe.h"   // _PyFrame_GetCode()
+#include "pycore_intrinsics.h"    // INTRINSIC_RAISE_STOPITERATION
 #include "pycore_lock.h"          // _Py_yield()
 #include "pycore_modsupport.h"    // _PyArg_CheckPositional()
 #include "pycore_object.h"        // _PyObject_GC_UNTRACK()
@@ -17,6 +20,7 @@
 #include "pycore_pyatomic_ft_wrappers.h" // FT_ATOMIC_LOAD_UINT8_RELAXED()
 #include "pycore_pyerrors.h"      // _PyErr_ClearExcState()
 #include "pycore_pystate.h"       // _PyThreadState_GET()
+#include "pycore_typeobject.h"    // _PyType_GetDict()
 #include "pycore_warnings.h"      // _PyErr_WarnUnawaitedCoroutine()
 #include "pycore_weakref.h"       // FT_CLEAR_WEAKREFS()
 
@@ -1022,7 +1026,7 @@ PyDoc_STRVAR(sizeof__doc__,
 "gen.__sizeof__() -> size of gen in memory, in bytes");
 
 static PyMethodDef gen_methods[] = {
-    {"send", gen_send, METH_O, send_doc},
+    /* send() is bytecode, see _PyGen_InitSendMethod(). */
     {"throw", _PyCFunction_CAST(gen_throw), METH_FASTCALL, throw_doc},
     {"close", gen_close, METH_NOARGS, close_doc},
     {"__sizeof__", gen_sizeof, METH_NOARGS, sizeof__doc__},
@@ -1374,7 +1378,7 @@ PyDoc_STRVAR(coro_close_doc,
 "close() -> raise GeneratorExit inside coroutine.");
 
 static PyMethodDef coro_methods[] = {
-    {"send", gen_send, METH_O, coro_send_doc},
+    /* send() is bytecode, see _PyGen_InitSendMethod(). */
     {"throw",_PyCFunction_CAST(gen_throw), METH_FASTCALL, coro_throw_doc},
     {"close", gen_close, METH_NOARGS, coro_close_doc},
     {"__sizeof__", gen_sizeof, METH_NOARGS, sizeof__doc__},
@@ -1382,6 +1386,141 @@ static PyMethodDef coro_methods[] = {
      PyDoc_STR("coroutines are generic over the types of their yield, send, and return values")},
     {NULL, NULL}        /* Sentinel */
 };
+
+/* generator.send() and coroutine.send() as bytecode.
+
+   The code object is assembled by hand, since no Python source compiles
+   to a bare SEND outside of a generator.  It is the equivalent of
+
+       def send(self, value, /):
+           <resume self with value>
+           if it yielded:  return the yielded value
+           if it returned: raise StopIteration(the returned value)
+
+   SEND pushes the generator's frame onto the current eval loop instead
+   of recursing into a new one.  SEND accepts both generators and
+   coroutines, so one code layout serves both types. */
+
+_Py_DECLARE_STR(anon_builtins, "<builtins>");
+
+static PyObject *
+make_send_method(const char *qualname_str, const char *doc)
+{
+    /* SEND's jump is relative to the end of the instruction and its
+       cache, so oparg 2 skips END_SEND + RETURN_VALUE.
+
+       There is deliberately no RESUME: a frame that has not reached its
+       code's first RESUME is "incomplete", so f_back, sys._getframe() and
+       tracebacks skip it, like the C method it replaces.  With
+       CO_NO_MONITORING_EVENTS it emits no trace events either.  Having
+       no RESUME also means no periodic check here, so pending signals are
+       raised inside the generator once it resumes, as with the C code. */
+    static const uint8_t code[] = {
+        LOAD_FAST, 0,                                   /* self */
+        PUSH_NULL, 0,
+        LOAD_FAST, 1,                                   /* value */
+        SEND, 2,
+        CACHE, 0,
+        /* yielded: receiver, NULL, yielded value */
+        END_SEND, 0,
+        RETURN_VALUE, 0,
+        /* returned: receiver, NULL, return value */
+        END_SEND, 0,
+        CALL_INTRINSIC_1, INTRINSIC_RAISE_STOPITERATION,
+        RETURN_VALUE, 0,                                /* unreachable */
+    };
+    static_assert(INLINE_CACHE_ENTRIES_SEND == 1, "SEND cache size changed");
+    /* 10 code units, none with a location: two "no location" entries. */
+    static const uint8_t linetable[] = {
+        0x80 | (PY_CODE_LOCATION_INFO_NONE << 3) | 7,
+        0x80 | (PY_CODE_LOCATION_INFO_NONE << 3) | 1,
+    };
+    static_assert(sizeof(code) / sizeof(_Py_CODEUNIT) == 8 + 2,
+                  "code size and linetable disagree");
+
+    PyObject *code_bytes = NULL, *consts = NULL, *varnames = NULL,
+             *empty = NULL, *qualname = NULL, *linetable_bytes = NULL,
+             *exctable = NULL, *globals = NULL, *func = NULL;
+    PyCodeObject *co = NULL;
+
+    code_bytes = PyBytes_FromStringAndSize((const char *)code, sizeof(code));
+    consts = Py_BuildValue("(s)", doc);
+    varnames = Py_BuildValue("(ss)", "self", "value");
+    empty = PyTuple_New(0);
+    qualname = PyUnicode_FromString(qualname_str);
+    linetable_bytes = PyBytes_FromStringAndSize((const char *)linetable,
+                                                sizeof(linetable));
+    exctable = PyBytes_FromStringAndSize("", 0);
+    if (code_bytes == NULL || consts == NULL || varnames == NULL ||
+        empty == NULL || qualname == NULL || linetable_bytes == NULL ||
+        exctable == NULL)
+    {
+        goto done;
+    }
+
+    co = PyUnstable_Code_NewWithPosOnlyArgs(
+        /* argcount */ 2, /* posonlyargcount */ 2, /* kwonlyargcount */ 0,
+        /* nlocals */ 2, /* stacksize */ 3,
+        (CO_OPTIMIZED | CO_NEWLOCALS | CO_HAS_DOCSTRING
+         | CO_NO_MONITORING_EVENTS),
+        code_bytes, consts, /* names */ empty, varnames,
+        /* freevars */ empty, /* cellvars */ empty,
+        &_Py_STR(anon_builtins), &_Py_ID(send), qualname,
+        /* firstlineno */ 1, linetable_bytes, exctable);
+    if (co == NULL) {
+        goto done;
+    }
+
+    globals = PyDict_New();
+    if (globals == NULL) {
+        goto done;
+    }
+    func = PyFunction_New((PyObject *)co, globals);
+    if (func == NULL) {
+        goto done;
+    }
+    /* As MAKE_FUNCTION does; without a version, calls are not specialized. */
+    _PyFunction_SetVersion((PyFunctionObject *)func, co->co_version);
+
+done:
+    Py_XDECREF(globals);
+    Py_XDECREF(co);
+    Py_XDECREF(exctable);
+    Py_XDECREF(linetable_bytes);
+    Py_XDECREF(qualname);
+    Py_XDECREF(empty);
+    Py_XDECREF(varnames);
+    Py_XDECREF(consts);
+    Py_XDECREF(code_bytes);
+    return func;
+}
+
+int
+_PyGen_InitSendMethod(PyInterpreterState *interp)
+{
+    static const struct {
+        PyTypeObject *type;
+        const char *qualname;
+        const char *doc;
+    } methods[] = {
+        {&PyGen_Type, "generator.send", send_doc},
+        {&PyCoro_Type, "coroutine.send", coro_send_doc},
+    };
+    for (size_t i = 0; i < Py_ARRAY_LENGTH(methods); i++) {
+        PyObject *func = make_send_method(methods[i].qualname, methods[i].doc);
+        if (func == NULL) {
+            return -1;
+        }
+        PyObject *dict = _PyType_GetDict(methods[i].type);
+        int r = PyDict_SetItem(dict, &_Py_ID(send), func);
+        Py_DECREF(func);
+        if (r < 0) {
+            return -1;
+        }
+        PyType_Modified(methods[i].type);
+    }
+    return 0;
+}
 
 static PyAsyncMethods coro_as_async = {
     coro_await,                                 /* am_await */

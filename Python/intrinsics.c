@@ -216,9 +216,17 @@ make_frozenset(PyThreadState* Py_UNUSED(ignored), PyObject *set)
     return _PySet_Freeze(set);
 }
 
+static PyObject *
+raise_stopiteration(PyThreadState* Py_UNUSED(tstate), PyObject *value)
+{
+    _PyGen_SetStopIterationValue(value == Py_None ? NULL : value);
+    return NULL;
+}
+
 
 #define INTRINSIC_FUNC_ENTRY(N, F) \
     [N] = {F, #N},
+
 
 const intrinsic_func1_info
 _PyIntrinsics_UnaryFunctions[] = {
@@ -235,6 +243,7 @@ _PyIntrinsics_UnaryFunctions[] = {
     INTRINSIC_FUNC_ENTRY(INTRINSIC_SUBSCRIPT_GENERIC, _Py_subscript_generic)
     INTRINSIC_FUNC_ENTRY(INTRINSIC_TYPEALIAS, _Py_make_typealias)
     INTRINSIC_FUNC_ENTRY(INTRINSIC_BUILD_FROZENSET, make_frozenset)
+    INTRINSIC_FUNC_ENTRY(INTRINSIC_RAISE_STOPITERATION, raise_stopiteration)
 };
 
 

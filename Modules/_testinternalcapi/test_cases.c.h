@@ -11610,6 +11610,7 @@
                 assert(frame->owner != FRAME_OWNED_BY_INTERPRETER);
                 if (!IS_PEP523_HOOKED(tstate) &&
                     (Py_TYPE(receiver_o) == &PyGen_Type || Py_TYPE(receiver_o) == &PyCoro_Type) &&
+                    (PyStackRef_IsNone(v) || !gen_is_just_started((PyGenObject *)receiver_o)) &&
                     gen_try_set_executing((PyGenObject *)receiver_o))
                 {
                     PyGenObject *gen = (PyGenObject *)receiver_o;
@@ -11761,6 +11762,11 @@
                 receiver = stack_pointer[-3];
                 PyGenObject *gen = (PyGenObject *)PyStackRef_AsPyObjectBorrow(receiver);
                 if (Py_TYPE(gen) != &PyGen_Type && Py_TYPE(gen) != &PyCoro_Type) {
+                    UPDATE_MISS_STATS(SEND);
+                    assert(_PyOpcode_Deopt[opcode] == (SEND));
+                    JUMP_TO_PREDICTED(SEND);
+                }
+                if (!PyStackRef_IsNone(v) && gen_is_just_started(gen)) {
                     UPDATE_MISS_STATS(SEND);
                     assert(_PyOpcode_Deopt[opcode] == (SEND));
                     JUMP_TO_PREDICTED(SEND);

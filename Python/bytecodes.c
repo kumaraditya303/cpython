@@ -1678,6 +1678,7 @@ dummy_func(
             assert(frame->owner != FRAME_OWNED_BY_INTERPRETER);
             if (!IS_PEP523_HOOKED(tstate) &&
                 (Py_TYPE(receiver_o) == &PyGen_Type || Py_TYPE(receiver_o) == &PyCoro_Type) &&
+                (PyStackRef_IsNone(v) || !gen_is_just_started((PyGenObject *)receiver_o)) &&
                 gen_try_set_executing((PyGenObject *)receiver_o))
             {
                 PyGenObject *gen = (PyGenObject *)receiver_o;
@@ -1724,6 +1725,7 @@ dummy_func(
         op(_SEND_GEN_FRAME, (receiver, null, v -- receiver, null, gen_frame)) {
             PyGenObject *gen = (PyGenObject *)PyStackRef_AsPyObjectBorrow(receiver);
             EXIT_IF(Py_TYPE(gen) != &PyGen_Type && Py_TYPE(gen) != &PyCoro_Type);
+            EXIT_IF(!PyStackRef_IsNone(v) && gen_is_just_started(gen));
             EXIT_IF(!gen_try_set_executing((PyGenObject *)gen));
             STAT_INC(SEND, hit);
             _PyInterpreterFrame *pushed_frame = &gen->gi_iframe;

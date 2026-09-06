@@ -11,6 +11,7 @@
 #include "pycore_fileutils.h"     // _Py_ResetForceASCII()
 #include "pycore_floatobject.h"   // _PyFloat_InitTypes()
 #include "pycore_freelist.h"      // _PyObject_ClearFreeLists()
+#include "pycore_genobject.h"     // _PyGen_InitSendMethod()
 #include "pycore_global_objects_fini_generated.h"  // _PyStaticObjects_CheckRefcnt()
 #include "pycore_initconfig.h"    // _PyStatus_OK()
 #include "pycore_interpolation.h" // _PyInterpolation_InitTypes()
@@ -922,6 +923,10 @@ pycore_init_builtins(PyThreadState *tstate)
 
     if (_PyBuiltins_AddExceptions(bimod) < 0) {
         return _PyStatus_ERR("failed to add exceptions to builtins");
+    }
+
+    if (_PyGen_InitSendMethod(interp) < 0) {
+        return _PyStatus_ERR("failed to initialize generator.send()");
     }
 
     interp->builtins_copy = PyDict_Copy(interp->builtins);
