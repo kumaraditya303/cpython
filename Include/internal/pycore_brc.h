@@ -18,6 +18,11 @@ extern "C" {
 // Prime number to avoid correlations with memory addresses.
 #define _Py_BRC_NUM_BUCKETS 257
 
+// If a detached (e.g. blocked) thread has at least this many objects queued
+// for merging, the queueing thread suspends it and merges the queue itself
+// rather than waiting for the owner to run again.
+#define _Py_BRC_MERGE_THRESHOLD 100
+
 // Hash table bucket
 struct _brc_bucket {
     // Mutex protects both the bucket and thread state queues in this bucket.
@@ -44,6 +49,9 @@ struct _brc_thread_state {
 
     // Objects with refcounts to be merged (protected by bucket mutex)
     _PyObjectStack objects_to_merge;
+
+    // Number of objects in objects_to_merge (protected by bucket mutex)
+    Py_ssize_t num_queued;
 
     // Local stack of objects to be merged (not accessed by other threads)
     _PyObjectStack local_objects_to_merge;
