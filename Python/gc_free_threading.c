@@ -928,6 +928,7 @@ merge_queued_objects(_PyThreadStateImpl *tstate, struct collection_state *state)
 {
     struct _brc_thread_state *brc = &tstate->brc;
     _PyObjectStack_Merge(&brc->local_objects_to_merge, &brc->objects_to_merge);
+    brc->num_queued = 0;
 
     PyObject *op;
     while ((op = _PyObjectStack_Pop(&brc->local_objects_to_merge)) != NULL) {
