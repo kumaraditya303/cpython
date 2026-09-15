@@ -21,7 +21,7 @@ extern "C" {
 // If a detached (e.g. blocked) thread has at least this many objects queued
 // for merging, the queueing thread suspends it and merges the queue itself
 // rather than waiting for the owner to run again.
-#define _Py_BRC_MERGE_THRESHOLD 100
+#define _Py_BRC_MERGE_THRESHOLD 10
 
 // Hash table bucket
 struct _brc_bucket {
