@@ -6,6 +6,7 @@
 #include "pycore_obmalloc.h"
 #include "pycore_obmalloc_init.h"
 #include "pycore_pyerrors.h"      // _Py_FatalErrorFormat()
+#include "pycore_pyatomic_ft_wrappers.h"
 #include "pycore_pymem.h"
 #include "pycore_pystate.h"       // _PyInterpreterState_GET
 #include "pycore_stats.h"         // OBJECT_STAT_INC_COND()
@@ -1328,6 +1329,21 @@ _PyObject_XDecRefDelayed(PyObject *ptr)
         // actual size.  If we are freeing many objects, the write sequence
         // will be advanced due to QSBR_DEFERRED_LIMIT.
         free_delayed(((uintptr_t)ptr)|0x01, 0);
+    }
+}
+#endif
+
+#ifdef Py_GIL_DISABLED
+void
+_PyObject_XSetRefDelayed(PyObject **ptr, PyObject *value)
+{
+    PyObject *old = *ptr;
+    FT_ATOMIC_STORE_PTR_RELEASE(*ptr, value);
+    if (old == NULL) {
+        return;
+    }
+    if (!_Py_IsImmortal(old)) {
+         _PyObject_XDecRefDelayed(old);
     }
 }
 #endif
