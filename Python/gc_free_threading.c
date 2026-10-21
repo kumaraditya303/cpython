@@ -11,6 +11,7 @@
 #include "pycore_interpframe.h"   // _PyFrame_GetLocalsArray()
 #include "pycore_list.h"          // _PyList_GetItemRef()
 #include "pycore_object_alloc.h"  // _PyObject_MallocWithType()
+#include "pycore_pyatomic_ft_wrappers.h"  // FT_ATOMIC_LOAD_INT_RELAXED()
 #include "pycore_pystate.h"       // _PyThreadState_GET()
 #include "pycore_tstate.h"        // _PyThreadStateImpl
 #include "pycore_tuple.h"         // _PyTuple_MaybeUntrack()
@@ -1729,6 +1730,7 @@ delete_garbage(struct collection_state *state)
 {
     PyThreadState *tstate = _PyThreadState_GET();
     GCState *gcstate = state->gcstate;
+    int debug = FT_ATOMIC_LOAD_INT_RELAXED(gcstate->debug);
 
     assert(!_PyErr_Occurred(tstate));
 
@@ -1751,7 +1753,7 @@ delete_garbage(struct collection_state *state)
 
         state->collected++;
 
-        if (gcstate->debug & _PyGC_DEBUG_SAVEALL) {
+        if (debug & _PyGC_DEBUG_SAVEALL) {
             assert(gcstate->garbage != NULL);
             if (PyList_Append(gcstate->garbage, op) < 0) {
                 _PyErr_Clear(tstate);
@@ -1777,16 +1779,17 @@ handle_legacy_finalizers(struct collection_state *state)
 {
     GCState *gcstate = state->gcstate;
     assert(gcstate->garbage != NULL);
+    int debug = FT_ATOMIC_LOAD_INT_RELAXED(gcstate->debug);
 
     PyObject *op;
     while ((op = worklist_pop(&state->legacy_finalizers)) != NULL) {
         state->uncollectable++;
 
-        if (gcstate->debug & _PyGC_DEBUG_UNCOLLECTABLE) {
+        if (debug & _PyGC_DEBUG_UNCOLLECTABLE) {
             debug_cycle("uncollectable", op);
         }
 
-        if ((gcstate->debug & _PyGC_DEBUG_SAVEALL) || has_legacy_finalizer(op)) {
+        if ((debug & _PyGC_DEBUG_SAVEALL) || has_legacy_finalizer(op)) {
             if (PyList_Append(gcstate->garbage, op) < 0) {
                 PyErr_Clear();
             }
@@ -2138,7 +2141,7 @@ gc_collect_internal(PyInterpreterState *interp, struct collection_state *state, 
 #endif
 
     // Print debugging information.
-    if (interp->gc.debug & _PyGC_DEBUG_COLLECTABLE) {
+    if (FT_ATOMIC_LOAD_INT_RELAXED(interp->gc.debug) & _PyGC_DEBUG_COLLECTABLE) {
         PyObject *op;
         WORKSTACK_FOR_EACH(&state->unreachable, op) {
             debug_cycle("collectable", op);
@@ -2244,7 +2247,8 @@ gc_collect_main(PyThreadState *tstate, int generation, _PyGC_Reason reason)
         invoke_gc_callback(tstate, "start", generation, 0, 0, 0, 0.0);
     }
 
-    if (gcstate->debug & _PyGC_DEBUG_STATS) {
+    int debug = FT_ATOMIC_LOAD_INT_RELAXED(gcstate->debug);
+    if (debug & _PyGC_DEBUG_STATS) {
         PySys_WriteStderr("gc: collecting generation %d...\n", generation);
         show_stats_each_generations(gcstate);
     }
@@ -2271,7 +2275,7 @@ gc_collect_main(PyThreadState *tstate, int generation, _PyGC_Reason reason)
     (void)PyTime_PerfCounterRaw(&stop);
     double duration = PyTime_AsSecondsDouble(stop - start);
 
-    if (gcstate->debug & _PyGC_DEBUG_STATS) {
+    if (debug & _PyGC_DEBUG_STATS) {
         PySys_WriteStderr(
             "gc: done, %zd unreachable, %zd uncollectable, %.4fs elapsed\n",
             n+m, n, duration);
@@ -2602,10 +2606,11 @@ void
 _PyGC_DumpShutdownStats(PyInterpreterState *interp)
 {
     GCState *gcstate = &interp->gc;
-    if (!(gcstate->debug & _PyGC_DEBUG_SAVEALL)
+    int debug = FT_ATOMIC_LOAD_INT_RELAXED(gcstate->debug);
+    if (!(debug & _PyGC_DEBUG_SAVEALL)
         && gcstate->garbage != NULL && PyList_GET_SIZE(gcstate->garbage) > 0) {
         const char *message;
-        if (gcstate->debug & _PyGC_DEBUG_UNCOLLECTABLE) {
+        if (debug & _PyGC_DEBUG_UNCOLLECTABLE) {
             message = "gc: %zd uncollectable objects at shutdown";
         }
         else {
@@ -2621,7 +2626,7 @@ _PyGC_DumpShutdownStats(PyInterpreterState *interp)
         {
             PyErr_FormatUnraisable("Exception ignored in GC shutdown");
         }
-        if (gcstate->debug & _PyGC_DEBUG_UNCOLLECTABLE) {
+        if (debug & _PyGC_DEBUG_UNCOLLECTABLE) {
             PyObject *repr = NULL, *bytes = NULL;
             repr = PyObject_Repr(gcstate->garbage);
             if (!repr || !(bytes = PyUnicode_EncodeFSDefault(repr))) {
