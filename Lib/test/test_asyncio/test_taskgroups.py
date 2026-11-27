@@ -1182,8 +1182,7 @@ class BaseTestTaskGroup:
     async def test_taskgroup_cancel_before_create_task(self):
         async with asyncio.TaskGroup() as tg:
             tg.cancel()
-            # TODO: This behavior is not ideal.  We'd rather have no exception
-            #   raised, and the child task run until the first await.
+            # A cancelled task group is shutting down, so it refuses new tasks.
             with self.assertRaises(RuntimeError):
                 tg.create_task(asyncio.sleep(1))
 
